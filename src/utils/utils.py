@@ -11,16 +11,14 @@ def path_exists(path):
     return path
 
 
-def calculate_random_feature_matrix(
-    num_states, num_features, num_active_features, seed
-):
+def calculate_phi_with_random_binary_features(N, n, num_ones, seed):
 
     np.random.seed(seed)
-    num_inactive_features = num_features - num_active_features
-    representations = np.zeros((num_states, num_features))
+    num_zeros = n - num_ones
+    representations = np.zeros((N, n))
 
-    for i_s in range(num_states):
-        random_array = np.array([0] * num_inactive_features + [1] * num_active_features)
+    for i_s in range(N):
+        random_array = np.array([0] * num_zeros + [1] * num_ones)
         np.random.shuffle(random_array)
         representations[i_s, :] = random_array
 
@@ -120,4 +118,3 @@ def calculate_irmsve(
 def calculate_auc(ys):
     auc = np.mean(ys)
     return auc
-
