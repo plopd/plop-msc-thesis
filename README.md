@@ -1,2 +1,2 @@
 # plop-msc-thesis
-Practicality of Emphasis in On-Policy Temporal DifferenceLearning for Prediction
+Practicality of Emphasis in On-Policy Temporal Difference Learning for Prediction
