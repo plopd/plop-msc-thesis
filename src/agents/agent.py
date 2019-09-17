@@ -18,7 +18,9 @@ class BaseAgent:
 
     def __init__(self):
         self.rand_generator = None
-        self.num_states = None
+        self.N = None
+        self.n = None
+        self.phi_repr = None
         self.alpha = None
         self.gamma = None
         self.lmbda = None

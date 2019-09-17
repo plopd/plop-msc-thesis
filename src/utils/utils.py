@@ -11,7 +11,7 @@ def path_exists(path):
     return path
 
 
-def get_phi(N, n, num_ones, seed, which=None):
+def get_phi(N, n, num_ones=None, seed=None, which=None):
     if which == "tabular":
         return calculate_phi_with_tabular(N)
     elif which == "random binary":
