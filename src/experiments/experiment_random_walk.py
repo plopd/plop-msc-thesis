@@ -1,14 +1,12 @@
 import numpy as np
-from tqdm import tqdm
-
 from experiments.experiment import BaseExperiment
 from rl_glue.rl_glue import RLGlue
+from tqdm import tqdm
 from utils import const
 from utils.utils import calculate_irmsve
 
 
 class RandomWalkExperiment(BaseExperiment):
-
     def __init__(self, agent_info, env_info, experiment_info):
         super(RandomWalkExperiment, self).__init__()
         self.agent_info = agent_info
@@ -16,9 +14,9 @@ class RandomWalkExperiment(BaseExperiment):
         self.experiment_info = experiment_info
 
         self.rl_glue = None
-        self.learn_history = np.zeros((self.n_runs,
-                                       self.n_episodes //
-                                       self.episode_eval_freq + 1))
+        self.learn_history = np.zeros(
+            (self.n_runs, self.n_episodes // self.episode_eval_freq + 1)
+        )
         self.approx_v = np.zeros((self.n_runs, self.N))
 
         self.episode = 0
@@ -34,7 +32,7 @@ class RandomWalkExperiment(BaseExperiment):
         self.n_runs = experiment_info["n_runs"]
         self.n_episodes = experiment_info["n_episodes"]
         self.episode_eval_freq = experiment_info["episode_eval_freq"]
-        self.I = experiment_info["I"]
+        self.i = experiment_info["i"]
         self.save_path = experiment_info["save_path"]
 
     def init_experiment(self):
@@ -58,7 +56,7 @@ class RandomWalkExperiment(BaseExperiment):
             true_state_val=self.true_v,
             learned_state_val=current_approx_v,
             state_distribution=self.state_distribution,
-            interest=self.I,
+            interest=self.i,
             num_states=self.N,
         )
         for episode in range(1, self.n_episodes + 1):
@@ -78,7 +76,7 @@ class RandomWalkExperiment(BaseExperiment):
                 true_state_val=self.true_v,
                 learned_state_val=current_approx_v,
                 state_distribution=self.state_distribution,
-                interest=self.I,
+                interest=self.i,
                 num_states=self.N,
             )
         elif self.episode == self.n_episodes:
@@ -87,8 +85,67 @@ class RandomWalkExperiment(BaseExperiment):
         return current_approx_v
 
     def _save(self):
-        np.save(f"{self.save_path}/learn_history", self.learn_history)
-        np.save(f"{self.save_path}/approx_v", self.approx_v)
+        learning_curve, learning_final, learning_speed, early_learning = (
+            self._calculate_stats()
+        )
+
+        np.save(
+            f"{self.save_path}/learn_history", self.learn_history, allow_pickle=True
+        )
+        np.save(f"{self.save_path}/approx_v", self.approx_v, allow_pickle=True)
+
+        np.save(
+            f"{self.save_path}/learning_curve.npy", learning_curve, allow_pickle=True
+        )
+        np.save(
+            f"{self.save_path}/learning_final.npy", learning_final, allow_pickle=True
+        )
+        np.save(
+            f"{self.save_path}/learning_speed.npy", learning_speed, allow_pickle=True
+        )
+        np.save(
+            f"{self.save_path}/early_learning.npy", early_learning, allow_pickle=True
+        )
+
+    def _calculate_stats(self):
+
+        learning_curve = {
+            "avg": np.mean(self.learn_history, axis=0),
+            "sd": np.std(self.learn_history, axis=0),
+            "se": np.std(self.learn_history, axis=0) / np.sqrt(self.n_runs),
+        }
+
+        data_final = np.mean(
+            self.learn_history[
+                :,
+                self.learn_history.shape[1] - int(0.01 * self.learn_history.shape[1]) :,
+            ],
+            axis=1,
+        )
+
+        learning_final = {
+            "avg": np.mean(data_final, axis=0),
+            "sd": np.std(data_final, axis=0),
+            "se": np.std(data_final, axis=0) / np.sqrt(self.n_runs),
+        }
+
+        auc = np.mean(self.learn_history, axis=1)
+        learning_speed = {
+            "avg": np.mean(auc, axis=0),
+            "sd": np.std(auc, axis=0),
+            "se": np.std(auc, axis=0) / np.sqrt(self.n_runs),
+        }
+
+        data_start = np.mean(
+            self.learn_history[:, : int(0.01 * self.learn_history.shape[1])], axis=1
+        )
+        early_learning = {
+            "avg": np.mean(data_start, axis=0),
+            "sd": np.std(data_start, axis=0),
+            "se": np.std(data_start, axis=0) / np.sqrt(self.n_runs),
+        }
+
+        return learning_curve, learning_final, learning_speed, early_learning
 
     def cleanup_experiment(self):
         pass

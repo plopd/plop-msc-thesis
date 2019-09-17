@@ -24,7 +24,7 @@ class BaseAgent:
         self.alpha = None
         self.gamma = None
         self.lmbda = None
-        self.I = None
+        self.i = None
         self.F = None
         self.M = None
         self.phi = None
