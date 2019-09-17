@@ -1,5 +1,4 @@
 import numpy as np
-
 from agents.agent import BaseAgent
 from utils.utils import get_phi
 
@@ -16,7 +15,9 @@ class TDAgent(BaseAgent):
         self.gamma = agent_info["gamma"]
         self.lmbda = agent_info["lmbda"]
         self.rand_generator = np.random.RandomState(agent_info.get("seed"))
-        self.phi = get_phi(self.N, self.n, seed=agent_info.get("seed"), which=self.phi_repr)
+        self.phi = get_phi(
+            self.N, self.n, seed=agent_info.get("seed"), which=self.phi_repr
+        )
         self.theta = np.zeros(self.n)
         self.z = np.zeros_like(self.theta)
 
@@ -45,15 +46,12 @@ class TDAgent(BaseAgent):
         last_state_feature = self.phi[self.s_t - 1]
 
         # cf. Eq. 12.5 textbook
-        self.z = (
-                self.gamma * self.lmbda * self.z
-                + last_state_feature
-        )
+        self.z = self.gamma * self.lmbda * self.z + last_state_feature
         # cf. Eq. 12.6 textbook
         td_error = (
-                reward
-                + self.gamma * np.dot(self.theta.T, current_state_feature)
-                - np.dot(self.theta.T, last_state_feature)
+            reward
+            + self.gamma * np.dot(self.theta.T, current_state_feature)
+            - np.dot(self.theta.T, last_state_feature)
         )
         # cf. Eq. 12.7 textbook
         self.theta = self.theta + self.alpha * td_error * self.z
@@ -67,10 +65,7 @@ class TDAgent(BaseAgent):
         last_state_feature = self.phi[self.s_t - 1]
 
         # cf. Eq. 12.5 textbook
-        self.z = (
-                self.gamma * self.lmbda * self.z
-                + last_state_feature
-        )
+        self.z = self.gamma * self.lmbda * self.z + last_state_feature
         # cf. Eq. 12.6 textbook
         td_error = reward - np.dot(self.theta.T, last_state_feature)
         # cf. Eq. 12.7 textbook
