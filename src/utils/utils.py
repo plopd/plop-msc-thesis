@@ -11,6 +11,28 @@ def path_exists(path):
     return path
 
 
+def get_phi(N, n, num_ones, seed, which=None):
+    if which == "tabular":
+        return calculate_phi_with_tabular(N)
+    elif which == "random binary":
+        return calculate_phi_with_random_binary_features(N, n, num_ones, seed)
+    elif which == "random non-binary":
+        raise NotImplementedError
+    elif which == "state aggregation":
+        if N == 5:
+            return calculate_phi_for_five_states_with_state_aggregation(n)
+        else:
+            raise ValueError("State aggregation work only with N=5.")
+    else:
+        raise ValueError(
+            "Unknown feature representation."
+            "Only 'tabular', "
+            "'random binary', "
+            "'random non-binary', "
+            "'state aggregation' are valid."
+        )
+
+
 def calculate_phi_with_random_binary_features(N, n, num_ones, seed):
 
     np.random.seed(seed)
@@ -25,24 +47,24 @@ def calculate_phi_with_random_binary_features(N, n, num_ones, seed):
     return representations
 
 
-def calculate_phi_for_five_states_with_state_aggregation(num_groups):
+def calculate_phi_for_five_states_with_state_aggregation(n):
 
-    if num_groups == 5:
+    if n == 5:
         group_sizes = [1, 1, 1, 1, 1]
-    elif num_groups == 4:
+    elif n == 4:
         group_sizes = [2, 1, 1, 1]
-    elif num_groups == 3:
+    elif n == 3:
         group_sizes = [2, 2, 1]
-    elif num_groups == 2:
+    elif n == 2:
         group_sizes = [3, 2]
-    elif num_groups == 1:
+    elif n == 1:
         group_sizes = [5]
     else:
         raise ValueError("Wrong number of groups. Valid are 1, 2, 3, 4 and 5")
 
     Phi = []
     for i_g, gs in enumerate(group_sizes):
-        phi = np.zeros((gs, num_groups))
+        phi = np.zeros((gs, n))
         phi[:, i_g] = 1.0
         Phi.append(phi)
     Phi = np.concatenate(Phi, axis=0)
@@ -50,8 +72,8 @@ def calculate_phi_for_five_states_with_state_aggregation(num_groups):
     return Phi
 
 
-def calculate_phi_with_tabular(num_states):
-    Phi = np.eye(num_states)
+def calculate_phi_with_tabular(N):
+    Phi = np.eye(N)
     return Phi
 
 
