@@ -1,14 +1,12 @@
 import numpy as np
-from tqdm import tqdm
-
 from experiments.experiment import BaseExperiment
 from rl_glue.rl_glue import RLGlue
+from tqdm import tqdm
 from utils import const
 from utils.utils import calculate_irmsve
 
 
 class RandomWalkExperiment(BaseExperiment):
-
     def __init__(self, agent_info, env_info, experiment_info):
         super(RandomWalkExperiment, self).__init__()
         self.agent_info = agent_info
@@ -16,9 +14,9 @@ class RandomWalkExperiment(BaseExperiment):
         self.experiment_info = experiment_info
 
         self.rl_glue = None
-        self.learn_history = np.zeros((self.n_runs,
-                                       self.n_episodes //
-                                       self.episode_eval_freq + 1))
+        self.learn_history = np.zeros(
+            (self.n_runs, self.n_episodes // self.episode_eval_freq + 1)
+        )
         self.approx_v = np.zeros((self.n_runs, self.N))
 
         self.episode = 0
