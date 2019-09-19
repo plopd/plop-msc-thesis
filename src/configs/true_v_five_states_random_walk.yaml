@@ -1,0 +1,22 @@
+agent_info:
+    N: 5
+    agent: MC
+    n: 5
+    phi: tabular
+    alpha: 0.0009765625
+    gamma: 1.0
+    lmbda: 0.0
+env_info:
+  env: RandomWalkEnvironment
+  N: 5
+  s0: 3
+  s_left_term: 0
+  s_right_term: 6
+  r_left: 0
+  r_right: 1
+experiment_info:
+  exp_name: true_v_five_states_random_walk
+  n_runs: 1
+  n_episodes: 1000000
+  episode_eval_freq: 1
+  max_timesteps_episode: 0

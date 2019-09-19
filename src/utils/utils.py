@@ -1,6 +1,9 @@
+import itertools
 import os
 
 import numpy as np
+import utils.const as const
+import yaml
 from utils.tiles import IHT
 from utils.tiles import my_tiles
 
@@ -14,11 +17,11 @@ def path_exists(path):
 def get_phi(N, n, num_ones=None, seed=None, which=None):
     if which == "tabular":
         return calculate_phi_with_tabular(N)
-    elif which == "random binary":
+    elif which == "random-binary":
         return calculate_phi_with_random_binary_features(N, n, num_ones, seed)
-    elif which == "random non-binary":
+    elif which == "random-non-binary":
         raise NotImplementedError
-    elif which == "state aggregation":
+    elif which == "state-aggregation":
         if N == 5:
             return calculate_phi_for_five_states_with_state_aggregation(n)
         else:
@@ -27,9 +30,9 @@ def get_phi(N, n, num_ones=None, seed=None, which=None):
         raise ValueError(
             "Unknown feature representation."
             "Only 'tabular', "
-            "'random binary', "
-            "'random non-binary', "
-            "'state aggregation' are valid."
+            "'random-binary', "
+            "'random-non-binary', "
+            "'state-aggregation' are valid."
         )
 
 
@@ -111,22 +114,9 @@ def calculate_phi_with_tile_coding(
     return feature_matrix
 
 
-def calculate_irmsve(
-    true_state_val, learned_state_val, state_distribution, interest, num_states
-):
-    """
-
-    Args:
-        true_state_val:
-        learned_state_val:
-        state_distribution:
-        interest:
-        num_states:
-
-    Returns:
-
-    """
+def calculate_irmsve(true_state_val, learned_state_val, state_distribution, num_states):
     assert len(true_state_val) == len(learned_state_val) == num_states
+    interest = np.ones(num_states)
     weighting_factor = np.multiply(state_distribution, interest)
     imsve = np.sum(
         np.multiply(weighting_factor, np.square(true_state_val - learned_state_val))
@@ -140,3 +130,35 @@ def calculate_irmsve(
 def calculate_auc(ys):
     auc = np.mean(ys)
     return auc
+
+
+def _zip_with_scalar(l, e):
+    return [(e, i) for i in l]
+
+
+def export_params_from_config_random_walk(cfg):
+    with open(f"{const.PATHS['project_path']}/src/configs/{cfg}.yaml", "r") as stream:
+        try:
+            struct = yaml.safe_load(stream)
+        except yaml.YAMLError as exc:
+            print(exc)
+
+    lst = []
+    for k, v in struct["agent_info"].items():
+        lst.append(_zip_with_scalar(v, k))
+    for kk, vv in struct["env_info"].items():
+        lst.append(_zip_with_scalar(vv, kk))
+    for kkk, vvv in struct["experiment_info"].items():
+        lst.append(_zip_with_scalar(vvv, kkk))
+
+    with open(f"{const.PATHS['project_path']}/src/configs/{cfg}.dat", "w") as f:
+        for param_conf in itertools.product(*lst):
+            line = " ".join(
+                [f"{param_key}={param_val}" for (param_key, param_val) in param_conf]
+            )
+            line = "export " + line
+            print(line, file=f)
+
+
+if __name__ == "__main__":
+    export_params_from_config_random_walk("experiment_five_states_random_walk")

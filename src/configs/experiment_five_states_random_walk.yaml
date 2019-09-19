@@ -1,0 +1,22 @@
+agent_info:
+    agent: [TD, ETD]
+    n: [4, 3, 2]
+    phi: [state-aggregation]
+    alpha: [9.5367431640625e-07, 1.9073486328125e-06, 3.814697265625e-06, 7.62939453125e-06, 1.52587890625e-05,
+            3.0517578125e-05, 6.103515625e-05, 0.0001220703125, 0.000244140625, 0.00048828125, 0.0009765625,
+            0.001953125, 0.00390625, 0.0078125, 0.015625, 0.03125, 0.0625, 0.125, 0.25, 0.5]
+    gamma: [1.0]
+    lmbda: [0.0]
+env_info:
+  env: [RandomWalkEnvironment]
+  N: [5]
+  s0: [3]
+  s_left_term: [0]
+  s_right_term: [6]
+  r_left: [0]
+  r_right: [1]
+experiment_info:
+  exp_name: [RandomWalkFiveStates]
+  n_runs: [500]
+  n_episodes: [100000]
+  episode_eval_freq: [1]

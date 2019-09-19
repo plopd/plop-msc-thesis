@@ -20,7 +20,7 @@ class BaseAgent:
         self.rand_generator = None
         self.N = None
         self.n = None
-        self.phi_repr = None
+        self.phi = None
         self.alpha = None
         self.gamma = None
         self.lmbda = None

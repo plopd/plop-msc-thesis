@@ -3,21 +3,19 @@ from agents.agent import BaseAgent
 from utils.utils import get_phi
 
 
-class TDAgent(BaseAgent):
+class TD(BaseAgent):
     def __init__(self):
-        super(TDAgent, self).__init__()
+        super(TD, self).__init__()
 
     def agent_init(self, agent_info):
         self.N = agent_info["N"]
         self.n = agent_info["n"]
-        self.phi_repr = agent_info["phi_repr"]
+        self.phi = agent_info["phi"]
         self.alpha = agent_info["alpha"]
         self.gamma = agent_info["gamma"]
         self.lmbda = agent_info["lmbda"]
         self.rand_generator = np.random.RandomState(agent_info.get("seed"))
-        self.phi = get_phi(
-            self.N, self.n, seed=agent_info.get("seed"), which=self.phi_repr
-        )
+        self.phi = get_phi(self.N, self.n, seed=agent_info.get("seed"), which=self.phi)
         self.theta = np.zeros(self.n)
         self.z = np.zeros_like(self.theta)
 
@@ -88,12 +86,14 @@ class TDAgent(BaseAgent):
     def agent_message(self, message):
         if message == "get state value":
             return np.dot(self.phi, self.theta)
-        if message == "get eligibility trace":
+        elif message == "get eligibility trace":
             return self.z
-        if message == "get feature matrix":
+        elif message == "get feature matrix":
             return self.phi
-        if message == "get weight vector":
+        elif message == "get weight vector":
             return self.theta
+        else:
+            raise ValueError("Invalid message received.")
 
     def agent_cleanup(self):
         pass
