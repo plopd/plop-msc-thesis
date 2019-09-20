@@ -4,6 +4,8 @@ import os
 import numpy as np
 import utils.const as const
 import yaml
+from rl_glue.rl_glue import RLGlue
+from tqdm import tqdm
 from utils.tiles import IHT
 from utils.tiles import my_tiles
 
@@ -160,5 +162,64 @@ def export_params_from_config_random_walk(cfg):
             print(line, file=f)
 
 
-if __name__ == "__main__":
-    export_params_from_config_random_walk("experiment_five_states_random_walk")
+def _open_yaml_file(filepath):
+    with open(filepath, "r") as stream:
+        try:
+            file = yaml.safe_load(stream)
+        except yaml.YAMLError as exc:
+            print(exc)
+    return file
+
+
+def calculate_true_v(cfg):
+    struct = _open_yaml_file(f"{const.PATHS['project_path']}/src/configs/{cfg}.yaml")
+
+    agent_info = struct["agent_info"]
+    env_info = struct["env_info"]
+    experiment_info = struct["experiment_info"]
+
+    rl_glue = RLGlue(const.ENVS[env_info["env"]], const.AGENTS[agent_info["agent"]])
+
+    rl_glue.rl_init(agent_info, env_info)
+    for _ in tqdm(range(1, experiment_info["n_episodes"] + 1)):
+        rl_glue.rl_episode(experiment_info["max_timesteps_episode"])
+
+    true_v = rl_glue.rl_agent_message("get state value")
+
+    np.save(
+        f"{const.PATHS['project_path']}/data/true_v_"
+        f"{struct['agent_info']['N']}_states_random_walk",
+        true_v,
+    )
+
+    return true_v
+
+
+def calculate_state_distribution(cfg):
+    struct = _open_yaml_file(f"{const.PATHS['project_path']}/src/configs/{cfg}.yaml")
+
+    agent_info = struct["agent_info"]
+    env_info = struct["env_info"]
+    experiment_info = struct["experiment_info"]
+
+    rl_glue = RLGlue(const.ENVS[env_info["env"]], const.AGENTS[agent_info["agent"]])
+
+    rl_glue.rl_init(agent_info, env_info)
+
+    eta = np.zeros(env_info["N"])
+    last_state, _ = rl_glue.rl_start()
+    for _ in tqdm(range(1, int(experiment_info["max_timesteps_episode"]) + 1)):
+        eta[last_state - 1] += 1
+        _, last_state, _, term = rl_glue.rl_step()
+        if term:
+            last_state, _ = rl_glue.rl_start()
+
+    state_distribution = eta / np.sum(eta)
+
+    np.save(
+        f"{const.PATHS['project_path']}/data/state_distribution_"
+        f"{struct['agent_info']['N']}_states_random_walk",
+        state_distribution,
+    )
+
+    return state_distribution

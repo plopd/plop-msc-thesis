@@ -1,6 +1,6 @@
 import numpy as np
+import utils.utils as utils
 from agents.agent import BaseAgent
-from utils.utils import get_phi
 
 
 class TD(BaseAgent):
@@ -15,7 +15,9 @@ class TD(BaseAgent):
         self.gamma = agent_info["gamma"]
         self.lmbda = agent_info["lmbda"]
         self.rand_generator = np.random.RandomState(agent_info.get("seed"))
-        self.phi = get_phi(self.N, self.n, seed=agent_info.get("seed"), which=self.phi)
+        self.phi = utils.get_phi(
+            self.N, self.n, seed=agent_info.get("seed"), which=self.phi
+        )
         self.theta = np.zeros(self.n)
         self.z = np.zeros_like(self.theta)
 
