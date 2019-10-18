@@ -19,8 +19,6 @@ class BaseEnvironment:
 
     def __init__(self):
         self.N = None
-        self.s0 = None
-        self.rand_generator = None
 
         reward = None
         observation = None

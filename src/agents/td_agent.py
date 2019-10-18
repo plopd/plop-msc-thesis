@@ -1,6 +1,9 @@
 import numpy as np
 import utils.utils as utils
-from agents.agent import BaseAgent
+from agents.base_agent import BaseAgent
+
+LEFT = 0
+RIGHT = 1
 
 
 class TD(BaseAgent):
@@ -9,16 +12,12 @@ class TD(BaseAgent):
 
     def agent_init(self, agent_info):
         self.N = agent_info["N"]
-        self.n = agent_info["n"]
-        self.phi = agent_info["phi"]
         self.alpha = agent_info["alpha"]
         self.gamma = agent_info["gamma"]
         self.lmbda = agent_info["lmbda"]
         self.rand_generator = np.random.RandomState(agent_info.get("seed"))
-        self.phi = utils.get_phi(
-            self.N, self.n, seed=agent_info.get("seed"), which=self.phi
-        )
-        self.theta = np.zeros(self.n)
+        self.phi = utils.get_features(self.N, name=agent_info["features"])
+        self.theta = np.zeros(self.phi.shape[1])
         self.z = np.zeros_like(self.theta)
 
         self.s_t = None
@@ -74,28 +73,19 @@ class TD(BaseAgent):
         return
 
     def agent_policy(self, observation):
-        """
-        Agent policy of taking an action given `observation`.
-            Action left (0) or right (1) is taken uniformly at random.
-        Args:
-            observation:
-
-        Returns:
-
-        """
-        return self.rand_generator.choice([0, 1])
+        return self.rand_generator.choice([LEFT, RIGHT])
 
     def agent_message(self, message):
         if message == "get state value":
-            return np.dot(self.phi, self.theta)
+            approx_v = np.dot(self.phi, self.theta)
+            return approx_v
         elif message == "get eligibility trace":
             return self.z
         elif message == "get feature matrix":
             return self.phi
         elif message == "get weight vector":
             return self.theta
-        else:
-            raise ValueError("Invalid message received.")
+        raise Exception("Unexpected message given")
 
     def agent_cleanup(self):
         pass

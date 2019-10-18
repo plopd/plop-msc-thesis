@@ -1,44 +1,221 @@
-import itertools
 import os
 
 import numpy as np
-import utils.const as const
 import yaml
-from rl_glue.rl_glue import RLGlue
-from tqdm import tqdm
-from utils.tiles import IHT
-from utils.tiles import my_tiles
 
 
 def path_exists(path):
     if not os.path.exists(path):
-        os.makedirs(path)
+        os.makedirs(path, exist_ok=True)
     return path
 
 
-def get_phi(N, n, num_ones=None, seed=None, which=None):
-    if which == "tabular":
-        return calculate_phi_with_tabular(N)
-    elif which == "random-binary":
-        return calculate_phi_with_random_binary_features(N, n, num_ones, seed)
-    elif which == "random-non-binary":
-        raise NotImplementedError
-    elif which == "state-aggregation":
-        if N == 5:
-            return calculate_phi_for_five_states_with_state_aggregation(n)
-        else:
-            raise ValueError("State aggregation work only with N=5.")
+def calculate_auc(ys):
+    auc = np.mean(ys)
+    return auc
+
+
+def get_interest(N, which):
+    if which == "uniform":
+        return np.ones(N)
+
+    raise Exception("Unexpected interest given")
+
+
+def open_yaml_file(filepath):
+    with open(filepath, "r") as stream:
+        try:
+            content = yaml.safe_load(stream)
+        except yaml.YAMLError as exc:
+            print(exc)
+    return content
+
+
+def calculate_MSVE(true_state_val, learned_state_val, state_distribution, i):
+    true_state_val = np.squeeze(true_state_val)
+    learned_state_val = np.squeeze(learned_state_val)
+    N = len(true_state_val)
+    assert len(true_state_val) == len(learned_state_val) == N
+    dmu_i = np.multiply(state_distribution, i)
+    deltas = np.square(true_state_val - learned_state_val)
+    deltas = np.multiply(dmu_i, deltas)
+    MSVE = np.sum(deltas, axis=0)
+    MSVE = MSVE / np.sum(dmu_i)
+
+    return MSVE
+
+
+def calculate_M(P_pi, Gamma, Lmbda, i, d_mu):
+    N = P_pi.shape[0]
+
+    x1 = np.matmul(P_pi, Gamma)
+    x1 = np.matmul(x1, Lmbda)
+    x1 = np.eye(N) - x1
+    x1 = np.linalg.inv(x1)
+
+    x2 = np.eye(N) - np.matmul(P_pi, Gamma)
+
+    P_pi_lmbda = np.eye(N) - np.matmul(x1, x2)
+
+    i = np.multiply(d_mu, i)
+
+    m = np.transpose(P_pi_lmbda)
+    m = np.eye(N) - m
+    m = np.linalg.inv(m)
+    m = np.dot(m, i)
+
+    M = np.diag(m)
+
+    return M
+
+
+def calculate_theta(P_pi, Gamma, Lmbda, Phi, r_pi, M):
+    N = P_pi.shape[0]
+
+    x1 = np.matmul(P_pi, Gamma)
+    x1 = np.matmul(x1, Lmbda)
+    x1 = np.eye(N) - x1
+    x1 = np.linalg.inv(x1)
+
+    x2 = np.matmul(P_pi, Gamma)
+    x2 = np.eye(N) - x2
+
+    x3 = np.matmul(x1, x2)
+
+    A = np.matmul(M, x3)
+    A = np.matmul(Phi.T, A)
+    A = np.matmul(A, Phi)
+
+    b = np.matmul(M, x1)
+    b = np.matmul(Phi.T, b)
+    b = np.dot(b, r_pi)
+
+    theta = np.dot(np.linalg.inv(A), b)
+
+    return theta, A, b
+
+
+def SolveExample(
+    P_pi, Gamma, Lmbda, Phi, r_pi, d_mu, i, true_v, which, title, logging=True, log=None
+):
+    """
+
+    Args:
+        P_pi: (N,N)
+        Gamma: (N,N)
+        Lmbda: (N,N)
+        Phi: (N, n)
+        r_pi: (N, 1)
+        d_mu: (N,)
+        i: (N,)
+        true_v: (N,)
+        which: str, either "td" or "etd"
+        title: str,
+    Returns:
+
+    """
+    if which == "etd":
+        M = calculate_M(P_pi, Gamma, Lmbda, i, d_mu)
+    elif which == "td":
+        M = np.diag(d_mu)
     else:
-        raise ValueError(
-            "Unknown feature representation."
-            "Only 'tabular', "
-            "'random-binary', "
-            "'random-non-binary', "
-            "'state-aggregation' are valid."
+        raise ValueError("only td or etd acceptable.")
+
+    theta, _, _ = calculate_theta(P_pi, Gamma, Lmbda, Phi, r_pi, M)
+    msve = calculate_MSVE(true_v, np.dot(Phi, theta), d_mu, i)
+    approx_v = np.dot(Phi, theta)
+
+    if logging:
+        log_output(
+            log,
+            theta=theta,
+            msve=msve,
+            approx_v=approx_v,
+            M=M,
+            which=which,
+            title=title,
         )
 
+    return theta, msve, approx_v, M
 
-def calculate_phi_with_random_binary_features(N, n, num_ones, seed):
+
+def TwoStateKeynoteConstant(which):
+    P_pi = np.array([[0, 1], [0, 0]])
+    Gamma = np.array([[1, 0], [0, 1]])
+    Lmbda = np.array([[0, 0], [0, 0]])
+    Phi = np.array([1, 1]).reshape((-1, 1))
+    r_pi = np.array([1, 1]).reshape((-1, 1))
+    d_mu = np.array([0.5, 0.5])
+    i = np.ones_like(d_mu)
+    true_v = np.array((2, 1)).reshape((-1, 1))
+    print(f"{TwoStateKeynoteConstant.__name__}", "\n----------------")
+    SolveExample(P_pi, Gamma, Lmbda, Phi, r_pi, d_mu, i, true_v, which)
+
+
+def TwoStateConstant(which):
+    P_pi = np.array([[0, 1], [0, 0]])
+    Gamma = np.array([[1, 0], [0, 1]])
+    Lmbda = np.array([[0, 0], [0, 0]])
+    Phi = np.array([1, 1]).reshape((-1, 1))
+    r_pi = np.array([2, 0]).reshape((-1, 1))
+    d_mu = np.array([0.5, 0.5])
+    i = np.ones_like(d_mu)
+    true_v = np.array((2, 0)).reshape((-1, 1))
+    print(f"{TwoStateConstant.__name__}", "\n----------------")
+    SolveExample(P_pi, Gamma, Lmbda, Phi, r_pi, d_mu, i, true_v, which)
+
+
+def TwoStateDependent(which):
+    P_pi = np.array([[0, 1], [0, 0]])
+    Gamma = np.array([[1, 0], [0, 0]])
+    Lmbda = np.array([[0, 0], [0, 1]])
+    Phi = np.array([1, 1]).reshape((-1, 1))
+    r_pi = np.array([2, 0]).reshape((-1, 1))
+    d_mu = np.array([0.5, 0.5])
+    i = np.array([1, 0])
+    true_v = np.array((2, 0)).reshape((-1, 1))
+    print(f"{TwoStateDependent.__name__}", "\n----------------")
+    SolveExample(P_pi, Gamma, Lmbda, Phi, r_pi, d_mu, i, true_v, which)
+
+
+def log_output(log, theta, msve, approx_v, M, which, title):
+    log.info(f"{title} -- {which.upper()}\n=================================")
+    # log.info(f"Theta:\n{theta}")
+    # log.info(f"Emphasis:\n{M}")
+    # log.info(f"Approx_v:\n{approx_v}")
+    log.info(f"MSVE:\t{msve}")
+    log.info("-----------------------------------\n")
+
+
+def get_features(N, name=None):
+    if name == "tabular":
+        return get_tabular_features(N)
+    elif name == "inverted":
+        return get_inverted_features(N)
+    elif name == "dependent":
+        return get_dependent_features(N)
+    raise Exception("Unexpected features given")
+
+
+def get_inverted_features(N):
+    features = np.array(
+        [0 if i == j else 0.5 for i in range(N) for j in range(N)]
+    ).reshape((N, N))
+
+    return features
+
+
+def get_dependent_features(N):
+    N = int(np.ceil(N / 2))
+    upper = np.tril(np.ones((N, N)), k=0)
+    lower = np.triu(np.ones((N - 1, N)), k=1)
+    features = np.vstack((upper, lower))
+    features = np.divide(features, np.linalg.norm(features, axis=1).reshape((-1, 1)))
+
+    return features
+
+
+def get_random_binary_features(N, n, num_ones, seed):
 
     np.random.seed(seed)
     num_zeros = n - num_ones
@@ -77,149 +254,59 @@ def calculate_phi_for_five_states_with_state_aggregation(n):
     return Phi
 
 
-def calculate_phi_with_tabular(N):
+def get_tabular_features(N):
     Phi = np.eye(N)
     return Phi
 
 
-def get_max_size_iht(num_tilings, num_tiles):
-    max_size_iht = (num_tiles + 1) * (num_tiles + 1) * num_tilings
-    return max_size_iht
+if __name__ == "__main__":
+    pass
+    # calculate_v_chain(19)
+    # calculate_state_distribution(19)
+    # TwoStateKeynoteConstant(which="td")
+    # TwoStateKeynoteConstant(which="etd")
 
+    # TwoStateConstant(which="td")
+    # TwoStateConstant(which="etd")
+    #
+    # TwoStateDependent(which="td")
+    # TwoStateDependent(which="etd")
 
-def calculate_phi_with_tile_coding(
-    num_tilings,
-    num_tiles,
-    src_left_bound,
-    src_right_bound,
-    dst_left_bound,
-    dst_right_bound,
-    num_states,
-):
-    max_size_iht = get_max_size_iht(num_tilings=num_tilings, num_tiles=num_tiles)
-    iht = IHT(max_size_iht)
-    feature_matrix = np.zeros((num_states, max_size_iht))
-    for idx_state, state in enumerate(range(1, num_states + 1)):
-        feature_state = np.zeros(max_size_iht)
-        idx_active_tiles = my_tiles(
-            iht,
-            num_tilings,
-            state,
-            src_left_bound,
-            src_right_bound,
-            dst_left_bound,
-            dst_right_bound,
-        )
-        feature_state[idx_active_tiles] = 1
-        feature_matrix[idx_state] = feature_state
+    # SolveExample(
+    #     P_pi=np.array([[0, 1, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1], [0, 0, 0, 0]]),
+    #     Gamma=np.array([[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1]]),
+    #     Lmbda=np.array([[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]]),
+    #     Phi=np.array([[1, 0], [1, 0], [0, 1], [0, 1]]),
+    #     r_pi=np.array([1, 1, 1, 1]).reshape((-1, 1)),
+    #     d_mu=np.array([0.25, 0.25, 0.25, 0.25]),
+    #     i=np.array([1, 0, 0, 0]),
+    #     true_v=np.array([4, 3, 2, 1]).reshape((-1, 1)),
+    #     which="etd",
+    #     title="###### Example 9.5: Interest and Emphasis",
+    # )
 
-    return feature_matrix
+    # SolveExample(
+    #     P_pi=np.array([[0, 1, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1], [0, 0, 0, 0]]),
+    #     Gamma=np.array([[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1]]),
+    #     Lmbda=np.array([[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]]),
+    #     Phi=np.array([[1, 0], [1, 0], [0, 1], [0, 1]]),
+    #     r_pi=np.array([1, 1, 1, 1]).reshape((-1, 1)),
+    #     d_mu=np.array([0.25, 0.25, 0.25, 0.25]),
+    #     i=np.array([0, 0, 1, 0]),  # or [0, 0, 0, 1] results in Singular matrix!
+    #     true_v=np.array([4, 3, 2, 1]).reshape((-1, 1)),
+    #     which="etd",
+    #     title="Example 9.5: Interest and Emphasis"
+    # )
 
-
-def calculate_irmsve(true_state_val, learned_state_val, state_distribution, num_states):
-    assert len(true_state_val) == len(learned_state_val) == num_states
-    interest = np.ones(num_states)
-    weighting_factor = np.multiply(state_distribution, interest)
-    imsve = np.sum(
-        np.multiply(weighting_factor, np.square(true_state_val - learned_state_val))
-    )
-    imsve_normalized = 1 / np.sum(weighting_factor) * imsve
-    irmsve = np.sqrt(imsve_normalized)
-
-    return irmsve
-
-
-def calculate_auc(ys):
-    auc = np.mean(ys)
-    return auc
-
-
-def _zip_with_scalar(l, e):
-    return [(e, i) for i in l]
-
-
-def export_params_from_config_random_walk(cfg):
-    with open(f"{const.PATHS['project_path']}/src/configs/{cfg}.yaml", "r") as stream:
-        try:
-            struct = yaml.safe_load(stream)
-        except yaml.YAMLError as exc:
-            print(exc)
-
-    lst = []
-    for k, v in struct["agent_info"].items():
-        lst.append(_zip_with_scalar(v, k))
-    for kk, vv in struct["env_info"].items():
-        lst.append(_zip_with_scalar(vv, kk))
-    for kkk, vvv in struct["experiment_info"].items():
-        lst.append(_zip_with_scalar(vvv, kkk))
-
-    with open(f"{const.PATHS['project_path']}/src/configs/{cfg}.dat", "w") as f:
-        for param_conf in itertools.product(*lst):
-            line = " ".join(
-                [f"{param_key}={param_val}" for (param_key, param_val) in param_conf]
-            )
-            line = "export " + line
-            print(line, file=f)
-
-
-def _open_yaml_file(filepath):
-    with open(filepath, "r") as stream:
-        try:
-            file = yaml.safe_load(stream)
-        except yaml.YAMLError as exc:
-            print(exc)
-    return file
-
-
-def calculate_true_v(cfg):
-    struct = _open_yaml_file(f"{const.PATHS['project_path']}/src/configs/{cfg}.yaml")
-
-    agent_info = struct["agent_info"]
-    env_info = struct["env_info"]
-    experiment_info = struct["experiment_info"]
-
-    rl_glue = RLGlue(const.ENVS[env_info["env"]], const.AGENTS[agent_info["agent"]])
-
-    rl_glue.rl_init(agent_info, env_info)
-    for _ in tqdm(range(1, experiment_info["n_episodes"] + 1)):
-        rl_glue.rl_episode(experiment_info["max_timesteps_episode"])
-
-    true_v = rl_glue.rl_agent_message("get state value")
-
-    np.save(
-        f"{const.PATHS['project_path']}/data/true_v_"
-        f"{struct['agent_info']['N']}_states_random_walk",
-        true_v,
-    )
-
-    return true_v
-
-
-def calculate_state_distribution(cfg):
-    struct = _open_yaml_file(f"{const.PATHS['project_path']}/src/configs/{cfg}.yaml")
-
-    agent_info = struct["agent_info"]
-    env_info = struct["env_info"]
-    experiment_info = struct["experiment_info"]
-
-    rl_glue = RLGlue(const.ENVS[env_info["env"]], const.AGENTS[agent_info["agent"]])
-
-    rl_glue.rl_init(agent_info, env_info)
-
-    eta = np.zeros(env_info["N"])
-    last_state, _ = rl_glue.rl_start()
-    for _ in tqdm(range(1, int(experiment_info["max_timesteps_episode"]) + 1)):
-        eta[last_state - 1] += 1
-        _, last_state, _, term = rl_glue.rl_step()
-        if term:
-            last_state, _ = rl_glue.rl_start()
-
-    state_distribution = eta / np.sum(eta)
-
-    np.save(
-        f"{const.PATHS['project_path']}/data/state_distribution_"
-        f"{struct['agent_info']['N']}_states_random_walk",
-        state_distribution,
-    )
-
-    return state_distribution
+    # SolveExample(
+    #     P_pi=np.array([[0, 1, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1], [0, 0, 0, 0]]),
+    #     Gamma=np.array([[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1]]),
+    #     Lmbda=np.array([[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]]),
+    #     Phi=np.array([[1, 0], [1, 0], [0, 1], [0, 1]]),
+    #     r_pi=np.array([1, 1, 1, 1]).reshape((-1, 1)),
+    #     d_mu=np.array([0.25, 0.25, 0.25, 0.25]),
+    #     i=np.array([1, 0, 0, 1]),
+    #     true_v=np.array([4, 3, 2, 1]).reshape((-1, 1)),
+    #     which="etd",
+    #     title="###### Example 9.5: Interest and Emphasis",
+    # )
