@@ -9,12 +9,13 @@ from alphaex.submitter import Submitter
 def run_submit():
 
     exp_results_rootpath = "/home/plopd/scratch/chain19"
+    project_root_dir = "/home/plopd/plop-msc-thesis"
 
     clusters = [
         {
             "name": "mp2b",
             "capacity": 10,
-            "project_root_dir": "/home/plopd/plop-msc-thesis",
+            "project_root_dir": project_root_dir,
             "exp_results_from": [
                 f"{exp_results_rootpath}/output",
                 f"{exp_results_rootpath}/error",
@@ -27,7 +28,7 @@ def run_submit():
         {
             "name": "cedar",
             "capacity": 10,
-            "project_root_dir": "/home/plopd",
+            "project_root_dir": project_root_dir,
             "exp_results_from": [
                 f"{exp_results_rootpath}/output",
                 f"{exp_results_rootpath}/error",
