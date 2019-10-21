@@ -1,5 +1,5 @@
-import os
 import sys
+from pathlib import Path
 
 from alphaex.sweeper import Sweeper
 from experiments.chain_experiment import ChainExp
@@ -7,12 +7,24 @@ from experiments.chain_experiment import ChainExp
 
 def main():
     sweep_id = int(sys.argv[1])  # sys.argv returns str
-    cfg_dir = "configs/"
     sweep_file_name = "chain.json"
-    sweeper = Sweeper(os.path.join(cfg_dir, sweep_file_name))
+    sweeper = Sweeper(f"{Path(__file__).parents[1]}/configs/{sweep_file_name}")
     param_cfg = sweeper.parse(sweep_id)
 
-    print(param_cfg)
+    report = (
+        "idx: %d\nrun: %d\nenv: %s\nN: %d\nalgorithm: %s\nalpha: "
+        "%s\nfeatures: %s\n"
+        % (
+            sweep_id,
+            param_cfg.get("run", None),
+            param_cfg.get("env", None),
+            param_cfg.get("N", None),
+            param_cfg.get("algorithm", None),
+            param_cfg.get("alpha", None),
+            param_cfg.get("features", None),
+        )
+    )
+    print(report)
 
     agent_info = {
         "N": param_cfg["N"],
@@ -21,7 +33,7 @@ def main():
         "gamma": param_cfg["gamma"],
         "lmbda": param_cfg["lmbda"],
         "alpha": param_cfg["alpha"],
-        "seed": sweep_id,
+        "seed": param_cfg["run"],
         "interest": param_cfg["interest"],
     }
 
@@ -29,7 +41,7 @@ def main():
 
     exp_info = {
         "id": sweep_id,
-        "max_timesteps_episode": param_cfg["max_timesteps_episode"],
+        "max_episode_steps": param_cfg["max_episode_steps"],
         "episode_eval_freq": param_cfg["episode_eval_freq"],
         "n_episodes": param_cfg["n_episodes"],
         "output_dir": param_cfg["output_dir"],

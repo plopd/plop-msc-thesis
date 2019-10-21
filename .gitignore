@@ -1,6 +1,2 @@
 .idea/*
-data/*
-venv-thesis-code/*
 *.pytest_cache/*
-*.dat
-output/*

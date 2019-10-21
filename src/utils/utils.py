@@ -1,7 +1,6 @@
 import os
 
 import numpy as np
-import yaml
 
 
 def path_exists(path):
@@ -15,34 +14,28 @@ def calculate_auc(ys):
     return auc
 
 
-def get_interest(N, which):
-    if which == "uniform":
+def get_interest(N, name):
+    if name == "uniform":
         return np.ones(N)
+    elif name == "random binary":
+        raise NotImplementedError
 
     raise Exception("Unexpected interest given")
 
 
-def open_yaml_file(filepath):
-    with open(filepath, "r") as stream:
-        try:
-            content = yaml.safe_load(stream)
-        except yaml.YAMLError as exc:
-            print(exc)
-    return content
-
-
-def calculate_MSVE(true_state_val, learned_state_val, state_distribution, i):
+def calc_rmsve(true_state_val, learned_state_val, state_distribution, interest):
     true_state_val = np.squeeze(true_state_val)
     learned_state_val = np.squeeze(learned_state_val)
-    N = len(true_state_val)
-    assert len(true_state_val) == len(learned_state_val) == N
-    dmu_i = np.multiply(state_distribution, i)
+    assert len(true_state_val) == len(learned_state_val)
+    dmu_i = np.multiply(state_distribution, interest)
     deltas = np.square(true_state_val - learned_state_val)
     deltas = np.multiply(dmu_i, deltas)
-    MSVE = np.sum(deltas, axis=0)
-    MSVE = MSVE / np.sum(dmu_i)
+    msve = np.sum(deltas, axis=0)
+    msve = msve / np.sum(dmu_i)
 
-    return MSVE
+    rmsve = np.sqrt(msve)
+
+    return rmsve
 
 
 def calculate_M(P_pi, Gamma, Lmbda, i, d_mu):
@@ -122,7 +115,7 @@ def SolveExample(
         raise ValueError("only td or etd acceptable.")
 
     theta, _, _ = calculate_theta(P_pi, Gamma, Lmbda, Phi, r_pi, M)
-    msve = calculate_MSVE(true_v, np.dot(Phi, theta), d_mu, i)
+    msve = calc_rmsve(true_v, np.dot(Phi, theta), d_mu, i)
     approx_v = np.dot(Phi, theta)
 
     if logging:
@@ -199,7 +192,7 @@ def get_features(N, name=None):
 
 def get_inverted_features(N):
     features = np.array(
-        [0 if i == j else 0.5 for i in range(N) for j in range(N)]
+        [0 if i == j else 1 / np.sqrt(N - 1) for i in range(N) for j in range(N)]
     ).reshape((N, N))
 
     return features
@@ -255,8 +248,8 @@ def calculate_phi_for_five_states_with_state_aggregation(n):
 
 
 def get_tabular_features(N):
-    Phi = np.eye(N)
-    return Phi
+    features = np.eye(N)
+    return features
 
 
 if __name__ == "__main__":

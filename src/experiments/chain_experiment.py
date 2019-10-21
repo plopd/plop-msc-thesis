@@ -1,4 +1,5 @@
 import os
+from pathlib import Path
 
 import agents.agents as agents
 import environments.environments as envs
@@ -7,7 +8,7 @@ from experiments.experiment import BaseExperiment
 from rl_glue.rl_glue import RLGlue
 from utils.calculate_state_distribution_chain import calculate_state_distribution
 from utils.calculate_value_function_chain import calculate_v_chain
-from utils.utils import calculate_MSVE
+from utils.utils import calc_rmsve
 from utils.utils import get_interest
 from utils.utils import path_exists
 
@@ -27,9 +28,9 @@ class ChainExp(BaseExperiment):
 
         self.n_episodes = experiment_info["n_episodes"]
         self.episode_eval_freq = experiment_info["episode_eval_freq"]
-        self.output_dir = f"{experiment_info['output_dir']}"
+        self.output_dir = f"{Path(__file__).parents[3]}/{experiment_info['output_dir']}"
         self.id = experiment_info["id"]
-        self.max_timesteps_episode = experiment_info["max_timesteps_episode"]
+        self.max_episode_steps = experiment_info["max_episode_steps"]
 
         self.i = get_interest(self.N, agent_info["interest"])
 
@@ -58,39 +59,39 @@ class ChainExp(BaseExperiment):
 
     def run_experiment(self):
         self.init_experiment()
-        self._learn_one_run()
-        self.save()
+        self.learn_run()
+        self.save_experiment()
 
-    def _learn_one_run(self):
+    def learn_run(self):
         self.rl_glue.rl_init(
             agent_init_info=self.agent_info, env_init_info=self.env_info
         )
 
         current_approx_v = self.rl_glue.rl_agent_message("get state value")
-        self.error[0] = calculate_MSVE(
+        self.error[0] = calc_rmsve(
             true_state_val=self.true_v,
             learned_state_val=current_approx_v,
             state_distribution=self.state_distribution,
-            i=self.i,
+            interest=self.i,
         )
         for self.episode in range(1, self.n_episodes + 1):
-            self._learn_one_episode()
+            self.learn_episode()
 
-    def _learn_one_episode(self):
+    def learn_episode(self):
         self.rl_glue.rl_episode(0)
 
         if self.episode % self.episode_eval_freq == 0:
             current_approx_v = self.rl_glue.rl_agent_message("get state value")
-            self.error[self.episode // self.episode_eval_freq] = calculate_MSVE(
+            self.error[self.episode // self.episode_eval_freq] = calc_rmsve(
                 true_state_val=self.true_v,
                 learned_state_val=current_approx_v,
                 state_distribution=self.state_distribution,
-                i=self.i,
+                interest=self.i,
             )
         elif self.episode == self.n_episodes:
             self.rl_glue.rl_agent_message("get state value")
 
-    def save(self):
+    def save_experiment(self):
         np.save(f"{self.output_dir}/{self.id}_error", self.error)
 
     def cleanup_experiment(self):

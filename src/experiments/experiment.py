@@ -20,7 +20,7 @@ class BaseExperiment:
         """
 
     @abstractmethod
-    def save(self):
+    def save_experiment(self):
         """
 
         Returns:
@@ -36,7 +36,7 @@ class BaseExperiment:
         """
 
     @abstractmethod
-    def _learn_one_run(self):
+    def learn_run(self):
         """
 
         Returns:
@@ -44,7 +44,7 @@ class BaseExperiment:
         """
 
     @abstractmethod
-    def _learn_one_episode(self):
+    def learn_episode(self):
         """
 
         Returns:

@@ -10,21 +10,34 @@ def run_submit():
     clusters = [
         {
             "name": "mp2b",
-            "capacity": 500,
+            "capacity": 1000,
             "project_root_dir": "/home/plopd/plop-msc-thesis/src",
             "exp_results_from": [
-                "/home/plopd/scratch/chain_five/output",
-                "/home/plopd/scratch/chain_five/error",
+                "/home/plopd/scratch/chain/output",
+                "/home/plopd/scratch/chain/error",
             ],
             "exp_results_to": [
-                "/home/plopd/scratch/chain_five/output",
-                "/home/plopd/scratch/chain_five/error",
+                "/home/plopd/scratch/chain/output",
+                "/home/plopd/scratch/chain/error",
             ],
-        }
+        },
+        {
+            "name": "cedar",
+            "capacity": 1000,
+            "project_root_dir": "/home/plopd/plop-msc-thesis/src",
+            "exp_results_from": [
+                "/home/plopd/scratch/chain/output",
+                "/home/plopd/scratch/chain/error",
+            ],
+            "exp_results_to": [
+                "/home/plopd/scratch/chain/output",
+                "/home/plopd/scratch/chain/error",
+            ],
+        },
     ]
-    num_jobs = 84  # one job = one param setting with one single run
+    num_jobs = 84  # =num_combinations x n_runs
     # repo_url = None  # git repo of experiment code
-    script_path = "/home/plopd/plop-msc-thesis/src/submit_slurm.sh"
+    script_path = "/home/plopd/plop-msc-thesis/src/slurm_submit.sh"
     submitter = Submitter(clusters, num_jobs, script_path)
     submitter.submit()
 

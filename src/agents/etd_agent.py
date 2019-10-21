@@ -1,12 +1,13 @@
 import numpy as np
 from agents.td_agent import TD
+from utils.utils import get_interest
 
 
 class ETD(TD):
     def agent_init(self, agent_info):
 
         super(ETD, self).agent_init(agent_info)
-        self.i = 1.0
+        self.i = get_interest(self.N, agent_info["interest"])
         self.F = 0.0
         self.M = 0.0
 
@@ -24,8 +25,8 @@ class ETD(TD):
         last_state_feature = self.phi[self.s_t - 1]
 
         # cf. Eq. 20-17 http://www.jmlr.org/papers/volume17/14-488/14-488.pdf
-        self.F = self.gamma * self.F + self.i
-        self.M = self.lmbda * self.i + (1 - self.lmbda) * self.F
+        self.F = self.gamma * self.F + self.i[self.s_t - 1]
+        self.M = self.lmbda * self.i[self.s_t - 1] + (1 - self.lmbda) * self.F
         self.z = self.gamma * self.lmbda * self.z + self.M * last_state_feature
 
         td_error = (
@@ -47,8 +48,8 @@ class ETD(TD):
     def agent_end(self, reward):
         last_state_feature = self.phi[self.s_t - 1]
 
-        self.F = self.gamma * self.F + self.i
-        self.M = self.lmbda * self.i + (1 - self.lmbda) * self.F
+        self.F = self.gamma * self.F + self.i[self.s_t - 1]
+        self.M = self.lmbda * self.i[self.s_t - 1] + (1 - self.lmbda) * self.F
 
         self.z = self.gamma * self.lmbda * self.z + self.M * last_state_feature
 
