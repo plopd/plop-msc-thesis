@@ -1,5 +1,4 @@
 import os
-from pathlib import Path
 
 import numpy as np
 
@@ -29,7 +28,7 @@ class ChainExp(BaseExperiment):
 
         self.n_episodes = experiment_info["n_episodes"]
         self.episode_eval_freq = experiment_info["episode_eval_freq"]
-        self.output_dir = f"{Path(__file__).parents[3]}/{experiment_info['output_dir']}"
+        self.output_dir = f"~/{experiment_info['output_dir']}"
         self.id = experiment_info["id"]
         self.max_episode_steps = experiment_info["max_episode_steps"]
 

@@ -39,13 +39,11 @@ def run_submit():
             ],
         },
     ]
-    num_jobs = 20  # =num_combinations x n_runs
+    num_jobs = 20
     repo_url = (
         "https://github.com/plopd/plop-msc-thesis.git"
     )  # git repo of experiment code
-    script_path = (
-        "/home/plopd/projects/def-sutton/plopd/plop-msc-thesis/slurm_submit.sh"
-    )
+    script_path = "slurm_submit.sh"
     submitter = Submitter(clusters, num_jobs, script_path, repo_url=repo_url)
     submitter.submit()
 
