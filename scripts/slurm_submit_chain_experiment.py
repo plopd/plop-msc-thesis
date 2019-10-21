@@ -44,7 +44,7 @@ def run_submit():
         "https://github.com/plopd/plop-msc-thesis.git"
     )  # git repo of experiment code
     script_path = (
-        "/home/plopd/projects/def-sutton/plopd/plop-msc-thesis/src/slurm_submit.sh"
+        "/home/plopd/projects/def-sutton/plopd/plop-msc-thesis/slurm_submit.sh"
     )
     submitter = Submitter(clusters, num_jobs, script_path, repo_url=repo_url)
     submitter.submit()

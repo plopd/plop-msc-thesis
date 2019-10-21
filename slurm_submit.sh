@@ -3,7 +3,7 @@
 #SBATCH --account=def-sutton
 #SBATCH --time=00:10:00
 #SBATCH --mem-per-cpu=500M
-#SBATCH --job-name /home/plopd/projects/def-sutton/plopd/plop-msc-thesis/src/slurm_submit.sh
+#SBATCH --job-name /home/plopd/projects/def-sutton/plopd/plop-msc-thesis/slurm_submit.sh
 #SBATCH --output=/home/plopd/scratch/chain19/output/submit_%a.txt
 #SBATCH --error=/home/plopd/scratch/chain19/error/submit_%a.txt
 

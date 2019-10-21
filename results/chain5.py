@@ -1,6 +1,6 @@
 from analysis.results import Result
 
-cfg_dir = "src/configs"
+cfg_dir = "configs"
 sweep_file_name = "chain.json"
 path = "/Users/saipiens/repos/data-plop-msc-thesis"
 exp = "chain"

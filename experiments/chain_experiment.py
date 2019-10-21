@@ -1,9 +1,10 @@
 import os
 from pathlib import Path
 
+import numpy as np
+
 import agents.agents as agents
 import environments.environments as envs
-import numpy as np
 from experiments.experiment import BaseExperiment
 from rl_glue.rl_glue import RLGlue
 from utils.calculate_state_distribution_chain import calculate_state_distribution

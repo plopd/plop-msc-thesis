@@ -2,6 +2,7 @@ import logging
 import os
 
 import numpy as np
+
 from utils.utils import SolveExample
 
 log = logging.getLogger(__name__)

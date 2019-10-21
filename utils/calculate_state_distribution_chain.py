@@ -1,10 +1,11 @@
 import sys
 
+import numpy as np
+from tqdm import tqdm
+
 import agents.agents as agents
 import environments.environments as envs
-import numpy as np
 from rl_glue.rl_glue import RLGlue
-from tqdm import tqdm
 
 
 def calculate_state_distribution(N):
