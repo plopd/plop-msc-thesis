@@ -16,33 +16,19 @@ def run_submit():
             "name": "mp2b",
             "capacity": 10,
             "project_root_dir": project_root_dir,
-            "exp_results_from": [
-                f"{exp_results_rootpath}/output",
-                f"{exp_results_rootpath}/error",
-            ],
-            "exp_results_to": [
-                f"{exp_results_rootpath}/output",
-                f"{exp_results_rootpath}/error",
-            ],
+            "exp_results_from": [f"{exp_results_rootpath}"],
+            "exp_results_to": [f"{exp_results_rootpath}"],
         },
         {
             "name": "cedar",
             "capacity": 10,
             "project_root_dir": project_root_dir,
-            "exp_results_from": [
-                f"{exp_results_rootpath}/output",
-                f"{exp_results_rootpath}/error",
-            ],
-            "exp_results_to": [
-                f"{exp_results_rootpath}/output",
-                f"{exp_results_rootpath}/error",
-            ],
+            "exp_results_from": [f"{exp_results_rootpath}"],
+            "exp_results_to": [f"{exp_results_rootpath}"],
         },
     ]
     num_jobs = 20
-    repo_url = (
-        "https://github.com/plopd/plop-msc-thesis.git"
-    )  # git repo of experiment code
+    repo_url = "https://github.com/plopd/plop-msc-thesis.git"
     script_path = "slurm_submit.sh"
     submitter = Submitter(clusters, num_jobs, script_path, repo_url=repo_url)
     submitter.submit()
