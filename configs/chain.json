@@ -7,7 +7,7 @@
 					"n_episodes": [100],
 					"max_episode_steps": [0],
 					"episode_eval_freq": [1],
-					"output_dir": ["scratch/chain19"]
+					"output_dir": ["/home/plopd/scratch/chain19"]
 				}
 			],
 	        "simulator": [

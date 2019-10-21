@@ -28,7 +28,7 @@ class ChainExp(BaseExperiment):
 
         self.n_episodes = experiment_info["n_episodes"]
         self.episode_eval_freq = experiment_info["episode_eval_freq"]
-        self.output_dir = f"~/{experiment_info['output_dir']}"
+        self.output_dir = f"{experiment_info['output_dir']}"
         self.id = experiment_info["id"]
         self.max_episode_steps = experiment_info["max_episode_steps"]
 
@@ -43,6 +43,7 @@ class ChainExp(BaseExperiment):
         self.run = 0
 
         path = f"{self.output_dir}/true_v.npy"
+
         if not os.path.isfile(path):
             true_v = calculate_v_chain(agent_info["N"])
             np.save(path, true_v)
