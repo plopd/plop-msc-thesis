@@ -28,7 +28,7 @@ class ChainExp(BaseExperiment):
 
         self.n_episodes = experiment_info["n_episodes"]
         self.episode_eval_freq = experiment_info["episode_eval_freq"]
-        self.output_dir = f"{experiment_info['output_dir']}"
+        self.output_dir = f"{experiment_info['output_dir']}/output"
         self.id = experiment_info["id"]
         self.max_episode_steps = experiment_info["max_episode_steps"]
 
