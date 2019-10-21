@@ -4,8 +4,8 @@
 #SBATCH --time=00:10:00
 #SBATCH --mem-per-cpu=500M
 #SBATCH --job-name /home/plopd/plop-msc-thesis/src/slurm_submit.sh
-#SBATCH --output=/home/plopd/scratch/chain/output/submit_%a.txt
-#SBATCH --error=/home/plopd/scratch/chain/error/submit_%a.txt
+#SBATCH --output=/home/plopd/scratch/chain19/output/submit_%a.txt
+#SBATCH --error=/home/plopd/scratch/chain19/error/submit_%a.txt
 
 export OMP_NUM_THREADS=1
 
