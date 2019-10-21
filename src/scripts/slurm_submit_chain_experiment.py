@@ -14,7 +14,7 @@ def run_submit():
         {
             "name": "mp2b",
             "capacity": 10,
-            "project_root_dir": "/home/plopd",
+            "project_root_dir": "/home/plopd/plop-msc-thesis",
             "exp_results_from": [
                 f"{exp_results_rootpath}/output",
                 f"{exp_results_rootpath}/error",
