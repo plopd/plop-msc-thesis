@@ -7,18 +7,21 @@ from alphaex.submitter import Submitter
 
 
 def run_submit():
+
+    exp_results_rootpath = "/home/plopd/scratch/chain19"
+
     clusters = [
         {
             "name": "mp2b",
             "capacity": 10,
             "project_root_dir": "/home/plopd",
             "exp_results_from": [
-                "/home/plopd/scratch/chain/output",
-                "/home/plopd/scratch/chain/error",
+                f"{exp_results_rootpath}/output",
+                f"{exp_results_rootpath}/error",
             ],
             "exp_results_to": [
-                "/home/plopd/scratch/chain/output",
-                "/home/plopd/scratch/chain/error",
+                f"{exp_results_rootpath}/output",
+                f"{exp_results_rootpath}/error",
             ],
         },
         {
@@ -26,12 +29,12 @@ def run_submit():
             "capacity": 10,
             "project_root_dir": "/home/plopd",
             "exp_results_from": [
-                "/home/plopd/scratch/chain/output",
-                "/home/plopd/scratch/chain/error",
+                f"{exp_results_rootpath}/output",
+                f"{exp_results_rootpath}/error",
             ],
             "exp_results_to": [
-                "/home/plopd/scratch/chain/output",
-                "/home/plopd/scratch/chain/error",
+                f"{exp_results_rootpath}/output",
+                f"{exp_results_rootpath}/error",
             ],
         },
     ]
