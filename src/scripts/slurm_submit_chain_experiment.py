@@ -9,7 +9,7 @@ from alphaex.submitter import Submitter
 def run_submit():
 
     exp_results_rootpath = "/home/plopd/scratch/chain19"
-    project_root_dir = "/home/plopd/plop-msc-thesis"
+    project_root_dir = "/home/plopd/projects/def-sutton/plopd/plop-msc-thesis"
 
     clusters = [
         {
@@ -43,7 +43,9 @@ def run_submit():
     repo_url = (
         "https://github.com/plopd/plop-msc-thesis.git"
     )  # git repo of experiment code
-    script_path = "/home/plopd/plop-msc-thesis/src/slurm_submit.sh"
+    script_path = (
+        "/home/plopd/projects/def-sutton/plopd/plop-msc-thesis/src/slurm_submit.sh"
+    )
     submitter = Submitter(clusters, num_jobs, script_path, repo_url=repo_url)
     submitter.submit()
 
