@@ -16,5 +16,5 @@ echo "Current working directory is $(pwd)"
 echo "Running on hostname $(hostname)"
 echo "Starting run at: $(date)"
 
-python -m scripts.chain_experiment "${SLURM_ARRAY_TASK_ID}"
+python -m scripts.run_chain_experiment "${SLURM_ARRAY_TASK_ID}"
 echo "Finished with exit code $? at: $(date)"

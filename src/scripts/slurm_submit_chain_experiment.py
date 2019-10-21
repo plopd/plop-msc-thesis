@@ -10,7 +10,7 @@ def run_submit():
     clusters = [
         {
             "name": "mp2b",
-            "capacity": 1000,
+            "capacity": 10,
             "project_root_dir": "/home/plopd/plop-msc-thesis/src",
             "exp_results_from": [
                 "/home/plopd/scratch/chain/output",
@@ -23,7 +23,7 @@ def run_submit():
         },
         {
             "name": "cedar",
-            "capacity": 1000,
+            "capacity": 10,
             "project_root_dir": "/home/plopd/plop-msc-thesis/src",
             "exp_results_from": [
                 "/home/plopd/scratch/chain/output",
@@ -35,7 +35,7 @@ def run_submit():
             ],
         },
     ]
-    num_jobs = 84  # =num_combinations x n_runs
+    num_jobs = 20  # =num_combinations x n_runs
     # repo_url = None  # git repo of experiment code
     script_path = "/home/plopd/plop-msc-thesis/src/slurm_submit.sh"
     submitter = Submitter(clusters, num_jobs, script_path)

@@ -12,7 +12,6 @@ py==1.8.0
 pyparsing==2.4.2
 pytest==5.2.1
 python-dateutil==2.8.0
-PyYAML==5.1.2
 six==1.12.0
 tqdm==4.36.1
 wcwidth==0.1.7

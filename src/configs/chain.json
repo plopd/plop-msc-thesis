@@ -4,16 +4,16 @@
 	    {
 			"experiment": [
 				{
-					"n_episodes": [2],
+					"n_episodes": [100],
 					"max_episode_steps": [0],
 					"episode_eval_freq": [1],
-					"output_dir": ["scratch/chain5"]
+					"output_dir": ["scratch/chain19"]
 				}
 			],
 	        "simulator": [
 				{
 					"env": ["chain"],
-					"N": [5]
+					"N": [19]
 				}
 			],
 	        "learner": [
