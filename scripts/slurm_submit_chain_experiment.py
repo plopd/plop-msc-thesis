@@ -14,7 +14,7 @@ def run_submit():
     clusters = [
         {
             "name": "mp2b",
-            "capacity": 10,
+            "capacity": 20,
             "project_root_dir": project_root_dir,
             "exp_results_from": [
                 f"{exp_results_rootpath}/output",
@@ -24,20 +24,20 @@ def run_submit():
                 f"{exp_results_rootpath}/output",
                 f"{exp_results_rootpath}/error",
             ],
-        },
-        {
-            "name": "cedar",
-            "capacity": 10,
-            "project_root_dir": project_root_dir,
-            "exp_results_from": [
-                f"{exp_results_rootpath}/output",
-                f"{exp_results_rootpath}/error",
-            ],
-            "exp_results_to": [
-                f"{exp_results_rootpath}/output",
-                f"{exp_results_rootpath}/error",
-            ],
-        },
+        }
+        # {
+        #     "name": "cedar",
+        #     "capacity": 10,
+        #     "project_root_dir": project_root_dir,
+        #     "exp_results_from": [
+        #         f"{exp_results_rootpath}/output",
+        #         f"{exp_results_rootpath}/error",
+        #     ],
+        #     "exp_results_to": [
+        #         f"{exp_results_rootpath}/output",
+        #         f"{exp_results_rootpath}/error",
+        #     ],
+        # },
     ]
     num_jobs = 20
     repo_url = (
