@@ -8,13 +8,13 @@ from alphaex.submitter import Submitter
 
 def run_submit():
 
-    exp_results_rootpath = "/home/plopd/scratch/chain19"
+    exp_results_rootpath = "/home/plopd/scratch/chain"
     project_root_dir = "/home/plopd/projects/def-sutton/plopd/plop-msc-thesis"
 
     clusters = [
         {
             "name": "mp2b",
-            "capacity": 20,
+            "capacity": 1000,
             "project_root_dir": project_root_dir,
             "exp_results_from": [
                 f"{exp_results_rootpath}/output",
@@ -39,7 +39,7 @@ def run_submit():
         #     ],
         # },
     ]
-    num_jobs = 20
+    num_jobs = 2000
     repo_url = (
         "https://github.com/plopd/plop-msc-thesis.git"
     )  # git repo of experiment code

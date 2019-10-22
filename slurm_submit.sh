@@ -1,11 +1,11 @@
 #!/bin/bash
 
 #SBATCH --account=def-sutton
-#SBATCH --time=00:10:00
-#SBATCH --mem-per-cpu=500M
+#SBATCH --time=01:00:00
+#SBATCH --mem-per-cpu=1G
 #SBATCH --job-name slurm_submit.sh
-#SBATCH --output=/home/plopd/scratch/chain19/output/submit_%a.txt
-#SBATCH --error=/home/plopd/scratch/chain19/error/submit_%a.txt
+#SBATCH --output=/home/plopd/scratch/chain/output/submit_%a.txt
+#SBATCH --error=/home/plopd/scratch/chain/error/submit_%a.txt
 
 export OMP_NUM_THREADS=1
 

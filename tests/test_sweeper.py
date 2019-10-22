@@ -5,7 +5,7 @@ from alphaex.sweeper import Sweeper
 
 def test_sweeper():
     sweep_file_name = "chain.json"
-    num_runs = 1
+    num_runs = 100
     # test Sweeper.parse
     sweeper = Sweeper(f"{Path(__file__).parents[1]}/configs/{sweep_file_name}")
     for sweep_id in range(0, sweeper.total_combinations * num_runs):

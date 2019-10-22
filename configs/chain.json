@@ -4,16 +4,16 @@
 	    {
 			"experiment": [
 				{
-					"n_episodes": [100],
+					"n_episodes": [100000],
 					"max_episode_steps": [0],
 					"episode_eval_freq": [1],
-					"output_dir": ["/home/plopd/scratch/chain19"]
+					"output_dir": ["/home/plopd/scratch/chain"]
 				}
 			],
 	        "simulator": [
 				{
 					"env": ["chain"],
-					"N": [19]
+					"N": [5, 19]
 				}
 			],
 	        "learner": [
@@ -22,7 +22,7 @@
 	                "alpha": [0.5, 0.125, 0.03125, 0.015625, 0.0078125, 0.00390625, 0.001953125, 0.00048828125, 0.0001220703125, 0.00006103515625],
 					"gamma": [1.0],
 					"lmbda": [0.0],
-					"features": ["dependent"],
+					"features": ["tabular", "dependent", "inverted"],
 					"interest": ["uniform"]
 	            },
 				{
@@ -30,7 +30,7 @@
 	                "alpha": [0.03125, 0.015625, 0.0078125, 0.00390625, 0.001953125, 0.0009765625, 0.00048828125, 0.000244140625, 0.0001220703125, 0.000030517578125],
 					"gamma": [1.0],
 					"lmbda": [0.0],
-					"features": ["dependent"],
+					"features": ["tabular", "dependent", "inverted"],
 					"interest": ["uniform"]
 	            }
 	        ]
