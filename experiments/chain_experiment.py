@@ -42,14 +42,15 @@ class ChainExp(BaseExperiment):
         self.episode = 0
         self.run = 0
 
-        path = f"{experiment_info['output_dir']}/true_v.npy"
+        path = f"{experiment_info['output_dir']}/true_v_{self.N}.npy"
 
         if not os.path.isfile(path):
             true_v = calculate_v_chain(agent_info["N"])
             np.save(path, true_v)
         self.true_v = np.load(path, allow_pickle=True)
 
-        path = f"{experiment_info['output_dir']}/state_distribution.npy"
+        path = f"{experiment_info['output_dir']}/state_distribution_{self.N}.npy"
+
         if not os.path.isfile(path):
             state_dist = calculate_state_distribution(agent_info["N"])
             np.save(path, state_dist)
