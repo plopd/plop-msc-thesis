@@ -39,7 +39,7 @@ def run_submit():
         #     ],
         # },
     ]
-    num_jobs = 2000
+    num_jobs = 12000
     repo_url = (
         "https://github.com/plopd/plop-msc-thesis.git"
     )  # git repo of experiment code
