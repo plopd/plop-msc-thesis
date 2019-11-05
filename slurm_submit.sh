@@ -1,11 +1,11 @@
 #!/bin/bash
 
 #SBATCH --account=def-sutton
-#SBATCH --time=01:00:00
+#SBATCH --time=00:20:00
 #SBATCH --mem-per-cpu=1G
 #SBATCH --job-name slurm_submit.sh
-#SBATCH --output=/home/plopd/scratch/chain/output/submit_%a.txt
-#SBATCH --error=/home/plopd/scratch/chain/error/submit_%a.txt
+#SBATCH --output=/home/plopd/scratch/output/submit_%a.txt
+#SBATCH --error=/home/plopd/scratch/error/submit_%a.txt
 
 export OMP_NUM_THREADS=1
 
@@ -16,5 +16,6 @@ echo "Current working directory is $(pwd)"
 echo "Running on hostname $(hostname)"
 echo "Starting run at: $(date)"
 
+echo "${SLURM_ARRAY_TASK_ID}"
 python -m scripts.run_chain_experiment "${SLURM_ARRAY_TASK_ID}"
 echo "Finished with exit code $? at: $(date)"

@@ -1,6 +1,8 @@
 import os
+from pathlib import Path
 
 import numpy as np
+from tqdm import tqdm
 
 import agents.agents as agents
 import environments.environments as envs
@@ -8,8 +10,8 @@ from experiments.experiment import BaseExperiment
 from rl_glue.rl_glue import RLGlue
 from utils.calculate_state_distribution_chain import calculate_state_distribution
 from utils.calculate_value_function_chain import calculate_v_chain
-from utils.utils import calc_rmsve
 from utils.utils import get_interest
+from utils.utils import MSVE
 from utils.utils import path_exists
 
 
@@ -32,24 +34,25 @@ class ChainExp(BaseExperiment):
         self.id = experiment_info["id"]
         self.max_episode_steps = experiment_info["max_episode_steps"]
 
-        self.i = get_interest(self.N, agent_info["interest"])
+        self.i = get_interest(
+            self.N, agent_info["interest"], seed=agent_info.get("seed")
+        )
 
         path_exists(self.output_dir)
 
         self.rl_glue = None
-        self.error = np.zeros(self.n_episodes // self.episode_eval_freq + 1)
+        self.msve_error = np.zeros(self.n_episodes // self.episode_eval_freq + 1)
 
         self.episode = 0
-        self.run = 0
 
-        path = f"{experiment_info['output_dir']}/true_v_{self.N}.npy"
+        path = f"{Path(experiment_info['output_dir']).parents[0]}/true_v_{self.N}.npy"
 
         if not os.path.isfile(path):
             true_v = calculate_v_chain(agent_info["N"])
             np.save(path, true_v)
         self.true_v = np.load(path, allow_pickle=True)
 
-        path = f"{experiment_info['output_dir']}/state_distribution_{self.N}.npy"
+        path = f"{Path(experiment_info['output_dir']).parents[0]}/state_distribution_{self.N}.npy"
 
         if not os.path.isfile(path):
             state_dist = calculate_state_distribution(agent_info["N"])
@@ -70,13 +73,13 @@ class ChainExp(BaseExperiment):
         )
 
         current_approx_v = self.rl_glue.rl_agent_message("get state value")
-        self.error[0] = calc_rmsve(
-            true_state_val=self.true_v,
-            learned_state_val=current_approx_v,
-            state_distribution=self.state_distribution,
-            interest=self.i,
+        self.msve_error[0] = MSVE(
+            true_v=self.true_v,
+            est_v=current_approx_v,
+            mu=self.state_distribution,
+            i=self.i,
         )
-        for self.episode in range(1, self.n_episodes + 1):
+        for self.episode in tqdm(range(1, self.n_episodes + 1)):
             self.learn_episode()
 
     def learn_episode(self):
@@ -84,17 +87,17 @@ class ChainExp(BaseExperiment):
 
         if self.episode % self.episode_eval_freq == 0:
             current_approx_v = self.rl_glue.rl_agent_message("get state value")
-            self.error[self.episode // self.episode_eval_freq] = calc_rmsve(
-                true_state_val=self.true_v,
-                learned_state_val=current_approx_v,
-                state_distribution=self.state_distribution,
-                interest=self.i,
+            self.msve_error[self.episode // self.episode_eval_freq] = MSVE(
+                true_v=self.true_v,
+                est_v=current_approx_v,
+                mu=self.state_distribution,
+                i=self.i,
             )
         elif self.episode == self.n_episodes:
             self.rl_glue.rl_agent_message("get state value")
 
     def save_experiment(self):
-        np.save(f"{self.output_dir}/{self.id}_error", self.error)
+        np.save(f"{self.output_dir}/{self.id}_msve", self.msve_error)
 
     def cleanup_experiment(self):
         pass

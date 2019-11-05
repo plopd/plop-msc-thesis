@@ -17,7 +17,18 @@ class TD(BaseAgent):
         self.gamma = agent_info["gamma"]
         self.lmbda = agent_info["lmbda"]
         self.rand_generator = np.random.RandomState(agent_info.get("seed"))
-        self.phi = utils.get_features(self.N, name=agent_info["features"])
+        states = np.arange(1, self.N + 1).reshape((-1, 1))
+        self.n = agent_info.get("n")
+        self.num_ones = agent_info.get("num_ones")
+        self.order = agent_info.get("order")
+        self.phi = utils.get_features(
+            states,
+            name=agent_info["features"],
+            n=self.n,
+            num_ones=self.num_ones,
+            order=self.order,
+            seed=agent_info.get("seed"),
+        )
         self.theta = np.zeros(self.phi.shape[1])
         self.z = np.zeros_like(self.theta)
 
@@ -37,7 +48,7 @@ class TD(BaseAgent):
 
         Args:
             reward:
-            observation: (int) in range [1, `self.num_states`]
+            observation: (int) in [1, `self.num_states`]
 
         Returns:
 

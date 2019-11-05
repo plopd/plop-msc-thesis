@@ -1,3 +1,4 @@
+import itertools
 import os
 
 import numpy as np
@@ -14,28 +15,43 @@ def calculate_auc(ys):
     return auc
 
 
-def get_interest(N, name):
+def get_interest(N, name, seed=None):
     if name == "uniform":
         return np.ones(N)
-    elif name == "random binary":
-        raise NotImplementedError
+    elif name == "random-binary":
+        np.random.seed(seed)
+        random_array = np.random.choice([0, 1], N)
+        return random_array
 
-    raise Exception("Unexpected interest given")
+    raise Exception("Unexpected interest given.")
 
 
-def calc_rmsve(true_state_val, learned_state_val, state_distribution, interest):
-    true_state_val = np.squeeze(true_state_val)
-    learned_state_val = np.squeeze(learned_state_val)
-    assert len(true_state_val) == len(learned_state_val)
-    dmu_i = np.multiply(state_distribution, interest)
-    deltas = np.square(true_state_val - learned_state_val)
-    deltas = np.multiply(dmu_i, deltas)
-    msve = np.sum(deltas, axis=0)
-    msve = msve / np.sum(dmu_i)
+def weight_norm(X, W):
+    return np.sqrt(X.T.dot(W).dot(X))
 
-    rmsve = np.sqrt(msve)
 
-    return rmsve
+def MSVE(true_v, est_v, mu, i):
+    """
+    Compute the Root Mean Square Value Error
+    Args:
+        true_v: ndarray (N,)
+        est_v: ndarray (N,)
+        mu: ndarray (N,)
+        i: ndarray (N,)
+
+    Returns:
+
+    """
+    w = np.multiply(mu, i)
+    w = w / np.sum(w)
+    W = np.diag(w)
+    res = weight_norm(true_v - est_v, W)
+
+    return res
+
+
+def MSPBE(v_theta, pi, p, r, gamma, Phi, W):
+    raise NotImplementedError
 
 
 def calculate_M(P_pi, Gamma, Lmbda, i, d_mu):
@@ -88,9 +104,26 @@ def calculate_theta(P_pi, Gamma, Lmbda, Phi, r_pi, M):
     return theta, A, b
 
 
-def SolveExample(
-    P_pi, Gamma, Lmbda, Phi, r_pi, d_mu, i, true_v, which, title, logging=True, log=None
-):
+def calculate_v_pi(P_pi, Gamma, Lmbda, r_pi):
+    N = P_pi.shape[0]
+
+    x1 = np.matmul(P_pi, Gamma)
+    x1 = np.matmul(x1, Lmbda)
+    x1 = np.eye(N) - x1
+    x1 = np.linalg.inv(x1)
+
+    x2 = np.eye(N) - np.matmul(P_pi, Gamma)
+
+    P_pi_lmbda = np.eye(N) - np.matmul(x1, x2)
+
+    r_pi_lmbda = np.dot(x1, r_pi)
+
+    v_pi = np.dot(np.linalg.inv(np.eye(N) - P_pi_lmbda), r_pi_lmbda)
+
+    return v_pi
+
+
+def run_exact_lstd(P_pi, Gamma, Lmbda, Phi, r_pi, d_mu, i, true_v, which):
     """
 
     Args:
@@ -103,203 +136,138 @@ def SolveExample(
         i: (N,)
         true_v: (N,)
         which: str, either "td" or "etd"
-        title: str,
     Returns:
 
     """
     if which == "etd":
         M = calculate_M(P_pi, Gamma, Lmbda, i, d_mu)
+        M = M / np.sum(M)
     elif which == "td":
         M = np.diag(d_mu)
     else:
-        raise ValueError("only td or etd acceptable.")
+        raise Exception("only td or etd acceptable.")
 
     theta, _, _ = calculate_theta(P_pi, Gamma, Lmbda, Phi, r_pi, M)
-    msve = calc_rmsve(true_v, np.dot(Phi, theta), d_mu, i)
+    msve = MSVE(true_v, np.dot(Phi, theta), d_mu, i)
     approx_v = np.dot(Phi, theta)
-
-    if logging:
-        log_output(
-            log,
-            theta=theta,
-            msve=msve,
-            approx_v=approx_v,
-            M=M,
-            which=which,
-            title=title,
-        )
 
     return theta, msve, approx_v, M
 
 
-def TwoStateKeynoteConstant(which):
-    P_pi = np.array([[0, 1], [0, 0]])
-    Gamma = np.array([[1, 0], [0, 1]])
-    Lmbda = np.array([[0, 0], [0, 0]])
-    Phi = np.array([1, 1]).reshape((-1, 1))
-    r_pi = np.array([1, 1]).reshape((-1, 1))
-    d_mu = np.array([0.5, 0.5])
-    i = np.ones_like(d_mu)
-    true_v = np.array((2, 1)).reshape((-1, 1))
-    print(f"{TwoStateKeynoteConstant.__name__}", "\n----------------")
-    SolveExample(P_pi, Gamma, Lmbda, Phi, r_pi, d_mu, i, true_v, which)
+def get_features(states, name=None, n=None, num_ones=None, order=None, seed=None):
+    """ Construct various features from states.
 
+    Args:
+        order: int
+        states: ndarray, shape (N, k)
+        name: str,
+        n: int,
+        num_ones: int,
+        seed: int,
 
-def TwoStateConstant(which):
-    P_pi = np.array([[0, 1], [0, 0]])
-    Gamma = np.array([[1, 0], [0, 1]])
-    Lmbda = np.array([[0, 0], [0, 0]])
-    Phi = np.array([1, 1]).reshape((-1, 1))
-    r_pi = np.array([2, 0]).reshape((-1, 1))
-    d_mu = np.array([0.5, 0.5])
-    i = np.ones_like(d_mu)
-    true_v = np.array((2, 0)).reshape((-1, 1))
-    print(f"{TwoStateConstant.__name__}", "\n----------------")
-    SolveExample(P_pi, Gamma, Lmbda, Phi, r_pi, d_mu, i, true_v, which)
+    Returns:
 
-
-def TwoStateDependent(which):
-    P_pi = np.array([[0, 1], [0, 0]])
-    Gamma = np.array([[1, 0], [0, 0]])
-    Lmbda = np.array([[0, 0], [0, 1]])
-    Phi = np.array([1, 1]).reshape((-1, 1))
-    r_pi = np.array([2, 0]).reshape((-1, 1))
-    d_mu = np.array([0.5, 0.5])
-    i = np.array([1, 0])
-    true_v = np.array((2, 0)).reshape((-1, 1))
-    print(f"{TwoStateDependent.__name__}", "\n----------------")
-    SolveExample(P_pi, Gamma, Lmbda, Phi, r_pi, d_mu, i, true_v, which)
-
-
-def log_output(log, theta, msve, approx_v, M, which, title):
-    log.info(f"{title} -- {which.upper()}\n=================================")
-    # log.info(f"Theta:\n{theta}")
-    # log.info(f"Emphasis:\n{M}")
-    # log.info(f"Approx_v:\n{approx_v}")
-    log.info(f"MSVE:\t{msve}")
-    log.info("-----------------------------------\n")
-
-
-def get_features(N, name=None):
+    """
     if name == "tabular":
-        return get_tabular_features(N)
+        return get_tabular_features(states)
     elif name == "inverted":
-        return get_inverted_features(N)
+        return get_inverted_features(states)
     elif name == "dependent":
-        return get_dependent_features(N)
-    raise Exception("Unexpected features given")
+        return get_dependent_features(states)
+    elif name == "poly":
+        return get_bases_features(states, order=order, kind="poly")
+    elif name == "fourier":
+        return get_bases_features(states, order=order, kind="fourier")
+    elif name == "random-binary":
+        return get_random_features(
+            states, n, num_ones=num_ones, kind="binary", seed=seed
+        )
+    elif name == "random-nonbinary":
+        return get_random_features(states, n, num_ones=0, kind="non-binary", seed=seed)
+    raise Exception("Unexpected features given.")
 
 
-def get_inverted_features(N):
-    features = np.array(
-        [0 if i == j else 1 / np.sqrt(N - 1) for i in range(N) for j in range(N)]
-    ).reshape((N, N))
+def get_inverted_features(states):
+    N, n = states.shape
+
+    features = np.ones((N, N))
+    features[np.arange(N), np.arange(N)] = 0
+    features = np.divide(features, np.linalg.norm(features, axis=1).reshape((-1, 1)))
 
     return features
 
 
-def get_dependent_features(N):
-    N = int(np.ceil(N / 2))
-    upper = np.tril(np.ones((N, N)), k=0)
-    lower = np.triu(np.ones((N - 1, N)), k=1)
+def get_dependent_features(states):
+    N, n = states.shape
+
+    D = N // 2 + 1
+    upper = np.tril(np.ones((D, D)), k=0)
+    lower = np.triu(np.ones((D - 1, D)), k=1)
     features = np.vstack((upper, lower))
     features = np.divide(features, np.linalg.norm(features, axis=1).reshape((-1, 1)))
 
     return features
 
 
-def get_random_binary_features(N, n, num_ones, seed):
+def get_random_features(states, n, num_ones, kind="binary", seed=None):
+    N, _ = states.shape
+    if kind != "binary" and kind != "non-binary":
+        raise Exception("Unknown kind given.")
 
     np.random.seed(seed)
     num_zeros = n - num_ones
-    representations = np.zeros((N, n))
+    features = np.zeros((N, n))
 
     for i_s in range(N):
-        random_array = np.array([0] * num_zeros + [1] * num_ones)
+        if kind == "binary":
+            random_array = np.array([0] * num_zeros + [1] * num_ones)
+        else:
+            random_array = np.random.randn(n)
         np.random.shuffle(random_array)
-        representations[i_s, :] = random_array
+        features[i_s, :] = random_array
 
-    return representations
+    features = np.divide(features, np.linalg.norm(features, axis=1).reshape((-1, 1)))
 
-
-def calculate_phi_for_five_states_with_state_aggregation(n):
-
-    if n == 5:
-        group_sizes = [1, 1, 1, 1, 1]
-    elif n == 4:
-        group_sizes = [2, 1, 1, 1]
-    elif n == 3:
-        group_sizes = [2, 2, 1]
-    elif n == 2:
-        group_sizes = [3, 2]
-    elif n == 1:
-        group_sizes = [5]
-    else:
-        raise ValueError("Wrong number of groups. Valid are 1, 2, 3, 4 and 5")
-
-    Phi = []
-    for i_g, gs in enumerate(group_sizes):
-        phi = np.zeros((gs, n))
-        phi[:, i_g] = 1.0
-        Phi.append(phi)
-    Phi = np.concatenate(Phi, axis=0)
-
-    return Phi
-
-
-def get_tabular_features(N):
-    features = np.eye(N)
     return features
 
 
-if __name__ == "__main__":
-    pass
-    # calculate_v_chain(19)
-    # calculate_state_distribution(19)
-    # TwoStateKeynoteConstant(which="td")
-    # TwoStateKeynoteConstant(which="etd")
+def get_tabular_features(states):
+    N, n = states.shape
+    return np.eye(N)
 
-    # TwoStateConstant(which="td")
-    # TwoStateConstant(which="etd")
-    #
-    # TwoStateDependent(which="td")
-    # TwoStateDependent(which="etd")
 
-    # SolveExample(
-    #     P_pi=np.array([[0, 1, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1], [0, 0, 0, 0]]),
-    #     Gamma=np.array([[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1]]),
-    #     Lmbda=np.array([[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]]),
-    #     Phi=np.array([[1, 0], [1, 0], [0, 1], [0, 1]]),
-    #     r_pi=np.array([1, 1, 1, 1]).reshape((-1, 1)),
-    #     d_mu=np.array([0.25, 0.25, 0.25, 0.25]),
-    #     i=np.array([1, 0, 0, 0]),
-    #     true_v=np.array([4, 3, 2, 1]).reshape((-1, 1)),
-    #     which="etd",
-    #     title="###### Example 9.5: Interest and Emphasis",
-    # )
+def get_bases_features(states, order, kind=None, normalize=True):
+    """
+    Construct order-n polynomial- or Fourier-basis features from states.
 
-    # SolveExample(
-    #     P_pi=np.array([[0, 1, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1], [0, 0, 0, 0]]),
-    #     Gamma=np.array([[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1]]),
-    #     Lmbda=np.array([[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]]),
-    #     Phi=np.array([[1, 0], [1, 0], [0, 1], [0, 1]]),
-    #     r_pi=np.array([1, 1, 1, 1]).reshape((-1, 1)),
-    #     d_mu=np.array([0.25, 0.25, 0.25, 0.25]),
-    #     i=np.array([0, 0, 1, 0]),  # or [0, 0, 0, 1] results in Singular matrix!
-    #     true_v=np.array([4, 3, 2, 1]).reshape((-1, 1)),
-    #     which="etd",
-    #     title="Example 9.5: Interest and Emphasis"
-    # )
+    Args:
+        states: ndarray, shape (N, k)
+        order: int,
+        kind: str, 'poly' or 'fourier'
 
-    # SolveExample(
-    #     P_pi=np.array([[0, 1, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1], [0, 0, 0, 0]]),
-    #     Gamma=np.array([[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1]]),
-    #     Lmbda=np.array([[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]]),
-    #     Phi=np.array([[1, 0], [1, 0], [0, 1], [0, 1]]),
-    #     r_pi=np.array([1, 1, 1, 1]).reshape((-1, 1)),
-    #     d_mu=np.array([0.25, 0.25, 0.25, 0.25]),
-    #     i=np.array([1, 0, 0, 1]),
-    #     true_v=np.array([4, 3, 2, 1]).reshape((-1, 1)),
-    #     which="etd",
-    #     title="###### Example 9.5: Interest and Emphasis",
-    # )
+    Returns: ndarray of size (N, num_features), with num_features = (order+1)**k
+
+    """
+    if kind != "poly" and kind != "fourier":
+        raise Exception("Unknown kind given.")
+
+    if normalize:
+        # https://stats.stackexchange.com/questions/70801/how-to-normalize-data-to-0-1-range
+        states = np.divide(states - states.min(), (states.max() - states.min()))
+
+    N, k = states.shape
+    num_features = (order + 1) ** k
+
+    c = [i for i in range(0, order + 1)]
+    C = np.array(list(itertools.product(*[c for _ in range(k)])))
+
+    X = np.zeros((N, num_features))
+
+    for n in range(N):
+        for i in range(num_features):
+            if kind == "poly":
+                X[n, i] = np.prod(np.power(states[n], C[i]))
+            elif kind == "fourier":
+                X[n, i] = np.cos(np.pi * np.dot(states[n], C[i]))
+
+    return X

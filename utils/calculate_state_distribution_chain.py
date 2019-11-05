@@ -50,4 +50,4 @@ def calculate_state_distribution(N):
 
 if __name__ == "__main__":
     N = int(sys.argv[1])
-    calculate_state_distribution(N)
+    print(calculate_state_distribution(N))
