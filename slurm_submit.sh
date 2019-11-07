@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #SBATCH --account=def-sutton
-#SBATCH --time=00:20:00
+#SBATCH --time=00:25:00
 #SBATCH --mem-per-cpu=1G
 #SBATCH --job-name slurm_submit.sh
 #SBATCH --output=/home/plopd/scratch/output/submit_%a.txt

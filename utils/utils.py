@@ -263,11 +263,10 @@ def get_bases_features(states, order, kind=None, normalize=True):
 
     X = np.zeros((N, num_features))
 
-    for n in range(N):
-        for i in range(num_features):
-            if kind == "poly":
-                X[n, i] = np.prod(np.power(states[n], C[i]))
-            elif kind == "fourier":
-                X[n, i] = np.cos(np.pi * np.dot(states[n], C[i]))
+    if kind == "poly":
+        for n in range(N):
+            X[n] = np.prod(np.power(states[n], C), axis=1)
+    elif kind == "fourier":
+        X = np.cos(np.pi * np.matmul(states, C.T))
 
     return X

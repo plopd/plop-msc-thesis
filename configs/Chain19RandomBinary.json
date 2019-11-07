@@ -7,7 +7,7 @@
 					"n_episodes": [100000],
 					"max_episode_steps": [0],
 					"episode_eval_freq": [1],
-					"output_dir": ["/home/plopd/scratch/Chain/Chain19Fourier"]
+					"output_dir": ["/home/plopd/scratch/Chain/Chain19RandomBinary"]
 				}
 			],
 	        "simulator": [
@@ -24,8 +24,9 @@
 					"lmbda": [0.0],
 					"features": [
 						{
-							"features": ["fourier"],
-							"order": [10]
+							"features": ["random-binary"],
+							"n": [17],
+							"num_ones": [9]
 						}
 					],
 					"interest": ["uniform"]
@@ -37,8 +38,9 @@
 					"lmbda": [0.0],
 					"features": [
 						{
-							"features": ["fourier"],
-							"order": [10]
+							"features": ["random-binary"],
+							"n": [17],
+							"num_ones": [9]
 						}
 					],
 					"interest": ["uniform"]

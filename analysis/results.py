@@ -53,21 +53,31 @@ class Result(object):
 
         return param_vals
 
-    def _load(self, idxs):
+    def load(self, idxs):
         lst_data = []
         for idx in idxs:
             try:
                 lst_data.append(
                     np.load(
-                        f"{self.datapath}/{self.exp}/output/{idx}_msve.npy",
-                        allow_pickle=True,
+                        f"{self.datapath}/{self.exp}/{idx}_msve.npy", allow_pickle=True
                     )
                 )
             except IOError:
                 continue
 
-        data = np.stack(lst_data)
+        data = None
+        if lst_data:
+            data = np.stack(lst_data)
+
         return data
+
+
+def get_data_auc(data):
+    n_runs, n_episodes = data.shape
+
+    auc_runs = data.mean(axis=1)
+
+    return auc_runs.mean(), auc_runs.std() / np.sqrt(n_runs)
 
 
 def get_data_end(data):
@@ -83,8 +93,8 @@ def get_data_end(data):
 def get_data_by(data, name="end"):
     if name == "end":
         return get_data_end(data)
-    elif name == "early":
+    elif name == "interim":
         raise NotImplementedError
-    elif name == "overall":
-        raise NotImplementedError
-    raise Exception("Unknown name given")
+    elif name == "auc":
+        return get_data_auc(data)
+    raise Exception("Unknown name given.")

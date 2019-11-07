@@ -17,8 +17,8 @@ def run_submit(num_jobs):
     CLUSTERS = [
         {
             "name": "mp2b",
-            "capacity": 1,
-            "PROJECT_ROOT_DIR": PROJECT_ROOT_DIR,
+            "capacity": 1000,
+            "project_root_dir": PROJECT_ROOT_DIR,
             "exp_results_from": [
                 f"{EXPERIMENT_ROOT_DIR}/output",
                 f"{EXPERIMENT_ROOT_DIR}/error",
@@ -27,22 +27,24 @@ def run_submit(num_jobs):
                 f"{EXPERIMENT_ROOT_DIR}/output",
                 f"{EXPERIMENT_ROOT_DIR}/error",
             ],
-        },
-        {
-            "name": "cedar",
-            "capacity": 1,
-            "PROJECT_ROOT_DIR": PROJECT_ROOT_DIR,
-            "exp_results_from": [
-                f"{EXPERIMENT_ROOT_DIR}/output",
-                f"{EXPERIMENT_ROOT_DIR}/error",
-            ],
-            "exp_results_to": [
-                f"{EXPERIMENT_ROOT_DIR}/output",
-                f"{EXPERIMENT_ROOT_DIR}/error",
-            ],
-        },
+        }
+        # {
+        #     "name": "cedar",
+        #     "capacity": 1000,
+        #     "project_root_dir": PROJECT_ROOT_DIR,
+        #     "exp_results_from": [
+        #         f"{EXPERIMENT_ROOT_DIR}/output",
+        #         f"{EXPERIMENT_ROOT_DIR}/error",
+        #     ],
+        #     "exp_results_to": [
+        #         f"{EXPERIMENT_ROOT_DIR}/output",
+        #         f"{EXPERIMENT_ROOT_DIR}/error",
+        #     ],
+        # },
     ]
-    submitter = Submitter(CLUSTERS, NUM_JOBS, SCRIPT_PATH)
+    submitter = Submitter(
+        clusters=CLUSTERS, total_num_jobs=NUM_JOBS, script_path=SCRIPT_PATH
+    )
     submitter.submit()
 
 

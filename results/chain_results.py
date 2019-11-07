@@ -1,3 +1,4 @@
+import argparse
 from pathlib import Path
 
 import matplotlib
@@ -11,31 +12,76 @@ from utils.utils import path_exists
 
 matplotlib.rcParams.update({"font.size": 18})
 
-N = [5, 19]
-FEATURES = ["tabular", "dependent", "random-binary", "random-nonbinary"]
-INTEREST = ["uniform"]
-DATA_PATH = "/home/plopd/scratch"
-RUNS = 100
-CUTOFF = 0.45
-RESULTS_PATH = f"{Path(__file__)}/Chain"
 
-path_exists(RESULTS_PATH)
+def main(num_states, features, experiment, order, num_ones, n, runs):
 
-for n in N:
-    for f in FEATURES:
-        for i in INTEREST:
-            EXPERIMENT_NAME = f"Chain{n}TabularDependentRandomBinaryRandomNonbinary"
-            N_RUNS_EXACT = (
-                RUNS if i == "random-binary" or i == "random-nonbinary" else 1
-            )
+    INTEREST = "uniform"
+    ENVIRONMENT = "chain"
+    RUNS = runs
+    CUTOFF = 0.45
+    PERFORMANCE = "end"
+    DATA_PATH = "/home/plopd/scratch/Chain"
+    METHODS = ["td", "etd"]
+    RESULTS_PATH = f"{Path(__file__).parents[0]}/Chain"
+    path_exists(RESULTS_PATH)
 
-            result = Result(
-                f"{EXPERIMENT_NAME}.json", DATA_PATH, EXPERIMENT_NAME, runs=RUNS
-            )
+    fig, axs = plt.subplots(1, 3, figsize=(20, 5), sharey="row", dpi=80)
+    ax1 = axs[0]
+    ax2 = axs[1]
+    ax3 = axs[2]
+    for m in METHODS:
+        result = Result(f"{experiment}.json", DATA_PATH, experiment, runs=RUNS)
 
-            fig, axs = plt.subplots(1, 3, figsize=(20, 5), sharey="row", dpi=80)
-            get_LCA(axs[0], result, n, f, i, N_RUNS_EXACT)
-            get_SSA(axs[1], result, f, i, cutoff=CUTOFF)
-            get_WF(axs[2], result, f, i, cutoff=CUTOFF)
-            plt.tight_layout()
-            plt.savefig(f"{RESULTS_PATH}/Chain_{n}_{f}_{i}")
+        stepsize_search_dct = {
+            "algorithm": m,
+            "env": ENVIRONMENT,
+            "features": features,
+            "interest": INTEREST,
+            "order": order,
+            "n": n,
+            "num_ones": num_ones,
+        }
+        filtered = {k: v for k, v in stepsize_search_dct.items() if v is not None}
+        stepsize_search_dct.clear()
+        stepsize_search_dct.update(filtered)
+
+        print(stepsize_search_dct)
+
+        ax1 = get_LCA(ax1, result, stepsize_search_dct, name=PERFORMANCE)
+        ax2 = get_SSA(ax2, result, stepsize_search_dct, cutoff=CUTOFF, name=PERFORMANCE)
+        ax3 = get_WF(
+            ax3,
+            result,
+            stepsize_search_dct,
+            cutoff=CUTOFF,
+            name=PERFORMANCE,
+            methods=METHODS,
+        )
+    plt.tight_layout()
+    plt.savefig(
+        f"{RESULTS_PATH}/Chain_{num_states}_{features}_{order}_{n}_{num_ones}_{INTEREST}_{PERFORMANCE}"
+    )
+
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+
+    parser.add_argument("--n_states", required=True, type=int)
+    parser.add_argument("--features", required=True, type=str)
+    parser.add_argument("--experiment", required=True, type=str)
+    parser.add_argument("--order", default=None, type=int)
+    parser.add_argument("--n_ones", default=None, type=int)
+    parser.add_argument("--n", default=None, type=int)
+    parser.add_argument("--runs", default=100, type=int)
+
+    args = parser.parse_args()
+
+    main(
+        num_states=args.n_states,
+        features=args.features,
+        experiment=args.experiment,
+        order=args.order,
+        num_ones=args.n_ones,
+        n=args.n,
+        runs=args.runs,
+    )

@@ -4,17 +4,14 @@ from pathlib import Path
 from alphaex.sweeper import Sweeper
 
 
-def test_sweeper(cfg_filename):
-    sweep_file_name = f"{cfg_filename}.json"
-    num_runs = 1
-    # test Sweeper.parse
-    sweeper = Sweeper(f"{Path(__file__).parents[1]}/configs/{sweep_file_name}")
-    for sweep_id in range(0, sweeper.total_combinations * num_runs):
+def test_sweeper(cfg_filename, num_runs):
+    sweeper = Sweeper(f"{Path(__file__).parents[1]}/configs/{cfg_filename}")
+    for sweep_id in range(sweeper.total_combinations * num_runs):
         rtn_dict = sweeper.parse(sweep_id)
 
         report = (
             "idx: %d\nrun: %d\nenv: %s\nN: %d\nalgorithm: %s\nalpha: "
-            "%s\nfeatures: %s\ninterest: %s\norder: %s\n"
+            "%s\nfeatures: %s\ninterest: %s\norder: %s\nn: %s\nnum_ones: %s\n"
             % (
                 sweep_id,
                 rtn_dict.get("run", None),
@@ -25,6 +22,8 @@ def test_sweeper(cfg_filename):
                 rtn_dict.get("features", None),
                 rtn_dict.get("interest", None),
                 rtn_dict.get("order", None),
+                rtn_dict.get("n", None),
+                rtn_dict.get("num_ones", None),
             )
         )
         print(report)
@@ -32,10 +31,12 @@ def test_sweeper(cfg_filename):
     print(sweeper.total_combinations)
 
     # # test Sweeper.search
-    sweeper.search({"env": "chain", "algorithm": "etd"}, num_runs)
-    # print(len(search_dct))
+    sweeper.search(
+        {"env": "chain", "algorithm": "td", "features": "random-binary"}, num_runs
+    )
 
 
 if __name__ == "__main__":
     cfg_filename = sys.argv[1]
-    test_sweeper(cfg_filename)
+    num_runs = int(sys.argv[2])
+    test_sweeper(cfg_filename, num_runs)

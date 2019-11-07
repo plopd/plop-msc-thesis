@@ -7,11 +7,10 @@ from experiments.chain_experiment import ChainExp
 
 
 def main():
-    sweep_id = int(sys.argv[1])  # sys.argv returns str
-    sweep_file_name = "Chain19Poly.json"
+    sweep_id = int(sys.argv[1])
+    sweep_file_name = "Chain5RandomNonBinary.json"
     sweeper = Sweeper(f"{Path(__file__).parents[1]}/configs/{sweep_file_name}")
     param_cfg = sweeper.parse(sweep_id)
-    print(sweep_file_name)
 
     agent_info = {
         "N": param_cfg.get("N", None),
