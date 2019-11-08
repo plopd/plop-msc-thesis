@@ -30,10 +30,7 @@ def test_sweeper(cfg_filename, num_runs):
 
     print(sweeper.total_combinations)
 
-    # # test Sweeper.search
-    sweeper.search(
-        {"env": "chain", "algorithm": "td", "features": "random-binary"}, num_runs
-    )
+    print(len(sweeper.search({"env": "chain", "N": 5}, num_runs)))
 
 
 if __name__ == "__main__":

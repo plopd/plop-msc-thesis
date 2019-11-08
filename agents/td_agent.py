@@ -9,7 +9,7 @@ RIGHT = 1
 
 class TD(BaseAgent):
     def __init__(self):
-        super(TD, self).__init__()
+        super().__init__()
 
     def agent_init(self, agent_info):
         self.N = agent_info["N"]
@@ -17,10 +17,10 @@ class TD(BaseAgent):
         self.gamma = agent_info["gamma"]
         self.lmbda = agent_info["lmbda"]
         self.rand_generator = np.random.RandomState(agent_info.get("seed"))
-        states = np.arange(1, self.N + 1).reshape((-1, 1))
         self.n = agent_info.get("n")
         self.num_ones = agent_info.get("num_ones")
         self.order = agent_info.get("order")
+        states = np.arange(1, self.N + 1).reshape((-1, 1))
         self.phi = utils.get_features(
             states,
             name=agent_info["features"],
@@ -37,9 +37,9 @@ class TD(BaseAgent):
 
     def agent_start(self, observation):
 
+        self.z = np.zeros_like(self.theta)
         self.s_t = observation
         self.a_t = self.agent_policy(observation)
-        self.z = np.zeros_like(self.theta)
 
         return self.a_t
 
@@ -56,16 +56,7 @@ class TD(BaseAgent):
         current_state_feature = self.phi[observation - 1]
         last_state_feature = self.phi[self.s_t - 1]
 
-        # cf. Eq. 12.5 textbook
-        self.z = self.gamma * self.lmbda * self.z + last_state_feature
-        # cf. Eq. 12.6 textbook
-        td_error = (
-            reward
-            + self.gamma * np.dot(self.theta.T, current_state_feature)
-            - np.dot(self.theta.T, last_state_feature)
-        )
-        # cf. Eq. 12.7 textbook
-        self.theta = self.theta + self.alpha * td_error * self.z
+        self._learn(reward, current_state_feature, last_state_feature)
 
         self.s_t = observation
         self.a_t = self.agent_policy(observation)
@@ -75,12 +66,7 @@ class TD(BaseAgent):
     def agent_end(self, reward):
         last_state_feature = self.phi[self.s_t - 1]
 
-        # cf. Eq. 12.5 textbook
-        self.z = self.gamma * self.lmbda * self.z + last_state_feature
-        # cf. Eq. 12.6 textbook
-        td_error = reward - np.dot(self.theta.T, last_state_feature)
-        # cf. Eq. 12.7 textbook
-        self.theta = self.theta + self.alpha * td_error * self.z
+        self._learn(reward, 0, last_state_feature)
 
         return
 
@@ -101,3 +87,14 @@ class TD(BaseAgent):
 
     def agent_cleanup(self):
         pass
+
+    def _learn(self, reward, current_state_feature, last_state_feature):
+        self.z = self.gamma * self.lmbda * self.z + last_state_feature
+
+        td_error = (
+            reward
+            + self.gamma * np.dot(self.theta.T, current_state_feature)
+            - np.dot(self.theta.T, last_state_feature)
+        )
+
+        self.theta += self.alpha * td_error * self.z

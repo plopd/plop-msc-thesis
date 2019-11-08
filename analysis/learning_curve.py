@@ -61,10 +61,14 @@ def get_LCA(ax, result, stepsize_search_dct, name):
         color=colors[stepsize_search_dct["algorithm"]],
         alpha=0.15,
     )
-    # TODO Plot LSTD solution
-    # _, msve_lstd, _, _ = compute_solution(N, method, features, interest, n_runs_exact)
-    # ax.axhline(msve_lstd[0,0], 0, len(data_learning_curve_methods[idx_m]['mean']), color=colors[method],
-    #            label=f"{data_learning_curve_methods[idx_m]['algorithm']}-LS", linestyle='-.')
+    # _, msve_lstd, _, _ = compute_solution(
+    #     stepsize_search_dct['N'],
+    #     stepsize_search_dct['algorithm'],
+    #     'tabular',
+    #     stepsize_search_dct['interest'],
+    #     result.runs)
+    # ax.axhline(msve_lstd[0,0], 0, len(m), color=colors[stepsize_search_dct["algorithm"]],
+    #            label=f"{stepsize_search_dct['algorithm']}-LS", linestyle='-.')
     ax.spines["right"].set_visible(False)
     ax.spines["top"].set_visible(False)
     ax.set_xlabel("Walks/Episodes", labelpad=25)

@@ -187,29 +187,37 @@ def get_features(states, name=None, n=None, num_ones=None, order=None, seed=None
     raise Exception("Unexpected features given.")
 
 
-def get_inverted_features(states):
+def get_inverted_features(states, normalize=True):
     N, n = states.shape
 
     features = np.ones((N, N))
     features[np.arange(N), np.arange(N)] = 0
-    features = np.divide(features, np.linalg.norm(features, axis=1).reshape((-1, 1)))
+
+    if normalize:
+        features = np.divide(
+            features, np.linalg.norm(features, axis=1).reshape((-1, 1))
+        )
 
     return features
 
 
-def get_dependent_features(states):
+def get_dependent_features(states, normalize=True):
     N, n = states.shape
 
     D = N // 2 + 1
     upper = np.tril(np.ones((D, D)), k=0)
     lower = np.triu(np.ones((D - 1, D)), k=1)
     features = np.vstack((upper, lower))
-    features = np.divide(features, np.linalg.norm(features, axis=1).reshape((-1, 1)))
+
+    if normalize:
+        features = np.divide(
+            features, np.linalg.norm(features, axis=1).reshape((-1, 1))
+        )
 
     return features
 
 
-def get_random_features(states, n, num_ones, kind="binary", seed=None):
+def get_random_features(states, n, num_ones, kind="binary", seed=None, normalize=True):
     N, _ = states.shape
     if kind != "binary" and kind != "non-binary":
         raise Exception("Unknown kind given.")
@@ -221,12 +229,15 @@ def get_random_features(states, n, num_ones, kind="binary", seed=None):
     for i_s in range(N):
         if kind == "binary":
             random_array = np.array([0] * num_zeros + [1] * num_ones)
+            np.random.shuffle(random_array)
         else:
             random_array = np.random.randn(n)
-        np.random.shuffle(random_array)
         features[i_s, :] = random_array
 
-    features = np.divide(features, np.linalg.norm(features, axis=1).reshape((-1, 1)))
+    if normalize:
+        features = np.divide(
+            features, np.linalg.norm(features, axis=1).reshape((-1, 1))
+        )
 
     return features
 

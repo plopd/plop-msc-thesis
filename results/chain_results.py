@@ -40,6 +40,7 @@ def main(num_states, features, experiment, order, num_ones, n, runs):
             "order": order,
             "n": n,
             "num_ones": num_ones,
+            "N": num_states,
         }
         filtered = {k: v for k, v in stepsize_search_dct.items() if v is not None}
         stepsize_search_dct.clear()
@@ -59,7 +60,7 @@ def main(num_states, features, experiment, order, num_ones, n, runs):
         )
     plt.tight_layout()
     plt.savefig(
-        f"{RESULTS_PATH}/Chain_{num_states}_{features}_{order}_{n}_{num_ones}_{INTEREST}_{PERFORMANCE}"
+        f"{RESULTS_PATH}/ChainStates{num_states.title()}Features{features.title()}_Order{order}_NumberFeaturesRandom{n}_NumberOnesRandom{num_ones}_Interest{INTEREST.title()}Performance{PERFORMANCE.upper()}"
     )
 
 

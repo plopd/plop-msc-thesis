@@ -7,7 +7,42 @@
 					"n_episodes": [100000],
 					"max_episode_steps": [0],
 					"episode_eval_freq": [1],
-					"output_dir": ["/home/plopd/scratch/Chain/Chain19RandomNonBinary"]
+					"output_dir": ["/home/plopd/scratch/Chain/ChainPolyFourier"]
+				}
+			],
+	        "simulator": [
+				{
+					"env": ["chain"],
+					"N": [5]
+				}
+			],
+	        "learner": [
+	            {
+	                "algorithm": ["td", "etd"],
+	                "alpha": [0.5, 0.125, 0.03125, 0.0078125, 0.001953125, 0.00048828125, 0.0001220703125, 3.0517578125e-05, 7.62939453125e-06, 1.9073486328125e-06, 4.76837158203125e-07, 1.1920928955078125e-07],
+					"gamma": [1.0],
+					"lmbda": [0.0],
+					"features": [
+						{
+							"features": ["fourier"],
+							"order": [2]
+						},
+						{
+							"features": ["poly"],
+							"order": [2]
+						}
+					],
+					"interest": ["uniform"]
+	            }
+	        ]
+	    },
+		{
+			"experiment": [
+				{
+					"n_episodes": [100000],
+					"max_episode_steps": [0],
+					"episode_eval_freq": [1],
+					"output_dir": ["/home/plopd/scratch/Chain/ChainPolyFourier"]
 				}
 			],
 	        "simulator": [
@@ -18,28 +53,18 @@
 			],
 	        "learner": [
 	            {
-	                "algorithm": ["td"],
+	                "algorithm": ["td", "etd"],
 	                "alpha": [0.5, 0.125, 0.03125, 0.0078125, 0.001953125, 0.00048828125, 0.0001220703125, 3.0517578125e-05, 7.62939453125e-06, 1.9073486328125e-06, 4.76837158203125e-07, 1.1920928955078125e-07],
 					"gamma": [1.0],
 					"lmbda": [0.0],
 					"features": [
 						{
-							"features": ["random-nonbinary"],
-							"n": [17]
-						}
-					],
-					"interest": ["uniform"]
-	            },
-				{
-	                "algorithm": ["etd"],
-	                "alpha": [0.5, 0.125, 0.03125, 0.0078125, 0.001953125, 0.00048828125, 0.0001220703125, 3.0517578125e-05, 7.62939453125e-06, 1.9073486328125e-06, 4.76837158203125e-07, 1.1920928955078125e-07],
-					"gamma": [1.0],
-					"lmbda": [0.0],
-					"features": [
+							"features": ["fourier"],
+							"order": [9]
+						},
 						{
-							"features": ["random-nonbinary"],
-							"n": [17],
-							"num_ones": [9]
+							"features": ["poly"],
+							"order": [9]
 						}
 					],
 					"interest": ["uniform"]
