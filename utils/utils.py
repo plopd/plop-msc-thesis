@@ -144,7 +144,7 @@ def run_exact_lstd(P_pi, Gamma, Lmbda, Phi, r_pi, d_mu, i, true_v, which):
     elif which == "td":
         M = np.diag(d_mu)
     else:
-        raise Exception("only td or etd acceptable.")
+        raise Exception("Unexpected which given.")
 
     theta, _, _ = calculate_theta(P_pi, Gamma, Lmbda, Phi, r_pi, M)
     msve = MSVE(true_v, np.dot(Phi, theta), d_mu, i)
@@ -179,10 +179,12 @@ def get_features(states, name=None, n=None, num_ones=None, order=None, seed=None
         return get_bases_features(states, order=order, kind="fourier")
     elif name == "random-binary":
         return get_random_features(
-            states, n, num_ones=num_ones, kind="binary", seed=seed
+            states, n, num_ones=num_ones, kind="random-binary", seed=seed
         )
     elif name == "random-nonbinary":
-        return get_random_features(states, n, num_ones=0, kind="non-binary", seed=seed)
+        return get_random_features(
+            states, n, num_ones=0, kind="random-nonbinary", seed=seed
+        )
     raise Exception("Unexpected features given.")
 
 
@@ -216,9 +218,11 @@ def get_dependent_features(states, normalize=True):
     return features
 
 
-def get_random_features(states, n, num_ones, kind="binary", seed=None, normalize=True):
+def get_random_features(
+    states, n, num_ones, kind="random-binary", seed=None, normalize=True
+):
     N, _ = states.shape
-    if kind != "binary" and kind != "non-binary":
+    if kind != "random-binary" and kind != "random-nonbinary":
         raise Exception("Unknown kind given.")
 
     np.random.seed(seed)
@@ -226,7 +230,7 @@ def get_random_features(states, n, num_ones, kind="binary", seed=None, normalize
     features = np.zeros((N, n))
 
     for i_s in range(N):
-        if kind == "binary":
+        if kind == "random-binary":
             random_array = np.array([0] * num_zeros + [1] * num_ones)
             np.random.shuffle(random_array)
         else:

@@ -14,9 +14,9 @@ agent_info = {
     "num_ones": None,
     "gamma": 1.0,
     "lmbda": 0.0,
+    "interest": "uniform",
     "alpha": 2 ** -7,
     "seed": None,
-    "interest": "uniform",
 }
 
 env_info = {"env": "chain", "N": 19}
@@ -47,7 +47,10 @@ def test_agent_start(algorithm):
     assert np.allclose(w, np.zeros(w.shape[0]))
 
 
-def test_followon_trace_for_constant_gamma_lambda_interest():
+def test_linear_followon_trace():
+    agent_info["gamma"] = 1.0
+    agent_info["lmbda"] = 0.0
+    agent_info["interest"] = "uniform"
     environment = get_environment(env_info["env"])
     agent = get_agent("etd")
 
@@ -57,6 +60,21 @@ def test_followon_trace_for_constant_gamma_lambda_interest():
         rl_glue.rl_init(agent_init_info=agent_info, env_init_info=env_info)
         rl_glue.rl_episode(0)
         assert rl_glue.rl_agent_message("get followon trace") - 1 == rl_glue.num_steps
+
+
+def test_constant_emphasis():
+    agent_info["gamma"] = 1.0
+    agent_info["lmbda"] = 1.0
+    agent_info["interest"] = "uniform"
+    environment = get_environment(env_info["env"])
+    agent = get_agent("etd")
+
+    rl_glue = RLGlue(environment, agent)
+
+    for episode in range(1, 3):
+        rl_glue.rl_init(agent_init_info=agent_info, env_init_info=env_info)
+        rl_glue.rl_episode(0)
+        assert rl_glue.rl_agent_message("get emphasis trace") == 1.0
 
 
 @pytest.mark.parametrize("algorithm", ["td", "etd"])
