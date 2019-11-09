@@ -7,7 +7,7 @@
 					"n_episodes": [100000],
 					"max_episode_steps": [0],
 					"episode_eval_freq": [1],
-					"output_dir": ["/home/plopd/scratch/Chain/Chain19TabularDependentRandomBinaryRandomNonbinary"]
+					"output_dir": ["~/scratch/Chain/Chain19TabularDependentRandomBinaryRandomNonbinary"]
 				}
 			],
 	        "simulator": [

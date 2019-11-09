@@ -4,10 +4,10 @@
 	    {
 			"experiment": [
 				{
-					"n_episodes": [100000],
+					"n_episodes": [100],
 					"max_episode_steps": [0],
 					"episode_eval_freq": [1],
-					"output_dir": ["/home/plopd/scratch/Chain19withUniformAndRandomInterest"]
+					"output_dir": ["~/scratch/Chain/Chain19withUniformAndRandomInterest"]
 				}
 			],
 	        "simulator": [

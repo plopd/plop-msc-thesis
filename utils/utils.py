@@ -5,9 +5,8 @@ import numpy as np
 
 
 def path_exists(path):
-    if not os.path.exists(path):
+    if not path.exists():
         os.makedirs(path, exist_ok=True)
-    return path
 
 
 def calculate_auc(ys):

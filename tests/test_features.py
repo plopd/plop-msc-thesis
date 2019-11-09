@@ -24,6 +24,9 @@ def test_dependent_features_is_unit_norm(N):
 
 @pytest.mark.parametrize("N", [5, 19])
 def test_random_features_is_unit_norm(N):
-    dependent_features = get_random_features(N, N // 2, num_ones=N // 4, kind="binary")
+    states = np.arange(N).reshape((-1, 1))
+    dependent_features = get_random_features(
+        states, N // 2, num_ones=N // 4, kind="binary"
+    )
     norm_dep_features = np.linalg.norm(dependent_features, axis=1)
     assert np.allclose(norm_dep_features, np.ones(N))

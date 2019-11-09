@@ -1,5 +1,3 @@
 .idea/*
-*.pytest_cache/*
-/tests/.pytest_cache/v/cache/lastfailed
-/tests/.pytest_cache/v/cache/nodeids
-/tests/.pytest_cache/v/cache/stepwise
+*/.pytest_cache/*
+*.png

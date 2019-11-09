@@ -8,11 +8,11 @@ class ETD(TD):
 
         super().agent_init(agent_info)
         self.i = 1.0
-        self.F = self.i
+        self.F = 0.0
         self.M = 0.0
 
     def agent_start(self, observation):
-        self.F = self.i
+        self.F = 0.0
         self.M = 0.0
         self.a_t = super().agent_start(observation)
 
@@ -41,11 +41,11 @@ class ETD(TD):
         return
 
     def agent_message(self, message):
-        response = super().agent_message(message)
         if message == "get followon trace":
             return self.F
         if message == "get emphasis trace":
             return self.M
+        response = super().agent_message(message)
         return response
 
     def agent_cleanup(self):

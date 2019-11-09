@@ -36,7 +36,7 @@ class BaseExperiment:
         """
 
     @abstractmethod
-    def learn_run(self):
+    def learn(self):
         """
 
         Returns:
@@ -44,7 +44,7 @@ class BaseExperiment:
         """
 
     @abstractmethod
-    def learn_episode(self):
+    def _learn(self, episode):
         """
 
         Returns:
