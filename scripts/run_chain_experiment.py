@@ -9,7 +9,7 @@ from experiments.chain_experiment import ChainExp
 def main():
     sweep_id = int(sys.argv[1])
     sweep_file_name = "Chain5withUniformAndRandomInterest.json"
-    sweeper = Sweeper(f"{Path(__file__).parents[1]}/configs/{sweep_file_name}")
+    sweeper = Sweeper(Path(__file__).parents[1] / "configs" / f"{sweep_file_name}")
     param_cfg = sweeper.parse(sweep_id)
 
     agent_info = {

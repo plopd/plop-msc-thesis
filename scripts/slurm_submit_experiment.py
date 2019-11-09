@@ -49,5 +49,4 @@ def run_submit(num_jobs):
 
 
 if __name__ == "__main__":
-    num_jobs = int(sys.argv[1])
-    run_submit(num_jobs)
+    run_submit(int(sys.argv[1]))
