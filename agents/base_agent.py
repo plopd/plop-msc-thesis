@@ -16,6 +16,7 @@ class BaseAgent:
 
     __metaclass__ = ABCMeta
 
+    @abstractmethod
     def __init__(self):
         self.rand_generator = None
         self.N = None
@@ -23,12 +24,10 @@ class BaseAgent:
         self.alpha = None
         self.gamma = None
         self.lmbda = None
-        self.i = None
-        self.F = None
-        self.M = None
         self.phi = None
         self.theta = None
         self.z = None
+
         self.s_t = None
         self.a_t = None
 

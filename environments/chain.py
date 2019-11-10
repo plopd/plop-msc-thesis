@@ -10,7 +10,8 @@ class Chain(BaseEnvironment):
     """
 
     def __init__(self):
-        super(Chain, self).__init__()
+        super().__init__()
+        self.N = None
 
     def env_init(self, env_info={}):
         self.N = env_info["N"]
@@ -32,7 +33,7 @@ class Chain(BaseEnvironment):
         elif action == RIGHT:
             current_state = min(self.N + 1, last_state + 1)
         else:
-            raise Exception("Unexpected action given")
+            raise Exception("Unexpected action given.")
 
         reward = 0
         is_terminal = False

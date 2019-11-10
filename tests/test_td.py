@@ -30,6 +30,7 @@ def test_agent_start(algorithm):
 
     rl_glue = RLGlue(environment, agent)
     rl_glue.rl_init(agent_init_info=agent_info, env_init_info=env_info)
+    rl_glue.rl_start()
 
     z = rl_glue.rl_agent_message("get eligibility trace")
     w = rl_glue.rl_agent_message("get weight vector")
@@ -84,11 +85,43 @@ def test_eligibility_trace_reset_at_start_of_episode(algorithm):
     agent = get_agent(agent_info["algorithm"])
 
     rl_glue = RLGlue(environment, agent)
+    rl_glue.rl_init(agent_init_info=agent_info, env_init_info=env_info)
+    rl_glue.rl_start()
+    e = rl_glue.rl_agent_message("get eligibility trace")
+    assert np.allclose(e, np.zeros(e.shape[0]))
 
-    for episode in range(1, 3):
+
+@pytest.mark.parametrize("algorithm", ["etd"])
+def test_emphasis_reset_at_start_of_episode(algorithm):
+    environment = get_environment(env_info["env"])
+    agent_info["algorithm"] = algorithm
+    agent = get_agent(agent_info["algorithm"])
+
+    rl_glue = RLGlue(environment, agent)
+
+    rl_glue.rl_init(agent_init_info=agent_info, env_init_info=env_info)
+    rl_glue.rl_start()
+    assert rl_glue.rl_agent_message("get emphasis trace") == 0.0
+
+
+@pytest.mark.parametrize(
+    "env, algorithm", [("deterministic-chain", "td"), ("deterministic-chain", "etd")]
+)
+def test_one_step_td_update(env, algorithm):
+    agent_info["algorithm"] = algorithm
+    agent_info["lmbda"] = 1.0
+    agent_info["gamma"] = 0.0
+    env_info["env"] = env
+    agent = get_agent(agent_info["algorithm"])
+    environment = get_environment(env_info["env"])
+
+    rl_glue = RLGlue(environment, agent)
+
+    for episode in range(1, 2):
         rl_glue.rl_init(agent_init_info=agent_info, env_init_info=env_info)
-        assert np.allclose(
-            rl_glue.rl_agent_message("get eligibility trace"),
-            np.zeros(rl_glue.rl_agent_message("get weight vector").shape[0]),
-        )
         rl_glue.rl_episode(0)
+        weight_vector = rl_glue.rl_agent_message("get weight vector")
+
+        assert np.allclose(
+            weight_vector[:-episode], np.zeros(weight_vector.shape[0] - episode)
+        )

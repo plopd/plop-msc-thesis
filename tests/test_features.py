@@ -26,7 +26,7 @@ def test_dependent_features_is_unit_norm(N):
 def test_random_features_is_unit_norm(N):
     states = np.arange(N).reshape((-1, 1))
     dependent_features = get_random_features(
-        states, N // 2, num_ones=N // 4, kind="binary"
+        states, N // 2, num_ones=N // 4, kind="random-binary"
     )
     norm_dep_features = np.linalg.norm(dependent_features, axis=1)
     assert np.allclose(norm_dep_features, np.ones(N))

@@ -8,29 +8,14 @@ RIGHT = 1
 
 
 class TD(BaseAgent):
-    def __init__(self):
-        super().__init__()
-
     def agent_init(self, agent_info):
-        self.N = agent_info["N"]
-        self.alpha = agent_info["alpha"]
-        self.gamma = agent_info["gamma"]
-        self.lmbda = agent_info["lmbda"]
+        self.alpha = agent_info.get("alpha")
+        self.gamma = agent_info.get("gamma", 1.0)
+        self.lmbda = agent_info.get("lmbda", 0.0)
         self.rand_generator = np.random.RandomState(agent_info.get("seed"))
-        self.n = agent_info.get("n")
-        self.num_ones = agent_info.get("num_ones")
-        self.order = agent_info.get("order")
-        states = np.arange(1, self.N + 1).reshape((-1, 1))
-        self.phi = utils.get_features(
-            states,
-            name=agent_info["features"],
-            n=self.n,
-            num_ones=self.num_ones,
-            order=self.order,
-            seed=agent_info.get("seed"),
-        )
+        states = np.arange(1, agent_info.get("N") + 1).reshape((-1, 1))
+        self.phi = utils.get_features(states, agent_info["features"], **agent_info)
         self.theta = np.zeros(self.phi.shape[1])
-        self.z = np.zeros_like(self.theta)
 
         self.s_t = None
         self.a_t = None
@@ -83,18 +68,24 @@ class TD(BaseAgent):
             return self.phi
         elif message == "get weight vector":
             return self.theta
-        raise Exception("Unexpected message given")
+        raise Exception("Unexpected message given.")
 
     def agent_cleanup(self):
         pass
 
     def _learn(self, reward, current_state_feature, last_state_feature):
-        self.z = self.gamma * self.lmbda * self.z + last_state_feature
+        self._compute_traces(last_state_feature)
+        td_error = self._td_error(reward, current_state_feature, last_state_feature)
 
+        self.theta += self.alpha * td_error * self.z
+
+    def _td_error(self, reward, current_state_feature, last_state_feature):
         td_error = (
             reward
             + self.gamma * np.dot(self.theta.T, current_state_feature)
             - np.dot(self.theta.T, last_state_feature)
         )
+        return td_error
 
-        self.theta += self.alpha * td_error * self.z
+    def _compute_traces(self, last_state_feature):
+        self.z = self.gamma * self.lmbda * self.z + last_state_feature

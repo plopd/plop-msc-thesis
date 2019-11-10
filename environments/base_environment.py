@@ -17,8 +17,8 @@ class BaseEnvironment:
 
     __metaclass__ = ABCMeta
 
+    @abstractmethod
     def __init__(self):
-        self.N = None
 
         reward = None
         observation = None

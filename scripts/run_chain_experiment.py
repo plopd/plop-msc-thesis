@@ -8,7 +8,7 @@ from experiments.chain_experiment import ChainExp
 
 def main():
     sweep_id = int(sys.argv[1])
-    sweep_file_name = "Chain5withUniformAndRandomInterest.json"
+    sweep_file_name = "ChainPolyFourier.json"
     sweeper = Sweeper(Path(__file__).parents[1] / "configs" / f"{sweep_file_name}")
     param_cfg = sweeper.parse(sweep_id)
 

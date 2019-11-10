@@ -14,7 +14,10 @@ def calculate_auc(ys):
     return auc
 
 
-def get_interest(N, name, seed=None):
+def get_interest(name, **kwargs):
+
+    N, seed = kwargs["N"], kwargs["seed"]
+
     if name == "uniform":
         return np.ones(N)
     elif name == "random-binary":
@@ -153,7 +156,7 @@ def run_exact_lstd(P_pi, Gamma, Lmbda, Phi, r_pi, d_mu, i, true_v, which):
     return theta, msve, approx_v, M
 
 
-def get_features(states, name=None, n=None, num_ones=None, order=None, seed=None):
+def get_features(states, name, **kwargs):
     """ Construct various features from states.
 
     Args:
@@ -167,6 +170,14 @@ def get_features(states, name=None, n=None, num_ones=None, order=None, seed=None
     Returns:
 
     """
+
+    n = kwargs["n"]
+    num_ones = kwargs["num_ones"]
+    order = kwargs["order"]
+    seed = kwargs["seed"]
+
+    print(kwargs)
+
     if name == "tabular":
         return get_tabular_features(states)
     elif name == "inverted":
