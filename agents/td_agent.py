@@ -1,7 +1,7 @@
 import numpy as np
 
-import utils.utils as utils
 from agents.base_agent import BaseAgent
+from utils.utils import get_feature
 
 LEFT = 0
 RIGHT = 1
@@ -9,13 +9,14 @@ RIGHT = 1
 
 class TD(BaseAgent):
     def agent_init(self, agent_info):
+        self.agent_info = agent_info
+        self.in_features = agent_info.get("in_features")
         self.alpha = agent_info.get("alpha")
         self.gamma = agent_info.get("gamma", 1.0)
         self.lmbda = agent_info.get("lmbda", 0.0)
         self.rand_generator = np.random.RandomState(agent_info.get("seed"))
-        states = np.arange(1, agent_info.get("N") + 1).reshape((-1, 1))
-        self.phi = utils.get_features(states, agent_info["features"], **agent_info)
-        self.theta = np.zeros(self.phi.shape[1])
+        self.theta = np.zeros(self.in_features)
+        self.feature = agent_info["features"]
 
         self.s_t = None
         self.a_t = None
@@ -29,17 +30,10 @@ class TD(BaseAgent):
         return self.a_t
 
     def agent_step(self, reward, observation):
-        """
-
-        Args:
-            reward:
-            observation: (int) in [1, `self.num_states`]
-
-        Returns:
-
-        """
-        current_state_feature = self.phi[observation - 1]
-        last_state_feature = self.phi[self.s_t - 1]
+        current_state_feature = get_feature(
+            observation - 1, self.feature, **self.agent_info
+        )
+        last_state_feature = get_feature(self.s_t - 1, self.feature, **self.agent_info)
 
         self._learn(reward, current_state_feature, last_state_feature)
 
@@ -49,7 +43,7 @@ class TD(BaseAgent):
         return self.a_t
 
     def agent_end(self, reward):
-        last_state_feature = self.phi[self.s_t - 1]
+        last_state_feature = get_feature(self.s_t - 1, self.feature, **self.agent_info)
 
         self._learn(reward, 0, last_state_feature)
 
@@ -59,13 +53,8 @@ class TD(BaseAgent):
         return self.rand_generator.choice([LEFT, RIGHT])
 
     def agent_message(self, message):
-        if message == "get state value":
-            approx_v = np.dot(self.phi, self.theta)
-            return approx_v
-        elif message == "get eligibility trace":
+        if message == "get eligibility trace":
             return self.z
-        elif message == "get feature matrix":
-            return self.phi
         elif message == "get weight vector":
             return self.theta
         raise Exception("Unexpected message given.")

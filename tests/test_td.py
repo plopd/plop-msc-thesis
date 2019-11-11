@@ -10,6 +10,7 @@ agent_info = {
     "algorithm": "etd",
     "features": "tabular",
     "order": None,
+    "in_features": 19,
     "n": None,
     "num_ones": None,
     "gamma": 1.0,

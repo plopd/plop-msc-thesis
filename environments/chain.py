@@ -1,3 +1,5 @@
+import numpy as np
+
 from environments.base_environment import BaseEnvironment
 
 LEFT = 0
@@ -18,7 +20,7 @@ class Chain(BaseEnvironment):
 
     def env_start(self):
         reward = 0
-        observation = self.N // 2 + 1
+        observation = np.array(self.N // 2 + 1)
         is_terminal = False
 
         self.reward_obs_term = (reward, observation, is_terminal)
@@ -29,9 +31,9 @@ class Chain(BaseEnvironment):
         last_state = self.reward_obs_term[1]
 
         if action == LEFT:
-            current_state = max(0, last_state - 1)
+            current_state = np.maximum(0, last_state - 1)
         elif action == RIGHT:
-            current_state = min(self.N + 1, last_state + 1)
+            current_state = np.minimum(self.N + 1, last_state + 1)
         else:
             raise Exception("Unexpected action given.")
 

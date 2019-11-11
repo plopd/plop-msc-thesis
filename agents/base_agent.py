@@ -19,12 +19,10 @@ class BaseAgent:
     @abstractmethod
     def __init__(self):
         self.rand_generator = None
-        self.N = None
-        self.phi = None
+        self.feature = None
         self.alpha = None
         self.gamma = None
         self.lmbda = None
-        self.phi = None
         self.theta = None
         self.z = None
 

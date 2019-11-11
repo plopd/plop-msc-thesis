@@ -14,7 +14,7 @@ class ELSTD(ETD):
         super().agent_init(agent_info)
 
         self.steps = 0
-        num_features = self.phi.shape[1]
+        num_features = self.feature.shape[1]
         self.A = np.zeros((num_features, num_features))
         self.b = np.zeros((num_features, 1))
 

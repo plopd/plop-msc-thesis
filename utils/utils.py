@@ -16,7 +16,7 @@ def calculate_auc(ys):
 
 def get_interest(name, **kwargs):
 
-    N, seed = kwargs["N"], kwargs["seed"]
+    N, seed = kwargs.get("N"), kwargs.get("seed")
 
     if name == "uniform":
         return np.ones(N)
@@ -156,12 +156,12 @@ def run_exact_lstd(P_pi, Gamma, Lmbda, Phi, r_pi, d_mu, i, true_v, which):
     return theta, msve, approx_v, M
 
 
-def get_features(states, name, **kwargs):
+def get_feature(x, name, **kwargs):
     """ Construct various features from states.
 
     Args:
         order: int
-        states: ndarray, shape (N, k)
+        x: ndarray, shape (N, k)
         name: str,
         n: int,
         num_ones: int,
@@ -171,31 +171,27 @@ def get_features(states, name, **kwargs):
 
     """
 
-    n = kwargs["n"]
-    num_ones = kwargs["num_ones"]
-    order = kwargs["order"]
-    seed = kwargs["seed"]
-
-    print(kwargs)
+    n = kwargs.get("n")
+    num_ones = kwargs.get("num_ones")
+    order = kwargs.get("order")
+    seed = kwargs.get("seed")
 
     if name == "tabular":
-        return get_tabular_features(states)
+        return get_tabular_feature(x, **kwargs)
     elif name == "inverted":
-        return get_inverted_features(states)
+        return get_inverted_features(x)
     elif name == "dependent":
-        return get_dependent_features(states)
+        return get_dependent_features(x)
     elif name == "poly":
-        return get_bases_features(states, order=order, kind="poly")
+        return get_bases_features(x, order=order, kind="poly")
     elif name == "fourier":
-        return get_bases_features(states, order=order, kind="fourier")
+        return get_bases_features(x, order=order, kind="fourier")
     elif name == "random-binary":
         return get_random_features(
-            states, n, num_ones=num_ones, kind="random-binary", seed=seed
+            x, n, num_ones=num_ones, kind="random-binary", seed=seed
         )
     elif name == "random-nonbinary":
-        return get_random_features(
-            states, n, num_ones=0, kind="random-nonbinary", seed=seed
-        )
+        return get_random_features(x, n, num_ones=0, kind="random-nonbinary", seed=seed)
     raise Exception("Unexpected features given.")
 
 
@@ -256,9 +252,12 @@ def get_random_features(
     return features
 
 
-def get_tabular_features(states):
-    N, n = states.shape
-    return np.eye(N)
+def get_tabular_feature(x, **kwargs):
+    num_states = kwargs.get("N")
+    feature = np.zeros(num_states)
+    feature[x] = 1
+
+    return feature
 
 
 def get_bases_features(states, order, kind=None, normalize=True):

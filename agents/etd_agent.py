@@ -1,4 +1,5 @@
 from agents.td_agent import TD
+from utils.utils import get_feature
 
 
 class ETD(TD):
@@ -21,8 +22,10 @@ class ETD(TD):
 
     def agent_step(self, reward, observation):
 
-        current_state_feature = self.phi[observation - 1]
-        last_state_feature = self.phi[self.s_t - 1]
+        current_state_feature = get_feature(
+            observation - 1, self.feature, **self.agent_info
+        )
+        last_state_feature = get_feature(self.s_t - 1, self.feature, **self.agent_info)
 
         self._learn(reward, current_state_feature, last_state_feature)
 
@@ -35,7 +38,7 @@ class ETD(TD):
         return super().agent_policy(observation)
 
     def agent_end(self, reward):
-        last_state_feature = self.phi[self.s_t - 1]
+        last_state_feature = get_feature(self.s_t - 1, self.feature, **self.agent_info)
 
         self._learn(reward, 0.0, last_state_feature)
 

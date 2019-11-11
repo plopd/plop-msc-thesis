@@ -4,7 +4,7 @@ import numpy as np
 
 from utils.calculate_state_distribution_chain import calculate_state_distribution
 from utils.utils import calculate_v_pi
-from utils.utils import get_features
+from utils.utils import get_feature
 from utils.utils import get_interest
 from utils.utils import run_exact_lstd
 
@@ -43,7 +43,7 @@ def compute_solution(N, method, features, interest, n_runs=1, n=None, num_ones=N
     r_pi[-1] = 0.5
 
     states = np.arange(N).reshape(-1, 1)
-    Phi = get_features(states, name=features, n=n, num_ones=num_ones, seed=None)
+    Phi = get_feature(states, name=features, n=n, num_ones=num_ones, seed=None)
     P_pi = np.array(
         [0.5 if i + 1 == j or i - 1 == j else 0 for i in range(N) for j in range(N)]
     ).reshape((N, N))
@@ -58,7 +58,7 @@ def compute_solution(N, method, features, interest, n_runs=1, n=None, num_ones=N
             P_pi=P_pi,
             Gamma=np.eye(N),
             Lmbda=np.zeros(N),
-            Phi=get_features(states, name=features, n=n, num_ones=num_ones, seed=i),
+            Phi=get_feature(states, name=features, n=n, num_ones=num_ones, seed=i),
             r_pi=r_pi.reshape((-1, 1)),
             d_mu=d_mu,
             i=get_interest(N, name=interest, seed=i),
