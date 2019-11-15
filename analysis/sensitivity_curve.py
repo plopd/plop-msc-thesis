@@ -7,14 +7,14 @@ from analysis.colormap import colors
 from analysis.results import get_data_by
 
 
-def get_SSA(ax, result, stepsize_search_dct, cutoff, name):
-    stepsizes = result.get_param_val("alpha", stepsize_search_dct)
+def get_SSA(ax, result, search_dct, cutoff, name):
+    stepsizes = result.get_param_val("alpha", search_dct)
     stepsizes = sorted(stepsizes)
     m = []
     s = []
     xs = []
     for stepsize in tqdm(stepsizes):
-        idx_exp_search_dict = copy.deepcopy(stepsize_search_dct)
+        idx_exp_search_dict = copy.deepcopy(search_dct)
         idx_exp_search_dict["alpha"] = stepsize
         idx_data = result.find_experiment_by(idx_exp_search_dict)
         data = result.load(idx_data)
@@ -33,18 +33,14 @@ def get_SSA(ax, result, stepsize_search_dct, cutoff, name):
     ax.plot(
         xs,
         m,
-        label=f"{stepsize_search_dct['algorithm']}",
-        c=colors[stepsize_search_dct["algorithm"]],
+        label=f"{search_dct['algorithm']}",
+        c=colors[search_dct["algorithm"]],
         marker="o",
     )
     se_upper = m + 2.5 * s
     se_lower = m - 2.5 * s
-    ax.fill_between(
-        xs, m, se_upper, color=colors[stepsize_search_dct["algorithm"]], alpha=0.15
-    )
-    ax.fill_between(
-        xs, m, se_lower, color=colors[stepsize_search_dct["algorithm"]], alpha=0.15
-    )
+    ax.fill_between(xs, m, se_upper, color=colors[search_dct["algorithm"]], alpha=0.15)
+    ax.fill_between(xs, m, se_lower, color=colors[search_dct["algorithm"]], alpha=0.15)
     ax.set_xscale("log")
     ax.spines["right"].set_visible(False)
     ax.spines["top"].set_visible(False)

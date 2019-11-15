@@ -1,33 +1,32 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
-from utils.utils import get_bases_features
+from utils.utils import get_feature
 
-states = np.random.uniform(0, 1, 1000).reshape(-1, 2)
 
-features = get_bases_features(states, order=5, kind="fourier")
+def get_fig(name):
+    n_states = 10000
+    in_features = 2
+    out_features = 36
+    states = np.random.uniform(0, 1, (n_states, in_features))
 
-N, n = features.shape
+    features = np.array(
+        [
+            get_feature(states[i], **{"order": 5, "features": name})
+            for i in range(n_states)
+        ]
+    )
 
-fig = plt.figure(figsize=(25, 25))
-fig.subplots_adjust(hspace=0.4, wspace=0.4)
+    fig = plt.figure(figsize=(25, 25))
+    fig.subplots_adjust(hspace=0.4, wspace=0.4)
 
-for i in range(1, n + 1):
-    ax = fig.add_subplot(int(np.sqrt(n)), int(np.sqrt(n)), i)
-    ax.scatter(states[:, 0], states[:, 1], c=features[:, i - 1], cmap="bone")
-plt.title("Fourier Basis")
-plt.tight_layout()
-plt.show()
+    for i in range(1, out_features + 1):
+        ax = fig.add_subplot(int(np.sqrt(out_features)), int(np.sqrt(out_features)), i)
+        ax.scatter(states[:, 0], states[:, 1], c=features[:, i - 1], cmap="bone")
+    plt.tight_layout()
+    plt.show()
 
-features = get_bases_features(states, order=5, kind="poly")
 
-N, n = features.shape
-fig = plt.figure(figsize=(25, 25))
-fig.subplots_adjust(hspace=0.4, wspace=0.4)
-
-for i in range(1, n + 1):
-    ax = fig.add_subplot(int(np.sqrt(n)), int(np.sqrt(n)), i)
-    ax.scatter(states[:, 0], states[:, 1], c=features[:, i - 1], cmap="bone")
-plt.title("Polynomial Basis")
-plt.tight_layout()
-plt.show()
+if __name__ == "__main__":
+    get_fig("fourier")
+    get_fig("poly")

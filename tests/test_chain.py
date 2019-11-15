@@ -32,4 +32,4 @@ def test_chain_init(N):
 
     (last_state, _) = rl_glue.rl_start()
 
-    assert last_state == N // 2 + 1
+    assert last_state == N // 2

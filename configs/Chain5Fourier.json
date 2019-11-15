@@ -4,7 +4,7 @@
 		{
 			"experiment": [
 				{
-					"n_episodes": [100000],
+					"n_episodes": [10000],
 					"max_episode_steps": [0],
 					"episode_eval_freq": [1],
 					"output_dir": ["~/scratch/Chain/Chain5Fourier"]
@@ -25,7 +25,13 @@
 					"features": [
 						{
 							"features": ["fourier"],
-							"order": [5, 10, 15]
+							"order": [2],
+							"in_features": [3]
+						},
+						{
+							"features": ["fourier"],
+							"order": [3],
+							"in_features": [4]
 						}
 					],
 					"interest": ["uniform"]

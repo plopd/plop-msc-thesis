@@ -1,3 +1,4 @@
+import json
 import sys
 from pathlib import Path
 
@@ -9,28 +10,21 @@ def test_sweeper(cfg_filename, num_runs):
     for sweep_id in range(sweeper.total_combinations * num_runs):
         rtn_dict = sweeper.parse(sweep_id)
 
-        report = (
-            "idx: %d\nrun: %d\nenv: %s\nN: %d\nalgorithm: %s\nalpha: "
-            "%s\nfeatures: %s\ninterest: %s\norder: %s\nn: %s\nnum_ones: %s\n"
-            % (
-                sweep_id,
-                rtn_dict.get("run", None),
-                rtn_dict.get("env", None),
-                rtn_dict.get("N", None),
-                rtn_dict.get("algorithm", None),
-                rtn_dict.get("alpha", None),
-                rtn_dict.get("features", None),
-                rtn_dict.get("interest", None),
-                rtn_dict.get("order", None),
-                rtn_dict.get("n", None),
-                rtn_dict.get("num_ones", None),
-            )
-        )
-        print(report)
+        print(f"ID: {sweep_id}", json.dumps(rtn_dict, indent=8))
 
-    print(sweeper.total_combinations)
+    print(f"-------------\nTotal sweeping combinations: {sweeper.total_combinations}")
 
-    print(len(sweeper.search({"env": "chain", "N": 5}, num_runs)))
+    # src_lst = sweeper.search({
+    #         "algorithm": "td",
+    #         "env": "chain",
+    #         "features": "tabular",
+    #         "in_features": 19,
+    #         "interest": "uniform",
+    #         "N": 19,
+    #     }, num_runs)
+    #
+    # for src in src_lst:
+    #     print(json.dumps(src, indent=8))
 
 
 if __name__ == "__main__":

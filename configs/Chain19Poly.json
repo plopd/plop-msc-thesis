@@ -25,7 +25,18 @@
 					"features": [
 						{
 							"features": ["poly"],
-							"order": [5, 10, 15]
+							"order": [5],
+							"in_features": [6]
+						},
+						{
+							"features": ["poly"],
+							"order": [10],
+							"in_features": [11]
+						},
+						{
+							"features": ["poly"],
+							"order": [15],
+							"in_features": [16]
 						}
 					],
 					"interest": ["uniform"]

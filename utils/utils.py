@@ -32,28 +32,21 @@ def weight_norm(X, W):
     return np.sqrt(X.T.dot(W).dot(X))
 
 
-def MSVE(true_v, est_v, mu, i):
+def MSVE(true_v, est_v, mu):
     """
     Compute the Root Mean Square Value Error
     Args:
         true_v: ndarray (N,)
         est_v: ndarray (N,)
         mu: ndarray (N,)
-        i: ndarray (N,)
 
     Returns:
 
     """
-    w = np.multiply(mu, i)
-    w = w / np.sum(w)
-    W = np.diag(w)
-    res = weight_norm(true_v - est_v, W)
+    D = np.diag(mu)
+    res = weight_norm(true_v - est_v, D)
 
     return res
-
-
-def MSPBE(v_theta, pi, p, r, gamma, Phi, W):
-    raise NotImplementedError
 
 
 def calculate_M(P_pi, Gamma, Lmbda, i, d_mu):
@@ -156,141 +149,145 @@ def run_exact_lstd(P_pi, Gamma, Lmbda, Phi, r_pi, d_mu, i, true_v, which):
     return theta, msve, approx_v, M
 
 
-def get_feature(x, name, **kwargs):
+def get_feature(x, normalize=True, **kwargs):
     """ Construct various features from states.
 
     Args:
-        order: int
-        x: ndarray, shape (N, k)
+        x: ndarray, shape (k,)
         name: str,
-        n: int,
-        num_ones: int,
-        seed: int,
 
     Returns:
 
     """
 
-    n = kwargs.get("n")
-    num_ones = kwargs.get("num_ones")
+    name = kwargs.get("features")
     order = kwargs.get("order")
+    num_states = kwargs.get("N")
+    in_features = kwargs.get("in_features")
+    num_ones = kwargs.get("num_ones", 0)
     seed = kwargs.get("seed")
 
     if name == "tabular":
-        return get_tabular_feature(x, **kwargs)
+        return get_tabular_feature(x, num_states)
     elif name == "inverted":
-        return get_inverted_features(x)
+        return get_inverted_feature(x, num_states)
     elif name == "dependent":
-        return get_dependent_features(x)
-    elif name == "poly":
-        return get_bases_features(x, order=order, kind="poly")
-    elif name == "fourier":
-        return get_bases_features(x, order=order, kind="fourier")
+        return get_dependent_feature(x, num_states)
+    elif name == "poly" or name == "fourier":
+        return get_bases_feature(x, name, order)
     elif name == "random-binary":
-        return get_random_features(
-            x, n, num_ones=num_ones, kind="random-binary", seed=seed
+        return get_random_feature(
+            x, num_states, name, in_features, num_ones, seed, normalize=False
         )
     elif name == "random-nonbinary":
-        return get_random_features(x, n, num_ones=0, kind="random-nonbinary", seed=seed)
-    raise Exception("Unexpected features given.")
+        return get_random_feature(x, num_states, name, in_features, num_ones, seed)
+    raise Exception("Unexpected name given.")
 
 
-def get_inverted_features(states, normalize=True):
-    N, n = states.shape
-
-    features = np.ones((N, N))
-    features[np.arange(N), np.arange(N)] = 0
+def get_inverted_feature(x, num_states=None, normalize=True):
+    representations = np.ones((num_states, num_states))
+    representations[np.arange(num_states), np.arange(num_states)] = 0
 
     if normalize:
-        features = np.divide(
-            features, np.linalg.norm(features, axis=1).reshape((-1, 1))
+        representations = np.divide(
+            representations, np.linalg.norm(representations, axis=1).reshape((-1, 1))
         )
 
+    features = representations[x].squeeze()
     return features
 
 
-def get_dependent_features(states, normalize=True):
-    N, n = states.shape
+def get_dependent_feature(x, num_states=None, normalize=True):
 
-    D = N // 2 + 1
+    D = num_states // 2 + 1
     upper = np.tril(np.ones((D, D)), k=0)
     lower = np.triu(np.ones((D - 1, D)), k=1)
-    features = np.vstack((upper, lower))
+    representations = np.vstack((upper, lower))
 
     if normalize:
-        features = np.divide(
-            features, np.linalg.norm(features, axis=1).reshape((-1, 1))
+        representations = np.divide(
+            representations, np.linalg.norm(representations, axis=1).reshape((-1, 1))
         )
 
+    features = representations[x].squeeze()
     return features
 
 
-def get_random_features(
-    states, n, num_ones, kind="random-binary", seed=None, normalize=True
+def get_random_feature(
+    x,
+    num_states=None,
+    name=None,
+    in_features=None,
+    num_ones=0,
+    seed=None,
+    normalize=True,
 ):
-    N, _ = states.shape
-    if kind != "random-binary" and kind != "random-nonbinary":
-        raise Exception("Unknown kind given.")
+
+    if name != "random-binary" and name != "random-nonbinary":
+        raise Exception("Unknown feature_type given.")
 
     np.random.seed(seed)
-    num_zeros = n - num_ones
-    features = np.zeros((N, n))
+    num_zeros = in_features - num_ones
+    representations = np.zeros((num_states, in_features))
 
-    for i_s in range(N):
-        if kind == "random-binary":
+    for i_s in range(num_states):
+        if name == "random-binary":
             random_array = np.array([0] * num_zeros + [1] * num_ones)
             np.random.shuffle(random_array)
         else:
-            random_array = np.random.randn(n)
-        features[i_s, :] = random_array
+            random_array = np.random.randn(in_features)
+        representations[i_s, :] = random_array
 
     if normalize:
-        features = np.divide(
-            features, np.linalg.norm(features, axis=1).reshape((-1, 1))
+        representations = np.divide(
+            representations, np.linalg.norm(representations, axis=1).reshape((-1, 1))
         )
+
+    features = representations[x].squeeze()
+    return features
+
+
+def get_tabular_feature(x, num_states):
+    features = np.zeros(num_states)
+    features[x] = 1
 
     return features
 
 
-def get_tabular_feature(x, **kwargs):
-    num_states = kwargs.get("N")
-    feature = np.zeros(num_states)
-    feature[x] = 1
-
-    return feature
-
-
-def get_bases_features(states, order, kind=None, normalize=True):
+def get_bases_feature(x, name, order, normalize=True):
     """
     Construct order-n polynomial- or Fourier-basis features from states.
 
     Args:
-        states: ndarray, shape (N, k)
-        order: int,
-        kind: str, 'poly' or 'fourier'
+        x: ndarray, shape (k,)
+        name: str, 'poly' or 'fourier'
+        order: int
 
-    Returns: ndarray of size (N, num_features), with num_features = (order+1)**k
+    Returns: ndarray of size (num_features,), with num_features = (order+1)**k
 
     """
-    if kind != "poly" and kind != "fourier":
-        raise Exception("Unknown kind given.")
 
-    if normalize:
-        # https://stats.stackexchange.com/questions/70801/how-to-normalize-data-to-0-1-range
-        states = np.divide(states - states.min(), (states.max() - states.min()))
+    if name != "poly" and name != "fourier":
+        raise Exception("Unknown name given.")
 
-    N, k = states.shape
+    k = len(x)
     num_features = (order + 1) ** k
 
-    c = [i for i in range(0, order + 1)]
+    c = [i for i in range(order + 1)]
     C = np.array(list(itertools.product(*[c for _ in range(k)])))
 
-    X = np.zeros((N, num_features))
+    features = np.zeros(num_features)
 
-    if kind == "poly":
-        for n in range(N):
-            X[n] = np.prod(np.power(states[n], C), axis=1)
-    elif kind == "fourier":
-        X = np.cos(np.pi * np.matmul(states, C.T))
+    if name == "poly":
+        features = np.prod(np.power(x, C), axis=1)
+    elif name == "fourier":
+        features = np.cos(np.pi * np.dot(C, x))
 
-    return X
+    if normalize:
+        features = features / np.linalg.norm(features)
+
+    return features
+
+
+def get_chain_states(N):
+    return np.arange(N).reshape((-1, 1))

@@ -25,7 +25,18 @@
 					"features": [
 						{
 							"features": ["fourier"],
-							"order": [5, 10, 15]
+							"order": [5],
+							"in_features": [6]
+						},
+						{
+							"features": ["fourier"],
+							"order": [10],
+							"in_features": [11]
+						},
+						{
+							"features": ["fourier"],
+							"order": [15],
+							"in_features": [16]
 						}
 					],
 					"interest": ["uniform"]

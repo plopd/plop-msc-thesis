@@ -60,9 +60,10 @@ class BaseExperiment:
         """
 
     @abstractmethod
-    def message_experiment(self):
+    def message_experiment(self, message):
         """
-
+        Args:
+            message: The message passed to the agent.
         Returns:
-
+            The response (or answer) to the message.
         """

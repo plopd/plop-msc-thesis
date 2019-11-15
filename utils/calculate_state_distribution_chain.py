@@ -38,7 +38,7 @@ def calculate_state_distribution(N):
     eta = np.zeros(env_info["N"])
     last_state, _ = rl_glue.rl_start()
     for _ in tqdm(range(1, int(exp_info["max_timesteps_episode"]) + 1)):
-        eta[last_state - 1] += 1
+        eta[last_state] += 1
         _, last_state, _, term = rl_glue.rl_step()
         if term:
             last_state, _ = rl_glue.rl_start()

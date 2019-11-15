@@ -36,8 +36,8 @@ class MC(TD):
         self.trajectory.append((self.s_t, reward))
         for (s_t, r) in self.trajectory[::-1]:
             self.G = self.gamma * self.G + r
-            delta = self.G - np.dot(self.theta.T, self.feature[s_t - 1])
-            self.theta = self.theta + self.alpha * delta * self.feature[s_t - 1]
+            delta = self.G - np.dot(self.theta.T, self.feature_type[s_t])
+            self.theta = self.theta + self.alpha * delta * self.feature_type[s_t]
 
         return
 

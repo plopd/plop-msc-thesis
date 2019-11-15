@@ -16,7 +16,6 @@ class TD(BaseAgent):
         self.lmbda = agent_info.get("lmbda", 0.0)
         self.rand_generator = np.random.RandomState(agent_info.get("seed"))
         self.theta = np.zeros(self.in_features)
-        self.feature = agent_info["features"]
 
         self.s_t = None
         self.a_t = None
@@ -30,10 +29,8 @@ class TD(BaseAgent):
         return self.a_t
 
     def agent_step(self, reward, observation):
-        current_state_feature = get_feature(
-            observation - 1, self.feature, **self.agent_info
-        )
-        last_state_feature = get_feature(self.s_t - 1, self.feature, **self.agent_info)
+        current_state_feature = get_feature(observation, **self.agent_info)
+        last_state_feature = get_feature(self.s_t, **self.agent_info)
 
         self._learn(reward, current_state_feature, last_state_feature)
 
@@ -43,9 +40,9 @@ class TD(BaseAgent):
         return self.a_t
 
     def agent_end(self, reward):
-        last_state_feature = get_feature(self.s_t - 1, self.feature, **self.agent_info)
+        last_state_feature = get_feature(self.s_t, **self.agent_info)
 
-        self._learn(reward, 0, last_state_feature)
+        self._learn(reward, 0.0, last_state_feature)
 
         return
 
@@ -63,18 +60,11 @@ class TD(BaseAgent):
         pass
 
     def _learn(self, reward, current_state_feature, last_state_feature):
-        self._compute_traces(last_state_feature)
-        td_error = self._td_error(reward, current_state_feature, last_state_feature)
-
-        self.theta += self.alpha * td_error * self.z
-
-    def _td_error(self, reward, current_state_feature, last_state_feature):
+        self.z = self.gamma * self.lmbda * self.z + last_state_feature
         td_error = (
             reward
             + self.gamma * np.dot(self.theta.T, current_state_feature)
             - np.dot(self.theta.T, last_state_feature)
         )
-        return td_error
 
-    def _compute_traces(self, last_state_feature):
-        self.z = self.gamma * self.lmbda * self.z + last_state_feature
+        self.theta += self.alpha * td_error * self.z

@@ -25,12 +25,12 @@
 					"features": [
 						{
 							"features": ["random-binary"],
-							"n": [10],
+							"in_features": [10],
 							"num_ones": [5]
 						},
 						{
 							"features": ["random-nonbinary"],
-							"n": [10]
+							"in_features": [10]
 						}
 					],
 					"interest": ["uniform"]

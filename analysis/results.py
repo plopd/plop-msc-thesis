@@ -5,49 +5,49 @@ from alphaex.sweeper import Sweeper
 
 
 class Result(object):
-    def __init__(self, cfg, datapath, exp, runs=100):
-        self.cfg = cfg
+    def __init__(self, config_filepath, datapath, experiment, runs=100):
+        self.cfg = config_filepath
         self.datapath = datapath
-        self.exp = exp
+        self.exp = experiment
         self.runs = runs
-        self.sweeper = Sweeper(f"{Path(__file__).parents[1]}/configs/{cfg}")
+        self.sweeper = Sweeper(Path(__file__).parents[1] / "configs" / f"{self.cfg}")
 
     def find_experiment_by(self, params):
         """
         Find all experiments which include `params`
         Args:
-            params: dct
+            params: dict
 
         Returns: list, sweeper indices
 
         """
-        lst_experiments = self.sweeper.search(params, num_runs=self.runs)
+        lst_experiments = self.sweeper.search(params, self.runs)
         ids_experiments = []
         for ls in lst_experiments:
             ids_experiments.extend(ls["ids"])
 
         return sorted(ids_experiments)
 
-    def find_experiment_by_idx(self, idcs):
+    def find_experiment_by_idx(self, idxs):
         experiments = []
-        for idx in idcs:
+        for idx in idxs:
             rtn_dict = self.sweeper.parse(idx)
             experiments.append(rtn_dict)
 
         return experiments
 
-    def get_param_val(self, name, search_dct={}):
+    def get_param_val(self, name, criteria):
         """
         Find values to parameter with `name`
         Args:
-            name:
-            search_dct:
+            name: str,
+            criteria: dict,
 
         Returns:
 
         """
         param_vals = set()
-        lst_experiments = self.sweeper.search(search_dct, num_runs=self.runs)
+        lst_experiments = self.sweeper.search(criteria, self.runs)
         for exp in lst_experiments:
             param_vals.add(exp[name])
 
@@ -58,17 +58,15 @@ class Result(object):
         for idx in idxs:
             try:
                 lst_data.append(
-                    np.load(
-                        f"{self.datapath}/{self.exp}/{idx}_msve.npy", allow_pickle=True
-                    )
+                    np.load(self.datapath / f"{self.exp}" / f"{idx}_msve.npy")
                 )
             except IOError:
                 continue
 
-        data = None
-        if lst_data:
-            data = np.stack(lst_data)
-
+        try:
+            data = np.vstack(lst_data)
+        except ValueError:
+            return None
         return data
 
 

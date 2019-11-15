@@ -19,7 +19,6 @@ class BaseAgent:
     @abstractmethod
     def __init__(self):
         self.rand_generator = None
-        self.feature = None
         self.alpha = None
         self.gamma = None
         self.lmbda = None

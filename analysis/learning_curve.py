@@ -1,37 +1,27 @@
 import copy
 
 import numpy as np
-from tqdm import tqdm
+from tqdm.auto import tqdm
 
 from analysis.colormap import colors
 from analysis.results import get_data_by
 from results.exact_lstd_chain import compute_solution  # noqa f401
 
 
-# Gather methods by experiment:
-#     data_learning_curve_methods = [{mean, se, params_method**}]
-#     For m in methods:
-#         Gather stepsizes by method m
-#         best_stepsize_data =
-#         For s in stepsizes:
-#             Gather data by m and s
-#             Compare to best
-#     plot_learning_curve(data_learning_curve_methods)
-
-
-def get_LCA(ax, result, stepsize_search_dct, name):
-    stepsizes = result.get_param_val("alpha", stepsize_search_dct)
+def get_LCA(ax, result, search_dct, metric):
+    stepsizes = result.get_param_val("alpha", search_dct)
     optim_stepsize_data = None
     optim_stepsize = None
     current_best = np.inf
     for stepsize in tqdm(stepsizes):
-        idx_exp_search_dict = copy.deepcopy(stepsize_search_dct)
+        idx_exp_search_dict = copy.deepcopy(search_dct)
         idx_exp_search_dict["alpha"] = stepsize
         idx_data = result.find_experiment_by(idx_exp_search_dict)
         data = result.load(idx_data)
         if data is None:
+            print(f"LCA: No data found for stepsize: {stepsize}")
             continue
-        mean, se = get_data_by(data, name=name)
+        mean, se = get_data_by(data, name=metric)
         if mean < current_best:
             current_best = mean
             optim_stepsize = stepsize
@@ -41,9 +31,9 @@ def get_LCA(ax, result, stepsize_search_dct, name):
 
     ax.plot(
         m,
-        label=f"{stepsize_search_dct['algorithm']} "
+        label=f"{search_dct['algorithm']} "
         + "2^{}".format(int(np.log2(optim_stepsize))),
-        c=colors[stepsize_search_dct["algorithm"]],
+        c=colors[search_dct["algorithm"]],
     )
     se_upper = m + 2.5 * s
     se_lower = m - 2.5 * s
@@ -51,14 +41,14 @@ def get_LCA(ax, result, stepsize_search_dct, name):
         np.arange(optim_stepsize_data.shape[1]),
         m,
         se_upper,
-        color=colors[stepsize_search_dct["algorithm"]],
+        color=colors[search_dct["algorithm"]],
         alpha=0.15,
     )
     ax.fill_between(
         np.arange(optim_stepsize_data.shape[1]),
         m,
         se_lower,
-        color=colors[stepsize_search_dct["algorithm"]],
+        color=colors[search_dct["algorithm"]],
         alpha=0.15,
     )
     # _, msve_lstd, _, _ = compute_solution(

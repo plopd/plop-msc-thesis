@@ -42,4 +42,5 @@ def calculate_v_chain(N):
 
 if __name__ == "__main__":
     N = int(sys.argv[1])
-    calculate_v_chain(N)
+    V = calculate_v_chain(N)
+    print(V)
