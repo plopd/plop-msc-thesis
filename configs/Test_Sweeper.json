@@ -1,16 +1,16 @@
 {
 	"experiment": [
 				{
-					"n_episodes": [1000],
+					"n_episodes": [50000],
 					"max_episode_steps": [0],
 					"episode_eval_freq": [1],
-					"output_dir": ["~/scratch/Chain/Test"]
+					"output_dir": ["~/scratch/Chain/ChainTabularDependent"]
 				}
 			],
 	"learners_common": [
 		{
 			"algorithm": ["td", "etd"],
-			"alpha": [0.0001220703125, 1.1920928955078125e-07],
+			"alpha": [0.5, 0.125, 0.03125, 0.0078125, 0.001953125, 0.00048828125, 0.0001220703125, 3.0517578125e-05, 7.62939453125e-06, 1.9073486328125e-06, 4.76837158203125e-07, 1.1920928955078125e-07],
 			"gamma": [1.0],
 			"lmbda": [0.0],
 			"interest": ["uniform"]
@@ -40,25 +40,6 @@
 						{
 							"features": ["dependent"],
 							"in_features": [3]
-						},
-						{
-							"features": ["fourier"],
-							"order": [3],
-							"in_features": [4]
-						},
-						{
-							"features": ["poly"],
-							"order": [3],
-							"in_features": [4]
-						},
-						{
-							"features": ["random-binary"],
-							"in_features": [4],
-							"num_ones": [2]
-						},
-						{
-							"features": ["random-nonbinary"],
-							"in_features": [4]
 						}
 					]
 	            }
@@ -79,25 +60,6 @@
 						},
 						{
 							"features": ["dependent"],
-							"in_features": [10]
-						},
-						{
-							"features": ["fourier"],
-							"order": [10],
-							"in_features": [11]
-						},
-						{
-							"features": ["poly"],
-							"order": [5],
-							"in_features": [6]
-						},
-						{
-							"features": ["random-binary"],
-							"in_features": [17],
-							"num_ones": [10]
-						},
-						{
-							"features": ["random-nonbinary"],
 							"in_features": [10]
 						}
 					]

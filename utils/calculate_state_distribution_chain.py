@@ -23,7 +23,6 @@ def calculate_state_distribution(N):
     env_info = {"env": "chain", "N": N}
 
     exp_info = {
-        "id": 0,
         "max_timesteps_episode": 1000000,
         "episode_eval_freq": 1,
         "n_episodes": 1,

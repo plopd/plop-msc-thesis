@@ -8,7 +8,7 @@ from experiments.chain_experiment import ChainExp
 
 
 def main():
-    sweep_file_name = "Test.json"
+    sweep_file_name = "ChainTabularDependent.json"
     sweeper = Sweeper(Path(__file__).parents[1] / "configs" / f"{sweep_file_name}")
     sweep_id = int(sys.argv[1])
     param_cfg = sweeper.parse(sweep_id)
@@ -21,7 +21,7 @@ def main():
         "features": param_cfg.get("features"),
         "in_features": param_cfg.get("in_features"),
         "order": param_cfg.get("order"),
-        "num_ones": param_cfg.get("num_ones"),
+        "num_ones": param_cfg.get("num_ones", 0),
         "gamma": param_cfg.get("gamma"),
         "lmbda": param_cfg.get("lmbda"),
         "alpha": param_cfg.get("alpha"),

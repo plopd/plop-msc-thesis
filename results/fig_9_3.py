@@ -13,7 +13,9 @@ def get_fig():
     features = np.array(
         [
             get_feature(
-                states[i], **{"order": 4, "features": "fourier"}, normalize=False
+                states[i],
+                **{"order": 4, "features": "fourier", "in_features": out_features},
+                unit_norm=False
             )
             for i in range(n_states)
         ]

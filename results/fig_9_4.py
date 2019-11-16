@@ -12,7 +12,11 @@ def get_fig(name):
 
     features = np.array(
         [
-            get_feature(states[i], **{"order": 5, "features": name})
+            get_feature(
+                states[i],
+                **{"order": 5, "features": name, "in_features": out_features},
+                unit_norm=False
+            )
             for i in range(n_states)
         ]
     )
