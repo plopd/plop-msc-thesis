@@ -41,12 +41,14 @@ def main():
             envs.get_environment(env_info["env"]),
             agents.get_agent(agent_info["algorithm"]),
         )
+        rl_glue.rl_init(agent_info, env_info)
         for j in range(n_episodes):
-            rl_glue.rl_init(agent_info, env_info)
+            num_steps_before_episode = rl_glue.num_steps
             rl_glue.rl_episode(exp_info.get("max_timesteps_episode"))
-            steps[i, j] = rl_glue.num_steps
-            print(f"Run: {i},\tEpisode: {j},\tSteps: {steps[i][j]} done.", end="\n")
-        # sys.stdout.flush()
+            num_steps_after_episode = rl_glue.num_steps
+            steps[i, j] = num_steps_after_episode - num_steps_before_episode
+        print(f"\rRun: {i},\tAvg. Steps: {np.mean(steps[i]):.2f} done.", end="")
+        sys.stdout.flush()
 
     path = Path(__file__).parents[1] / "results" / "Chain"
     path_exists(path)
