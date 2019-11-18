@@ -10,7 +10,7 @@ from experiments.chain_experiment import ChainExp
 def main():
     comm = MPI.COMM_WORLD
     sweep_id = comm.Get_rank()
-    sweep_file_name = "ChainDependentLambdasETD.json"
+    sweep_file_name = "Chain19DependentLambdasETD.json"
     sweeper = Sweeper(Path(__file__).parents[1] / "configs" / f"{sweep_file_name}")
     param_cfg = sweeper.parse(sweep_id)
 
