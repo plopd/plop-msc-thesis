@@ -33,6 +33,7 @@ def main():
         "env": param_cfg.get("env"),
         "N": param_cfg.get("N"),
         "seed": param_cfg.get("run"),
+        "log_episodes": param_cfg.get("log_episodes", None),
     }
 
     exp_info = {
