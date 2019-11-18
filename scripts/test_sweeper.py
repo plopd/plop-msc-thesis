@@ -14,17 +14,19 @@ def test_sweeper(cfg_filename, num_runs):
 
     print(f"-------------\nTotal sweeping combinations: {sweeper.total_combinations}")
 
-    # src_lst = sweeper.search({
-    #         "algorithm": "td",
-    #         "env": "chain",
-    #         "features": "tabular",
-    #         "in_features": 19,
-    #         "interest": "uniform",
-    #         "N": 19,
-    #     }, num_runs)
-    #
-    # for src in src_lst:
-    #     print(json.dumps(src, indent=8))
+    src_lst = sweeper.search(
+        {
+            "env": "chain",
+            "features": "dependent",
+            "in_features": 3,
+            "interest": "uniform",
+            "N": 5,
+        },
+        num_runs,
+    )
+
+    for src in src_lst:
+        print(json.dumps(src, indent=8))
 
 
 if __name__ == "__main__":

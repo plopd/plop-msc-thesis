@@ -19,7 +19,7 @@ class BaseEnvironment:
 
     @abstractmethod
     def __init__(self):
-
+        self.rand_generator = None
         reward = None
         observation = None
         termination = None

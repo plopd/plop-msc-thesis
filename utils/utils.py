@@ -175,7 +175,9 @@ def get_feature(x, unit_norm=True, **kwargs):
             x, num_states, name, in_features, num_ones, seed, unit_norm=False
         )
     elif name == "random-nonbinary":
-        return get_random_feature(x, num_states, name, in_features, num_ones, seed)
+        return get_random_feature(
+            x, num_states, name, in_features, num_ones, seed, unit_norm
+        )
     raise Exception("Unexpected name given.")
 
 

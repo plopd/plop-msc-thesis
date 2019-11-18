@@ -1,16 +1,17 @@
 import json
-import sys
 from pathlib import Path
 
 from alphaex.sweeper import Sweeper
+from mpi4py import MPI
 
 from experiments.chain_experiment import ChainExp
 
 
 def main():
-    sweep_file_name = "Test.json"
+    comm = MPI.COMM_WORLD
+    sweep_id = comm.Get_rank()
+    sweep_file_name = "ChainDependentLambdasETD.json"
     sweeper = Sweeper(Path(__file__).parents[1] / "configs" / f"{sweep_file_name}")
-    sweep_id = int(sys.argv[1])
     param_cfg = sweeper.parse(sweep_id)
 
     print(json.dumps(param_cfg, indent=4))
@@ -25,15 +26,11 @@ def main():
         "gamma": param_cfg.get("gamma"),
         "lmbda": param_cfg.get("lmbda"),
         "alpha": param_cfg.get("alpha"),
-        "seed": param_cfg.get("run"),
+        "seed": param_cfg.get("seed"),
         "interest": param_cfg.get("interest"),
     }
 
-    env_info = {
-        "env": param_cfg.get("env"),
-        "N": param_cfg.get("N"),
-        "seed": param_cfg.get("run"),
-    }
+    env_info = {"env": param_cfg.get("env"), "N": param_cfg.get("N")}
 
     exp_info = {
         "id": sweep_id,

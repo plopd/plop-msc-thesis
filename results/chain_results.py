@@ -29,6 +29,7 @@ def main(kwargs):
     metric = kwargs.get("metric")
     datapath = Path("~/scratch/Chain").expanduser()
     methods = kwargs.get("methods")
+    lmbdas = kwargs.get("lmbdas")
     RESULTS_PATH = Path(__file__).parents[0] / "Chain"
     path_exists(RESULTS_PATH)
 
@@ -37,36 +38,43 @@ def main(kwargs):
     ax2 = axs[1]
     ax3 = axs[2]
     for method in methods:
-        result = Result(f"{experiment}.json", datapath, experiment, num_runs)
+        for lmbda in lmbdas:
+            result = Result(f"{experiment}.json", datapath, experiment, num_runs)
 
-        stepsize_search_dct = {
-            "algorithm": method,
-            "env": environment,
-            "in_features": in_features,
-            "features": features,
-            "order": order,
-            "num_ones": num_ones,
-            "N": num_states,
-        }
+            stepsize_search_dct = {
+                "algorithm": method,
+                "env": environment,
+                "in_features": in_features,
+                "features": features,
+                "order": order,
+                "num_ones": num_ones,
+                "N": num_states,
+                "lmbda": lmbda,
+            }
 
-        # remove any keys with value None
-        filtered = {k: v for k, v in stepsize_search_dct.items() if v is not None}
-        stepsize_search_dct.clear()
-        stepsize_search_dct.update(filtered)
+            # remove any keys with value None
+            filtered = {k: v for k, v in stepsize_search_dct.items() if v is not None}
+            stepsize_search_dct.clear()
+            stepsize_search_dct.update(filtered)
 
-        # pretty print criteria
-        print(json.dumps(stepsize_search_dct, indent=4))
+            # pretty print criteria
+            print(json.dumps(stepsize_search_dct, indent=4))
 
-        ax1 = get_LCA(ax1, result, stepsize_search_dct, metric)
-        ax2 = get_SSA(ax2, result, stepsize_search_dct, threshold_error, metric)
-        ax3 = get_WF(ax3, result, stepsize_search_dct, threshold_error, metric, methods)
-    plt.tight_layout()
-    plt.savefig(
-        RESULTS_PATH
-        / f"ChainStates{num_states}Features{features.title()}_Order{order}_"
-        f"NumberFeaturesRandom{in_features}_NumberOnesRandom{num_ones}_"
-        f"Interest{interest.title()}Performance{metric.upper()}"
-    )
+            ax1 = get_LCA(ax1, result, stepsize_search_dct, metric)
+            ax2 = get_SSA(ax2, result, stepsize_search_dct, threshold_error, metric)
+            ax3 = get_WF(
+                ax3, result, stepsize_search_dct, threshold_error, metric, methods
+            )
+            plt.tight_layout()
+            plt.savefig(
+                RESULTS_PATH / f"ChainStates{num_states}_"
+                f"Lambda{str(lmbda).replace('.', '_')}_"
+                f"Features{features.title()}_"
+                f"Order{order}_"
+                f"NumberFeaturesRandom{in_features}_"
+                f"NumberOnesRandom{num_ones}_"
+                f"Interest{interest.title()}Performance{metric.upper()}"
+            )
 
 
 if __name__ == "__main__":
@@ -80,7 +88,9 @@ if __name__ == "__main__":
     parser.add_argument("--ones", default=None, type=int)
     parser.add_argument("--in_features", default=None, type=int)
     parser.add_argument("--runs", default=100, type=int)
+    parser.add_argument("--lmbdas", nargs="+", type=float, default=[0.0])
     parser.add_argument("--methods", nargs="+", type=str, default=["td", "etd"])
 
     args = parser.parse_args()
+
     main(vars(args))

@@ -8,11 +8,11 @@ import sys
 from alphaex.submitter import Submitter
 
 
-def run_submit(num_jobs):
+def run_submit():
+    num_jobs = int(sys.argv[1])
     EXPERIMENT_ROOT_DIR = "/home/plopd/scratch"
     PROJECT_ROOT_DIR = "/home/plopd/projects/def-sutton/plopd/plop-msc-thesis"
     SCRIPT_PATH = "slurm_submit.sh"
-    NUM_JOBS = num_jobs
 
     CLUSTERS = [
         {
@@ -42,11 +42,9 @@ def run_submit(num_jobs):
         #     ],
         # },
     ]
-    submitter = Submitter(
-        clusters=CLUSTERS, total_num_jobs=NUM_JOBS, script_path=SCRIPT_PATH
-    )
+    submitter = Submitter(CLUSTERS, num_jobs, SCRIPT_PATH)
     submitter.submit()
 
 
 if __name__ == "__main__":
-    run_submit(int(sys.argv[1]))
+    run_submit()

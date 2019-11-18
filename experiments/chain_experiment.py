@@ -1,7 +1,6 @@
 from pathlib import Path
 
 import numpy as np
-from tqdm import tqdm
 
 import agents.agents as agents
 import environments.environments as envs
@@ -84,21 +83,25 @@ class ChainExp(BaseExperiment):
 
         # Learn for `self.n_episodes`.
         # Counting episodes starts from 1 because the 0-th episode is treated above.
-        for episode in tqdm(range(1, self.n_episodes + 1)):
+        for episode in range(1, self.n_episodes + 1):
             self._learn(episode)
 
     def _learn(self, episode):
         # Run one episode with `self.max_episode_steps`
         self.rl_glue.rl_episode(self.max_episode_steps)
 
-        # TODO Log learning progress.
-        if episode % self.episode_eval_freq:
+        if episode % self.episode_eval_freq == 0:
             current_approx_v = self.message_experiment("get state value")
             self.msve_error[episode // self.episode_eval_freq] = MSVE(
                 self.true_v, current_approx_v, self.state_distribution
             )
-        elif episode == self.n_episodes:
-            self.message_experiment("get state value")
+
+        if episode % 1000 == 0:
+            precision = int(np.log10(self.n_episodes)) + 1
+            print(
+                f"Episodes: {episode:0{precision}d}/{self.n_episodes:0{precision}d},\t"
+                f"MSVE: {self.msve_error[episode // self.episode_eval_freq]:.4f}"
+            )
 
     def save_experiment(self):
         np.save(self.output_dir / f"{self.id}_msve", self.msve_error)

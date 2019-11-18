@@ -16,9 +16,13 @@ class Chain(BaseEnvironment):
         self.N = None
 
     def env_init(self, env_info={}):
-        self.N = env_info["N"]
+        self.rand_generator = np.random.RandomState(env_info.get("seed"))
+        self.N = env_info.get("N")
+        self.log_episodes = env_info.get("log_episodes", 0)
 
     def env_start(self):
+        if self.log_episodes:
+            self.experience_episode = []
         reward = 0
         observation = np.array((self.N // 2,))
         is_terminal = False
@@ -29,7 +33,8 @@ class Chain(BaseEnvironment):
 
     def env_step(self, action):
         last_state = self.reward_obs_term[1]
-
+        if self.log_episodes:
+            self.experience_episode.append(last_state)
         if action == LEFT:
             current_state = np.maximum(-1, last_state - 1)
         elif action == RIGHT:
@@ -55,4 +60,6 @@ class Chain(BaseEnvironment):
         pass
 
     def env_message(self, message):
-        pass
+        if message == "get episode" and self.log_episodes:
+            return self.experience_episode
+        raise Exception("Unexpected message given.")

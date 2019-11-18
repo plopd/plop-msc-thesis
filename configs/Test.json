@@ -1,7 +1,7 @@
 {
 	"experiment": [
 				{
-					"n_episodes": [1000],
+					"n_episodes": [3],
 					"max_episode_steps": [0],
 					"episode_eval_freq": [1],
 					"output_dir": ["~/scratch/Chain/Test"]
@@ -10,7 +10,7 @@
 	"learners_common": [
 		{
 			"algorithm": ["td", "etd"],
-			"alpha": [0.0001220703125, 1.1920928955078125e-07],
+			"alpha": [0.00048828125],
 			"gamma": [1.0],
 			"lmbda": [0.0],
 			"interest": ["uniform"]
