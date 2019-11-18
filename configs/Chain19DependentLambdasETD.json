@@ -4,7 +4,7 @@
 					"n_episodes": [50000],
 					"max_episode_steps": [0],
 					"episode_eval_freq": [1],
-					"output_dir": ["~/scratch/Chain/ChainDependentLambdasETD"]
+					"output_dir": ["~/scratch/Chain/Chain19DependentLambdasETD"]
 				}
 			],
 	"learners_common": [

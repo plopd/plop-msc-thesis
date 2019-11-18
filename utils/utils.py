@@ -161,6 +161,8 @@ def get_feature(x, unit_norm=True, **kwargs):
     in_features = kwargs.get("in_features")
     num_ones = kwargs.get("num_ones", 0)
     seed = kwargs.get("seed")
+    v_min = kwargs.get("v_min")
+    v_max = kwargs.get("v_max")
 
     if name == "tabular":
         return get_tabular_feature(x, in_features)
@@ -169,7 +171,7 @@ def get_feature(x, unit_norm=True, **kwargs):
     elif name == "dependent":
         return get_dependent_feature(x, in_features, unit_norm)
     elif name == "poly" or name == "fourier":
-        return get_bases_feature(x, name, order, in_features, unit_norm)
+        return get_bases_feature(x, name, order, in_features, v_min, v_max, unit_norm)
     elif name == "random-binary":
         return get_random_feature(
             x, num_states, name, in_features, num_ones, seed, unit_norm=False
@@ -244,7 +246,7 @@ def get_tabular_feature(x, in_features):
     return features
 
 
-def get_bases_feature(x, name, order, in_features, unit_norm=True):
+def get_bases_feature(x, name, order, in_features, v_min, v_max, unit_norm=True):
     """
     Construct order-n polynomial- or Fourier-basis features from states.
 
@@ -260,13 +262,16 @@ def get_bases_feature(x, name, order, in_features, unit_norm=True):
     if name != "poly" and name != "fourier":
         raise Exception("Unknown name given.")
 
+    if v_min is not None and v_max is not None:
+        x = (x - v_min) / (v_max - v_min)
+
     k = len(x)
     num_features = (order + 1) ** k
 
     assert in_features == num_features
 
     c = [i for i in range(order + 1)]
-    C = np.array(list(itertools.product(*[c for _ in range(k)])))
+    C = np.array(list(itertools.product(*[c for _ in range(k)]))).reshape((-1, k))
 
     features = np.zeros(num_features)
 

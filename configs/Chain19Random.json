@@ -4,7 +4,7 @@
 	    {
 			"experiment": [
 				{
-					"n_episodes": [100000],
+					"n_episodes": [50000],
 					"max_episode_steps": [0],
 					"episode_eval_freq": [1],
 					"output_dir": ["~/scratch/Chain/Chain19Random"]
@@ -25,12 +25,12 @@
 					"features": [
 						{
 							"features": ["random-binary"],
-							"in_features": [10],
-							"num_ones": [5]
+							"in_features": [17],
+							"num_ones": [9]
 						},
 						{
 							"features": ["random-nonbinary"],
-							"in_features": [10]
+							"in_features": [17]
 						}
 					],
 					"interest": ["uniform"]
