@@ -18,7 +18,8 @@
 	],
 	"simulator_common": [
 		{
-			"env": ["chain"]
+			"env": ["chain"],
+			"log_episodes": [1]
 		}
 	],
 	"experiments":
