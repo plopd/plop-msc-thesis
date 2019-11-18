@@ -103,12 +103,13 @@ class ChainExp(BaseExperiment):
                 self.true_v, current_approx_v, self.state_distribution
             )
 
-        if episode % 1000 == 0:
-            precision = int(np.log10(self.n_episodes)) + 1
-            print(
-                f"Episodes: {episode:0{precision}d}/{self.n_episodes:0{precision}d},\t"
-                f"MSVE: {self.msve_error[episode // self.episode_eval_freq]:.4f}"
-            )
+        if self.experiment_info.get("logging"):
+            if episode % 1000 == 0:
+                precision = int(np.log10(self.n_episodes)) + 1
+                print(
+                    f"Episodes: {episode:0{precision}d}/{self.n_episodes:0{precision}d},\t"
+                    f"MSVE: {self.msve_error[episode // self.episode_eval_freq]:.4f}"
+                )
 
     def save_experiment(self):
         np.save(self.output_dir / f"{self.id}_msve", self.msve_error)

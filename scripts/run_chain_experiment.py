@@ -8,9 +8,13 @@ from experiments.chain_experiment import ChainExp
 
 
 def main():
-    sweep_file_name = "Test.json"
-    sweeper = Sweeper(Path(__file__).parents[1] / "configs" / f"{sweep_file_name}")
     sweep_id = int(sys.argv[1])
+    try:
+        sweep_file_name = sys.argv[2]
+    except IndexError:
+        sweep_file_name = "Test.json"
+    sweeper = Sweeper(Path(__file__).parents[1] / "configs" / f"{sweep_file_name}")
+
     param_cfg = sweeper.parse(sweep_id)
 
     print(json.dumps(param_cfg, indent=4))
@@ -22,6 +26,8 @@ def main():
         "in_features": param_cfg.get("in_features"),
         "order": param_cfg.get("order"),
         "num_ones": param_cfg.get("num_ones", 0),
+        "v_min": param_cfg.get("v_min"),
+        "v_max": param_cfg.get("v_max"),
         "gamma": param_cfg.get("gamma"),
         "lmbda": param_cfg.get("lmbda"),
         "alpha": param_cfg.get("alpha"),
@@ -42,6 +48,7 @@ def main():
         "episode_eval_freq": param_cfg.get("episode_eval_freq"),
         "n_episodes": param_cfg.get("n_episodes"),
         "output_dir": param_cfg.get("output_dir"),
+        "logging": param_cfg.get("logging"),
     }
 
     exp = ChainExp(agent_info, env_info, exp_info)
