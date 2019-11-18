@@ -7,8 +7,6 @@
 #SBATCH --output=/home/plopd/scratch/output/slurm-%A_%5a.txt
 #SBATCH --error=/home/plopd/scratch/error/slurm-%A_%5a.txt
 
-CONFIG_PATHFILE=$2
-
 export OMP_NUM_THREADS=$SLURM_CPUS_PER_TASK
 
 source /home/plopd/projects/def-sutton/plopd/plop-msc-thesis-venv/bin/activate
@@ -20,7 +18,7 @@ echo "Running on hostname $(hostname)."
 start=`date +%s`
 echo "Starting run at: $(date)."
 echo "SLURM_ARRAY_TASK_ID: ${SLURM_ARRAY_TASK_ID}"
-python -m scripts.run_chain_experiment "${SLURM_ARRAY_TASK_ID}"  "${CONFIG_PATHFILE}"
+python -m scripts.run_chain_experiment "${SLURM_ARRAY_TASK_ID}"
 end=`date +%s`
 runtime=$((end-start))
 echo "Finished with exit code $? at: $(date)."
