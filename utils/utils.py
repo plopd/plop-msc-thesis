@@ -174,7 +174,7 @@ def get_feature(x, unit_norm=True, **kwargs):
         return get_bases_feature(x, name, order, in_features, v_min, v_max, unit_norm)
     elif name == "random-binary":
         return get_random_feature(
-            x, num_states, name, in_features, num_ones, seed, unit_norm=False
+            x, num_states, name, in_features, num_ones, seed, unit_norm
         )
     elif name == "random-nonbinary":
         return get_random_feature(
