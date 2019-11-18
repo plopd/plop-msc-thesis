@@ -85,6 +85,13 @@ class ChainExp(BaseExperiment):
         # Counting episodes starts from 1 because the 0-th episode is treated above.
         for episode in range(1, self.n_episodes + 1):
             self._learn(episode)
+            if (
+                self.env_info.get("log_episodes") is not None
+                and self.env_info.get("log_episodes") == 1
+            ):
+                print(
+                    f"Episode: {episode},\t{np.array(self.rl_glue.rl_env_message('get episode')).squeeze().tolist()}"
+                )
 
     def _learn(self, episode):
         # Run one episode with `self.max_episode_steps`
