@@ -1,0 +1,71 @@
+{
+	"experiment": [
+				{
+					"n_episodes": [50000],
+					"max_episode_steps": [0],
+					"episode_eval_freq": [50000],
+					"output_dir": ["~/scratch/Chain/ChainLSTDRandom"]
+				}
+			],
+	"learners_common": [
+		{
+			"algorithm": ["lstd", "elstd"],
+			"gamma": [1.0],
+			"lmbda": [0.0],
+			"interest": ["uniform"]
+		}
+	],
+	"simulator_common": [
+		{
+			"env": ["chain"]
+		}
+	],
+	"experiments":
+	[
+	    {
+
+	        "simulator": [
+				{
+					"N": [5]
+				}
+			],
+	        "learner": [
+	            {
+					"features": [
+						{
+							"features": ["random-binary"],
+							"num_ones": [3],
+							"in_features": [4]
+						},
+						{
+							"features": ["random-nonbinary"],
+							"in_features": [4]
+						}
+					]
+	            }
+	        ]
+	    },
+		{
+	        "simulator": [
+				{
+					"N": [19]
+				}
+			],
+	        "learner": [
+	            {
+					"features": [
+						{
+							"features": ["random-binary"],
+							"in_features": [17],
+							"num_ones": [9]
+						},
+						{
+							"features": ["random-nonbinary"],
+							"in_features": [17]
+						}
+					]
+	            }
+	        ]
+	    }
+	]
+}

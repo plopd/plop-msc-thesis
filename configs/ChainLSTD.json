@@ -1,0 +1,130 @@
+{
+	"experiment": [
+				{
+					"n_episodes": [10000],
+					"max_episode_steps": [0],
+					"episode_eval_freq": [1],
+					"output_dir": ["~/scratch/Chain/ChainLSTD"],
+					"logging": [1]
+				}
+			],
+	"learners_common": [
+		{
+			"algorithm": ["lstd", "elstd"],
+			"gamma": [1.0],
+			"lmbda": [0.0],
+			"interest": ["uniform"]
+		}
+	],
+	"simulator_common": [
+		{
+			"env": ["chain"]
+		}
+	],
+	"experiments":
+	[
+	    {
+
+	        "simulator": [
+				{
+					"N": [5]
+				}
+			],
+	        "learner": [
+	            {
+					"features": [
+						{
+							"features": ["tabular"],
+							"in_features": [5]
+						},
+						{
+							"features": ["dependent"],
+							"in_features": [3]
+						},
+						{
+							"features": ["fourier"],
+							"order": [1],
+							"in_features": [2]
+						},
+						{
+							"features": ["fourier"],
+							"order": [2],
+							"in_features": [3]
+						},
+						{
+							"features": ["fourier"],
+							"order": [3],
+							"in_features": [4]
+						},
+						{
+							"features": ["poly"],
+							"order": [1],
+							"in_features": [2]
+						},
+						{
+							"features": ["poly"],
+							"order": [2],
+							"in_features": [3]
+						},
+						{
+							"features": ["poly"],
+							"order": [3],
+							"in_features": [4]
+						}
+					]
+	            }
+	        ]
+	    },
+		{
+	        "simulator": [
+				{
+					"N": [19]
+				}
+			],
+	        "learner": [
+	            {
+					"features": [
+						{
+							"features": ["tabular"],
+							"in_features": [19]
+						},
+						{
+							"features": ["dependent"],
+							"in_features": [10]
+						},
+						{
+							"features": ["fourier"],
+							"order": [5],
+							"in_features": [6]
+						},
+						{
+							"features": ["fourier"],
+							"order": [10],
+							"in_features": [11]
+						},
+						{
+							"features": ["fourier"],
+							"order": [15],
+							"in_features": [16]
+						},
+						{
+							"features": ["poly"],
+							"order": [5],
+							"in_features": [6]
+						},
+						{
+							"features": ["poly"],
+							"order": [10],
+							"in_features": [11]
+						},
+						{
+							"features": ["poly"],
+							"order": [15],
+							"in_features": [16]
+						}
+					]
+	            }
+	        ]
+	    }
+	]
+}
