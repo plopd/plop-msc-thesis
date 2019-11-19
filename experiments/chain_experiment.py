@@ -90,7 +90,12 @@ class ChainExp(BaseExperiment):
                 and self.env_info.get("log_episodes") == 1
             ):
                 print(
-                    f"Episode: {episode},\t{np.array(self.rl_glue.rl_env_message('get episode')).squeeze().tolist()}"
+                    "Episode: {},\t{}".format(
+                        episode,
+                        np.array(self.rl_glue.rl_env_message("get episode"))
+                        .squeeze()
+                        .tolist(),
+                    )
                 )
 
     def _learn(self, episode):
@@ -107,8 +112,9 @@ class ChainExp(BaseExperiment):
             if episode % 1000 == 0:
                 precision = int(np.log10(self.n_episodes)) + 1
                 print(
-                    f"Episodes: {episode:0{precision}d}/{self.n_episodes:0{precision}d},\t"
-                    f"MSVE: {self.msve_error[episode // self.episode_eval_freq]:.4f}"
+                    f"Episodes: "
+                    f"{episode:0{precision}d}/{self.n_episodes:0{precision}d},"
+                    f"\tMSVE: {self.msve_error[episode // self.episode_eval_freq]:.4f}"
                 )
 
     def save_experiment(self):
