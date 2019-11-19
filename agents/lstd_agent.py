@@ -12,22 +12,19 @@ class LSTD(TD):
 
     def agent_init(self, agent_info):
         super().agent_init(agent_info)
-
         self.steps = 0
-        num_features = self.feature_type.shape[1]
-        self.A = np.zeros((num_features, num_features))
-        self.b = np.zeros((num_features, 1))
+        self.A = np.zeros((self.in_features, self.in_features))
+        self.b = np.zeros((self.in_features, 1))
 
         return self.a_t
 
     def agent_start(self, observation):
         self.a_t = super().agent_start(observation)
-        self.steps = 1
         return self.a_t
 
     def agent_step(self, reward, observation):
-        self.a_t = super().agent_step(reward, observation)
         self.steps += 1
+        self.a_t = super().agent_step(reward, observation)
 
         return self.a_t
 
@@ -48,4 +45,19 @@ class LSTD(TD):
             )
         )
 
-        self.b += 1 / self.steps * (reward * self.z - self.b)
+        self.b += 1 / self.steps * (reward * np.expand_dims(self.z, axis=1) - self.b)
+
+    def agent_message(self, message):
+        if message == "get A":
+            return self.A
+        elif message == "get b":
+            return self.b
+        elif message == "get weight vector":
+            try:
+                inv_A = np.linalg.inv(self.A)
+                self.theta = np.dot(inv_A, self.b).squeeze()
+            except np.linalg.LinAlgError:
+                return self.theta
+        response = super().agent_message(message)
+
+        return response
