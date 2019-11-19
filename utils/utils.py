@@ -216,7 +216,7 @@ def get_random_feature(
 ):
 
     if name != "random-binary" and name != "random-nonbinary":
-        raise Exception("Unknown feature_type given.")
+        raise Exception("Unknown name given.")
 
     np.random.seed(seed)
     num_zeros = in_features - num_ones
