@@ -25,7 +25,7 @@
 					"features": [
 						{
 							"features": ["random-binary"],
-							"num_ones": [2],
+							"num_ones": [3],
 							"in_features": [4]
 						},
 						{
