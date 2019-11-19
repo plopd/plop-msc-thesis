@@ -9,7 +9,7 @@ from utils.utils import get_interest
 from utils.utils import run_exact_lstd
 
 
-def compute_solution(N, method, features, interest, n_runs=1, n=None, num_ones=None):
+def compute_solution(N, method, features, interest, in_features, num_ones, n_runs):
     if N == 5:
         d_mu = np.array([0.11143, 0.222_273, 0.333_124, 0.221_995, 0.111_178])
     elif N == 19:
@@ -43,7 +43,10 @@ def compute_solution(N, method, features, interest, n_runs=1, n=None, num_ones=N
     r_pi[-1] = 0.5
 
     states = np.arange(N).reshape(-1, 1)
-    Phi = get_feature(states, name=features, n=n, num_ones=num_ones, seed=None)
+    Phi = get_feature(
+        states,
+        **{"features": features, "in_features": in_features, "num_ones": num_ones},
+    )
     P_pi = np.array(
         [0.5 if i + 1 == j or i - 1 == j else 0 for i in range(N) for j in range(N)]
     ).reshape((N, N))
@@ -58,10 +61,18 @@ def compute_solution(N, method, features, interest, n_runs=1, n=None, num_ones=N
             P_pi=P_pi,
             Gamma=np.eye(N),
             Lmbda=np.zeros(N),
-            Phi=get_feature(states, name=features, n=n, num_ones=num_ones, seed=i),
+            Phi=get_feature(
+                states,
+                **{
+                    "features": features,
+                    "in_features": in_features,
+                    "num_ones": num_ones,
+                    "seed": i,
+                },
+            ),
             r_pi=r_pi.reshape((-1, 1)),
             d_mu=d_mu,
-            i=get_interest(N, name=interest, seed=i),
+            i=get_interest(N=N, name=interest, seed=i),
             true_v=true_v.reshape((-1, 1)),
             which=method,
         )
@@ -84,9 +95,9 @@ if __name__ == "__main__":
     features = sys.argv[3]
     interest = sys.argv[4]
     n_runs = int(sys.argv[5])
-    n = int(sys.argv[6])
+    in_features = int(sys.argv[6])
     num_ones = int(sys.argv[7])
     theta_acc, msve_acc, M_acc, v_theta_acc = compute_solution(
-        N, method, features, interest, n_runs, n, num_ones
+        N, method, features, interest, in_features, num_ones, n_runs
     )
     print(msve_acc)
