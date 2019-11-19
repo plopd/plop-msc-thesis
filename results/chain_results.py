@@ -16,20 +16,20 @@ matplotlib.rcParams.update({"font.size": 18})
 
 
 def main(kwargs):
-    threshold_error = 0.45
+    CUTOFF_ERR = 0.45
     interest = kwargs.get("interest", "uniform")
-    environment = kwargs.get("environment", "chain")
-    experiment = kwargs.get("experiment")
-    features = kwargs.get("features")
-    order = kwargs.get("order")
-    in_features = kwargs.get("in_features")
-    num_ones = kwargs.get("ones")
-    num_states = kwargs.get("states")
-    num_runs = kwargs.get("runs")
-    metric = kwargs.get("metric")
+    environment = kwargs.get("env")
+    experiment = kwargs.get("exp")
+    features = kwargs.get("fts")
+    order = kwargs.get("ord")
+    in_features = kwargs.get("infts")
+    num_ones = kwargs.get("one")
+    num_states = kwargs.get("sts")
+    num_runs = kwargs.get("rns")
+    metric = kwargs.get("m")
     datapath = Path("~/scratch/Chain").expanduser()
-    methods = kwargs.get("methods")
-    lmbdas = kwargs.get("lmbdas")
+    methods = kwargs.get("ms")
+    lmbdas = kwargs.get("ls")
     RESULTS_PATH = Path(__file__).parents[0] / "Chain"
     path_exists(RESULTS_PATH)
 
@@ -37,8 +37,8 @@ def main(kwargs):
     ax1 = axs[0]
     ax2 = axs[1]
     ax3 = axs[2]
-    for method in methods:
-        for lmbda in lmbdas:
+    for lmbda in lmbdas:
+        for method in methods:
             result = Result(f"{experiment}.json", datapath, experiment, num_runs)
 
             stepsize_search_dct = {
@@ -61,10 +61,8 @@ def main(kwargs):
             print(json.dumps(stepsize_search_dct, indent=4))
 
             ax1 = get_LCA(ax1, result, stepsize_search_dct, metric)
-            ax2 = get_SSA(ax2, result, stepsize_search_dct, threshold_error, metric)
-            ax3 = get_WF(
-                ax3, result, stepsize_search_dct, threshold_error, metric, methods
-            )
+            ax2 = get_SSA(ax2, result, stepsize_search_dct, CUTOFF_ERR, metric)
+            ax3 = get_WF(ax3, result, stepsize_search_dct, CUTOFF_ERR, metric, methods)
             plt.tight_layout()
             plt.savefig(
                 RESULTS_PATH / f"ChainStates{num_states}_"
@@ -79,17 +77,17 @@ def main(kwargs):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-
-    parser.add_argument("--states", required=True, type=int)
-    parser.add_argument("--features", required=True, type=str)
-    parser.add_argument("--experiment", required=True, type=str)
-    parser.add_argument("--metric", default="end", type=str)
-    parser.add_argument("--order", default=None, type=int)
-    parser.add_argument("--ones", default=None, type=int)
-    parser.add_argument("--in_features", default=None, type=int)
-    parser.add_argument("--runs", default=100, type=int)
-    parser.add_argument("--lmbdas", nargs="+", type=float, default=[0.0])
-    parser.add_argument("--methods", nargs="+", type=str, default=["td", "etd"])
+    parser.add_argument("-sts", required=True, type=int)
+    parser.add_argument("-fts", required=True, type=str)
+    parser.add_argument("-exp", required=True, type=str)
+    parser.add_argument("-m", default="end", type=str)
+    parser.add_argument("-ord", default=None, type=int)
+    parser.add_argument("-one", default=None, type=int)
+    parser.add_argument("-infts", default=None, type=int)
+    parser.add_argument("-rns", default=100, type=int)
+    parser.add_argument("-ls", nargs="+", type=float, default=[0.0])
+    parser.add_argument("-ms", nargs="+", type=str, default=["td", "etd"])
+    parser.add_argument("-env", type=str, default="chain")
 
     args = parser.parse_args()
 
