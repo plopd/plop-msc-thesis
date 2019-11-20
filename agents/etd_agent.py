@@ -27,10 +27,13 @@ class ETD(TD):
         response = super().agent_message(message)
         return response
 
-    def _learn(self, reward, current_state_feature, last_state_feature):
+    def update_traces(self, last_state_feature):
         self.F = self.gamma * self.F + self.i
         self.M = self.lmbda * self.i + (1 - self.lmbda) * self.F
         self.z = self.gamma * self.lmbda * self.z + self.M * last_state_feature
+
+    def _learn(self, reward, current_state_feature, last_state_feature):
+        self.update_traces(last_state_feature)
 
         td_error = (
             reward

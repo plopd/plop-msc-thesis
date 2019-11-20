@@ -22,7 +22,7 @@ agent_info = {
 env_info = {"env": "chain", "N": 19}
 
 
-@pytest.mark.parametrize("algorithm", ["td", "etd"])
+@pytest.mark.parametrize("algorithm", ["elstd"])
 def test_agent_start(algorithm):
     environment = get_environment(env_info["env"])
     agent_info["algorithm"] = algorithm
@@ -34,8 +34,6 @@ def test_agent_start(algorithm):
 
     z = rl_glue.rl_agent_message("get eligibility trace")
     w = rl_glue.rl_agent_message("get weight vector")
-
-    print(z)
 
     try:
         M = rl_glue.rl_agent_message("get emphasis vector")
@@ -80,7 +78,7 @@ def test_constant_emphasis():
         assert rl_glue.rl_agent_message("get emphasis trace") == 1.0
 
 
-@pytest.mark.parametrize("algorithm", ["td", "etd"])
+@pytest.mark.parametrize("algorithm", ["td", "etd", "lstd", "elstd"])
 def test_eligibility_trace_reset_at_start_of_episode(algorithm):
     environment = get_environment(env_info["env"])
     agent_info["algorithm"] = algorithm
@@ -93,7 +91,7 @@ def test_eligibility_trace_reset_at_start_of_episode(algorithm):
     assert np.allclose(e, np.zeros(e.shape[0]))
 
 
-@pytest.mark.parametrize("algorithm", ["etd"])
+@pytest.mark.parametrize("algorithm", ["etd", "elstd"])
 def test_emphasis_reset_at_start_of_episode(algorithm):
     environment = get_environment(env_info["env"])
     agent_info["algorithm"] = algorithm
