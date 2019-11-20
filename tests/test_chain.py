@@ -11,7 +11,6 @@ agent_info = {
     "features": "tabular",
     "in_features": 5,
     "order": None,
-    "n": None,
     "num_ones": None,
     "gamma": 1.0,
     "lmbda": 0.0,

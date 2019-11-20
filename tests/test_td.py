@@ -11,7 +11,6 @@ agent_info = {
     "features": "tabular",
     "order": None,
     "in_features": 19,
-    "n": None,
     "num_ones": None,
     "gamma": 1.0,
     "lmbda": 0.0,
@@ -30,11 +29,13 @@ def test_agent_start(algorithm):
     agent = get_agent(agent_info["algorithm"])
 
     rl_glue = RLGlue(environment, agent)
-    rl_glue.rl_init(agent_init_info=agent_info, env_init_info=env_info)
+    rl_glue.rl_init(agent_info, env_info)
     rl_glue.rl_start()
 
     z = rl_glue.rl_agent_message("get eligibility trace")
     w = rl_glue.rl_agent_message("get weight vector")
+
+    print(z)
 
     try:
         M = rl_glue.rl_agent_message("get emphasis vector")
