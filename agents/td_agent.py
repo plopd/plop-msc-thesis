@@ -22,7 +22,7 @@ class TD(BaseAgent):
 
     def agent_start(self, observation):
 
-        self.z = np.zeros_like(self.in_features)
+        self.z = np.zeros(self.in_features)
         self.s_t = observation
         self.a_t = self.agent_policy(observation)
 
