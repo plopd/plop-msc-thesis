@@ -9,6 +9,19 @@ def path_exists(path):
         os.makedirs(path, exist_ok=True)
 
 
+def remove_keys_with_none_value(dct):
+    """
+    Remove any keys with value None
+    Returns:
+
+    """
+    filtered = {k: v for k, v in dct.items() if v is not None}
+    dct.clear()
+    dct.update(filtered)
+
+    return dct
+
+
 def get_interest(name, **kwargs):
 
     N, seed = kwargs.get("N"), kwargs.get("seed")

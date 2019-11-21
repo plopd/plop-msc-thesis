@@ -4,67 +4,71 @@ import numpy as np
 from alphaex.sweeper import Sweeper
 
 
-class Result(object):
-    def __init__(self, config_filepath, datapath, experiment, runs=100):
-        self.cfg = config_filepath
+class Result:
+    def __init__(self, config_filename, datapath, experiment):
+        self.cfg = config_filename
         self.datapath = datapath
         self.exp = experiment
-        self.runs = runs
         self.sweeper = Sweeper(Path(__file__).parents[1] / "configs" / f"{self.cfg}")
 
-    def find_experiment_by(self, params):
+    def find_experiment_by(self, params, n_runs):
         """
-        Find all experiments which include `params`
+        Find all experiments which include `params` across `n_runs` runs.
         Args:
-            params: dict
+            params: dict,
+            n_runs: int,
 
         Returns: list, sweeper indices
 
         """
-        lst_experiments = self.sweeper.search(params, self.runs)
-        ids_experiments = []
-        for ls in lst_experiments:
-            ids_experiments.extend(ls["ids"])
+        exps = self.sweeper.search(params, n_runs)
+        ids_exp = []
+        for ls in exps:
+            ids_exp.extend(ls["ids"])
 
-        return sorted(ids_experiments)
+        return sorted(ids_exp)
 
-    def find_experiment_by_idx(self, idxs):
-        experiments = []
-        for idx in idxs:
-            rtn_dict = self.sweeper.parse(idx)
-            experiments.append(rtn_dict)
+    def find_experiment_by_idx(self, ids):
+        exps = []
+        for idx in ids:
+            exp_config = self.sweeper.parse(idx)
+            exps.append(exp_config)
 
-        return experiments
+        return exps
 
-    def get_param_val(self, name, criteria):
+    def get_param_val(self, name, by, n_runs):
         """
-        Find values to parameter with `name`
+        Find values to parameter `name` by criteria across `runs`
         Args:
             name: str,
-            criteria: dict,
-
+            by: dict,
+            n_runs: int,
         Returns:
 
         """
         param_vals = set()
-        lst_experiments = self.sweeper.search(criteria, self.runs)
-        for exp in lst_experiments:
+        exps = self.sweeper.search(by, n_runs)
+        for exp in exps:
             param_vals.add(exp[name])
 
         return param_vals
 
-    def load(self, idxs):
-        lst_data = []
-        for idx in idxs:
+    def load(self, ids, filename_ext="msve", file_ext="npy"):
+        data = []
+        for idx in ids:
             try:
-                lst_data.append(
-                    np.load(self.datapath / f"{self.exp}" / f"{idx}_msve.npy")
+                data.append(
+                    np.load(
+                        self.datapath
+                        / f"{self.exp}"
+                        / f"{idx}_{filename_ext}.{file_ext}"
+                    )
                 )
             except IOError:
                 continue
 
         try:
-            data = np.vstack(lst_data)
+            data = np.vstack(data)
         except ValueError:
             return None
         return data

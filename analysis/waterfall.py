@@ -8,8 +8,9 @@ from analysis.colormap import locs
 from analysis.results import get_data_by
 
 
-def get_WF(ax, result, search_dct, cutoff, name, methods):
-    stepsizes = result.get_param_val("alpha", search_dct)
+def get_WF(ax, result, search_dct, cutoff, name, methods, **param_dict):
+    n_runs = param_dict.get("n_runs")
+    stepsizes = result.get_param_val("alpha", search_dct, n_runs)
     stepsizes = sorted(stepsizes)
     m = []
     n_negatives = 0
@@ -17,11 +18,11 @@ def get_WF(ax, result, search_dct, cutoff, name, methods):
     for stepsize in tqdm(stepsizes):
         idx_exp_search_dict = copy.deepcopy(search_dct)
         idx_exp_search_dict["alpha"] = stepsize
-        idx_data = result.find_experiment_by(idx_exp_search_dict)
+        idx_data = result.find_experiment_by(idx_exp_search_dict, n_runs)
         data = result.load(idx_data)
         if data is None:
             continue
-        mean, _ = get_data_by(data, name=name)
+        mean, _ = get_data_by(data, name)
         if mean <= cutoff:
             m.append(mean)
         else:
