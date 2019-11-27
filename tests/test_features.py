@@ -142,3 +142,29 @@ def test_fourier_features_num_features(num_states, order, out_features):
         ]
     )
     assert random_features.shape[1] == out_features
+
+
+def test_same_random_feature_for_state_in_an_episode():
+    states = np.array([1, 1, 2, 2, 2, 3, 3]).reshape(-1, 1)
+    random_features = np.vstack(
+        [
+            get_feature(
+                states[i],
+                **{
+                    "features": "random-binary",
+                    "N": 7,
+                    "seed": 6,
+                    "in_features": 7 // 2,
+                    "num_ones": 2,
+                }
+            )
+            for i in range(7)
+        ]
+    )
+    assert np.allclose(random_features[0], random_features[1])
+
+    assert np.allclose(random_features[2], random_features[3])
+    assert np.allclose(random_features[2], random_features[4])
+    assert np.allclose(random_features[3], random_features[4])
+
+    assert np.allclose(random_features[5], random_features[6])

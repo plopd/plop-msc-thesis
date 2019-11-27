@@ -37,7 +37,7 @@ def test_sweeper_same_keys_for_all_experiments():
 )
 def test_sweeper_number_of_stepsizes_for_method(name, features):
     cfg_filename, num_runs = "Test_Sweeper", 100
-    result = Result(f"{cfg_filename}.json", None, "Test_Sweeper", num_runs)
+    result = Result(f"{cfg_filename}.json", None, "Test_Sweeper")
 
     param_vals = result.get_param_val(
         "alpha",
@@ -48,6 +48,7 @@ def test_sweeper_number_of_stepsizes_for_method(name, features):
             "interest": "uniform",
             "N": 19,
         },
+        n_runs=num_runs,
     )
 
     assert len(param_vals) == 12
