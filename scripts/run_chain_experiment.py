@@ -9,10 +9,8 @@ from experiments.chain_experiment import ChainExp
 
 def main():
     sweep_id = int(sys.argv[1])
-    try:
-        sweep_file_name = sys.argv[2]
-    except IndexError:
-        sweep_file_name = "Test.json"
+    sweep_file_name = sys.argv[2]
+
     sweeper = Sweeper(Path(__file__).parents[1] / "configs" / f"{sweep_file_name}")
 
     param_cfg = sweeper.parse(sweep_id)

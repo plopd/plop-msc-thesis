@@ -16,17 +16,19 @@ def test_sweeper(cfg_filename, num_runs):
 
     src_lst = sweeper.search(
         {
+            # "v_min": 0,
+            # "v_max": 19
+            "algorithm": "lstd",
+            "N": 5,
             "env": "chain",
             "features": "dependent",
-            "in_features": 3,
             "interest": "uniform",
-            "N": 5,
         },
         num_runs,
     )
 
     for src in src_lst:
-        print(json.dumps(src, indent=8))
+        print(json.dumps(src, indent=4))
 
 
 if __name__ == "__main__":

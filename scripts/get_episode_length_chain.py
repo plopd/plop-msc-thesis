@@ -6,9 +6,11 @@ import numpy as np
 import agents.agents as agents
 import environments.environments as envs
 from rl_glue.rl_glue import RLGlue
+from utils.decorators import timer
 from utils.utils import path_exists
 
 
+@timer
 def main():
     n_runs = 30
     n_episodes = 10000
