@@ -15,8 +15,8 @@ echo "Running on hostname $(hostname)."
 
 start=$(date +%s)
 echo "Starting run at: $(date)."
-echo "SLURM_ARRAY_TASK_ID: ${SLURM_ARRAY_TASK_ID}" "CONFIG_FILE:" "${CONFIG_FILE}"
-python -m scripts.run_chain_experiment "${SLURM_ARRAY_TASK_ID}" "${CONFIG_FILE}"
+echo "SLURM_ARRAY_TASK_ID: ${SLURM_ARRAY_TASK_ID}" "config_file:" "${config_file}"
+python -m "${python_module}" "${SLURM_ARRAY_TASK_ID}" "${config_file}"
 end=$(date +%s)
 runtime=$((end-start))
 

@@ -1,8 +1,3 @@
-#######################################################################
-# Copyright (C) 2019 Yi Wan(wan6@ualberta.ca)                         #
-# Permission given to modify the code as long as you keep this        #
-# declaration at the top                                              #
-#######################################################################
 import argparse
 
 from alphaex.submitter import Submitter
@@ -17,6 +12,12 @@ def main():
         "-config_file", type=str, default=None, help="name of config file"
     )
     parser.add_argument(
+        "-python_module",
+        type=str,
+        default="scripts.run_experiment",
+        help="python module to execute",
+    )
+    parser.add_argument(
         "-script_path",
         type=str,
         help="script path for submitter",
@@ -24,8 +25,6 @@ def main():
     )
     args = parser.parse_args()
 
-    num_jobs = args.num_jobs
-    config_file = args.config_file
     experiment_root_dir = "/home/plopd/scratch"
     project_root_dir = "/home/plopd/projects/def-sutton/plopd/plop-msc-thesis"
     script_path = args.script_path
@@ -58,7 +57,15 @@ def main():
         #     ],
         # },
     ]
-    submitter = Submitter(clusters, num_jobs, script_path, config_file)
+    submitter = Submitter(
+        clusters,
+        args.num_jobs,
+        script_path,
+        export_params={
+            "python_module": args.python_module,
+            "config_file": args.config_file,
+        },
+    )
     submitter.submit()
 
 
