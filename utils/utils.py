@@ -55,7 +55,6 @@ def get_feature(x, unit_norm=True, **kwargs):
 
     name = kwargs.get("features")
     order = kwargs.get("order")
-    num_states = kwargs.get("N")
     in_features = kwargs.get("in_features")
     num_ones = kwargs.get("num_ones", 0)
     seed = kwargs.get("seed")
@@ -71,10 +70,7 @@ def get_feature(x, unit_norm=True, **kwargs):
     elif name == "poly" or name == "fourier":
         return get_bases_feature(x, name, order, in_features, v_min, v_max, unit_norm)
     elif name == "random-binary" or name == "random-nonbinary":
-        features = get_random_features(
-            num_states, name, in_features, num_ones, seed, unit_norm
-        )
-        return features[x][0]
+        return get_random_features(x, name, in_features, num_ones, seed, unit_norm)
     raise Exception("Unexpected name given.")
 
 

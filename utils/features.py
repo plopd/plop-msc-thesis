@@ -31,30 +31,27 @@ def get_dependent_feature(x, in_features, unit_norm=True):
     return features
 
 
-def get_random_features(num_states, name, in_features, num_ones, seed, unit_norm=True):
+def get_random_features(x, name, in_features, num_ones, seed, unit_norm=True):
 
     if name != "random-binary" and name != "random-nonbinary":
         raise Exception("Unknown name given.")
 
-    np.random.seed(seed)
-    shuffle = np.vectorize(np.random.permutation, signature="(n)->(n)")
+    np.random.seed(seed + x)
 
     num_zeros = in_features - num_ones
-    zeros = np.zeros((num_states, num_zeros))
-    ones = np.ones((num_states, num_ones))
-    zeros_and_ones = np.hstack((zeros, ones))
+    zeros = np.zeros(num_zeros)
+    ones = np.ones(num_ones)
+    features = np.hstack((zeros, ones))
 
     if name == "random-binary":
-        representations = shuffle(zeros_and_ones)
+        np.random.shuffle(features)
     else:
-        representations = np.random.randn((num_states, in_features))
+        features = np.random.randn(in_features)
 
     if unit_norm:
-        representations = np.divide(
-            representations, np.linalg.norm(representations, axis=1).reshape((-1, 1))
-        )
+        features = features / np.linalg.norm(features)
 
-    return representations
+    return features
 
 
 def get_tabular_feature(x, in_features):
