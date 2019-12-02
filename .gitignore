@@ -4,3 +4,4 @@
 *.npy
 /logs/
 /notebooks/sweeper.ipynb
+configs/Test.json

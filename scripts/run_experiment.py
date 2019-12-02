@@ -1,4 +1,3 @@
-import json
 import sys
 from pathlib import Path
 
@@ -14,8 +13,6 @@ def main():
     sweeper = Sweeper(Path(__file__).parents[1] / "configs" / f"{sweep_file_name}")
 
     param_cfg = sweeper.parse(sweep_id)
-
-    print(json.dumps(param_cfg, indent=4))
 
     agent_info = {
         "N": param_cfg.get("N"),
@@ -37,7 +34,6 @@ def main():
         "env": param_cfg.get("env"),
         "N": param_cfg.get("N"),
         "seed": param_cfg.get("run"),
-        "log_episodes": param_cfg.get("log_episodes", None),
     }
 
     exp_info = {
@@ -46,7 +42,6 @@ def main():
         "episode_eval_freq": param_cfg.get("episode_eval_freq"),
         "n_episodes": param_cfg.get("n_episodes"),
         "output_dir": param_cfg.get("output_dir"),
-        "logging": param_cfg.get("logging"),
     }
 
     exp = ChainExp(agent_info, env_info, exp_info)

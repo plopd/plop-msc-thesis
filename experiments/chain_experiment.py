@@ -1,4 +1,4 @@
-import logging
+import json
 from pathlib import Path
 
 import numpy as np
@@ -12,11 +12,8 @@ from utils.calculate_value_function_chain import calculate_v_chain
 from utils.objectives import MSVE
 from utils.utils import get_chain_states
 from utils.utils import get_feature
+from utils.utils import get_simple_logger
 from utils.utils import path_exists
-
-# create logger on the current module and set its level
-logger = logging.getLogger(__name__)
-logger.setLevel(logging.INFO)
 
 
 class ChainExp(BaseExperiment):
@@ -39,11 +36,10 @@ class ChainExp(BaseExperiment):
         self.output_dir = Path(experiment_info["output_dir"]).expanduser()
         path_exists(self.output_dir)
 
-        logging.basicConfig(
-            filename=self.output_dir / "info.log",
-            filemode="w",
-            format="%(asctime)s-%(levelname)s-%(message)s",
-            datefmt="%d-%b-%y %H:%M:%S",
+        self.logger = get_simple_logger(__name__, self.output_dir / "info.log")
+
+        self.logger.info(
+            json.dumps([self.agent_info, self.env_info, self.experiment_info], indent=4)
         )
 
         # Load value function
@@ -110,7 +106,7 @@ class ChainExp(BaseExperiment):
 
         if episode % 1000 == 0:
             precision = int(np.log10(self.n_episodes)) + 1
-            logger.info(
+            self.logger.info(
                 f"Episodes: "
                 f"{episode:0{precision}d}/{self.n_episodes:0{precision}d},"
                 f"\tMSVE: {self.msve_error[episode // self.episode_eval_freq]:.4f}"

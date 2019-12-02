@@ -1,3 +1,4 @@
+import logging
 import os
 
 import numpy as np
@@ -76,3 +77,18 @@ def get_feature(x, unit_norm=True, **kwargs):
 
 def get_chain_states(N):
     return np.arange(N).reshape((-1, 1))
+
+
+def get_simple_logger(module_name, output_filepath):
+    # create logger on the current module and set its level
+    logger = logging.getLogger(module_name)
+    logger.setLevel(logging.INFO)
+
+    logging.basicConfig(
+        filename=output_filepath,
+        filemode="w",
+        format="%(asctime)s-%(levelname)s-%(message)s",
+        datefmt="%d-%b-%y %H:%M:%S",
+    )
+
+    return logger
