@@ -1,7 +1,7 @@
+import logging
 from pathlib import Path
 
 import numpy as np
-from tqdm import tqdm
 
 import agents.agents as agents
 import environments.environments as envs
@@ -13,6 +13,10 @@ from utils.objectives import MSVE
 from utils.utils import get_chain_states
 from utils.utils import get_feature
 from utils.utils import path_exists
+
+# create logger on the current module and set its level
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
 
 
 class ChainExp(BaseExperiment):
@@ -34,6 +38,13 @@ class ChainExp(BaseExperiment):
 
         self.output_dir = Path(experiment_info["output_dir"]).expanduser()
         path_exists(self.output_dir)
+
+        logging.basicConfig(
+            filename=self.output_dir / "info.log",
+            filemode="w",
+            format="%(asctime)s-%(levelname)s-%(message)s",
+            datefmt="%d-%b-%y %H:%M:%S",
+        )
 
         # Load value function
         path = self.output_dir.parents[0] / f"true_v_{self.N}.npy"
@@ -84,20 +95,8 @@ class ChainExp(BaseExperiment):
 
         # Learn for `self.n_episodes`.
         # Counting episodes starts from 1 because the 0-th episode is treated above.
-        for episode in tqdm(range(1, self.n_episodes + 1)):
+        for episode in range(1, self.n_episodes + 1):
             self._learn(episode)
-            if (
-                self.env_info.get("log_episodes") is not None
-                and self.env_info.get("log_episodes") == 1
-            ):
-                print(
-                    "Episode: {},\t{}".format(
-                        episode,
-                        np.array(self.rl_glue.rl_env_message("get episode"))
-                        .squeeze()
-                        .tolist(),
-                    )
-                )
 
     def _learn(self, episode):
         # Run one episode with `self.max_episode_steps`
@@ -109,14 +108,13 @@ class ChainExp(BaseExperiment):
                 self.true_v, current_approx_v, self.state_distribution
             )
 
-        if self.experiment_info.get("logging"):
-            if episode % 1000 == 0:
-                precision = int(np.log10(self.n_episodes)) + 1
-                print(
-                    f"Episodes: "
-                    f"{episode:0{precision}d}/{self.n_episodes:0{precision}d},"
-                    f"\tMSVE: {self.msve_error[episode // self.episode_eval_freq]:.4f}"
-                )
+        if episode % 1000 == 0:
+            precision = int(np.log10(self.n_episodes)) + 1
+            logger.info(
+                f"Episodes: "
+                f"{episode:0{precision}d}/{self.n_episodes:0{precision}d},"
+                f"\tMSVE: {self.msve_error[episode // self.episode_eval_freq]:.4f}"
+            )
 
     def save_experiment(self):
         np.save(self.output_dir / f"{self.id}_msve", self.msve_error)
