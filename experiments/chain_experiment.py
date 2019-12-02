@@ -1,6 +1,7 @@
 from pathlib import Path
 
 import numpy as np
+from tqdm import tqdm
 
 import agents.agents as agents
 import environments.environments as envs
@@ -8,9 +9,9 @@ from experiments.base_experiment import BaseExperiment
 from rl_glue.rl_glue import RLGlue
 from utils.calculate_state_distribution_chain import calculate_state_distribution
 from utils.calculate_value_function_chain import calculate_v_chain
+from utils.objectives import MSVE
 from utils.utils import get_chain_states
 from utils.utils import get_feature
-from utils.utils import MSVE
 from utils.utils import path_exists
 
 
@@ -83,7 +84,7 @@ class ChainExp(BaseExperiment):
 
         # Learn for `self.n_episodes`.
         # Counting episodes starts from 1 because the 0-th episode is treated above.
-        for episode in range(1, self.n_episodes + 1):
+        for episode in tqdm(range(1, self.n_episodes + 1)):
             self._learn(episode)
             if (
                 self.env_info.get("log_episodes") is not None

@@ -9,7 +9,8 @@ class Result:
         self.cfg = config_filename
         self.datapath = datapath
         self.exp = experiment
-        self.sweeper = Sweeper(Path(__file__).parents[1] / "configs" / f"{self.cfg}")
+        sweeper_config_file = Path(__file__).parents[1] / "configs" / f"{self.cfg}"
+        self.sweeper = Sweeper(sweeper_config_file)
 
     def find_experiment_by(self, params, n_runs):
         """

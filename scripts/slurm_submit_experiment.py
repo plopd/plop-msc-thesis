@@ -21,7 +21,7 @@ def main():
         "-script_path",
         type=str,
         help="script path for submitter",
-        default="slurm_submit.sh",
+        default="slurm_submit_jobs.sh",
     )
     args = parser.parse_args()
 

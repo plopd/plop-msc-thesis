@@ -1,7 +1,7 @@
 import numpy as np
 import pytest
 
-from utils.utils import MSVE
+from utils.objectives import MSVE
 
 
 @pytest.mark.parametrize("N, expected_res", [(5, 11.0), (19, 130.0)])
