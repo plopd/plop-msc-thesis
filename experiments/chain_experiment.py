@@ -36,7 +36,9 @@ class ChainExp(BaseExperiment):
         self.output_dir = Path(experiment_info["output_dir"]).expanduser()
         path_exists(self.output_dir)
 
-        self.logger = get_simple_logger(__name__, self.output_dir / "info.log")
+        self.logger = get_simple_logger(
+            __name__, self.output_dir / f"{self.id}_info.log"
+        )
 
         self.logger.info(
             json.dumps([self.agent_info, self.env_info, self.experiment_info], indent=4)
