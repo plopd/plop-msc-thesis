@@ -21,8 +21,7 @@ class TD(BaseAgent):
         self.a_t = None
 
     def agent_start(self, observation):
-
-        self.z = np.zeros(self.in_features)
+        self.reset()
         self.s_t = observation
         self.a_t = self.agent_policy(observation)
 
@@ -68,3 +67,6 @@ class TD(BaseAgent):
         )
 
         self.theta += self.alpha * td_error * self.z
+
+    def reset(self):
+        self.z = np.zeros(self.in_features)

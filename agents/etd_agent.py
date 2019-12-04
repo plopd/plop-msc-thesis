@@ -6,16 +6,16 @@ from agents.td_agent import TD
 class ETD(TD):
     def __init__(self):
         super().__init__()
+        self.i = None
+        self.F = None
+        self.M = None
 
     def agent_init(self, agent_info):
         super().agent_init(agent_info)
 
     def agent_start(self, observation):
         self.a_t = super().agent_start(observation)
-
-        self.i = 1.0
-        self.F = 0.0
-        self.M = 0.0
+        self.reset()
 
         return self.a_t
 
@@ -42,3 +42,9 @@ class ETD(TD):
         )
 
         self.theta += self.alpha * td_error * self.z
+
+    def reset(self):
+        super().reset()
+        self.i = 1.0
+        self.F = 0.0
+        self.M = 0.0
