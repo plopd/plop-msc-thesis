@@ -13,7 +13,8 @@
 			"algorithm": ["lstd", "elstd"],
 			"gamma": [1.0],
 			"lmbda": [0.0],
-			"interest": ["uniform"]
+			"interest": ["uniform"],
+			"policy": ["random-chain"]
 		}
 	],
 	"simulator_common": [

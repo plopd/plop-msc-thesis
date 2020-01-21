@@ -28,6 +28,7 @@ def main():
         "alpha": param_cfg.get("alpha"),
         "seed": param_cfg.get("run"),
         "interest": param_cfg.get("interest"),
+        "policy": param_cfg.get("policy"),
     }
 
     env_info = {
