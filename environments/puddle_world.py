@@ -7,6 +7,13 @@ from environments.base_environment import BaseEnvironment
 class PuddleWorld(BaseEnvironment):
     """Implements PuddleWorld from Off-Policy Actor-Critic
     https://arxiv.org/pdf/1205.4839.pdf
+
+    ACTIONS:
+        0 - west
+        1 - east
+        2 - south
+        3 - north
+        4 - don't move
     """
 
     def __init__(self):

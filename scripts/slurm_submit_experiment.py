@@ -9,7 +9,7 @@ def main():
         "-num_jobs", type=int, help="number of jobs to run", required=True
     )
     parser.add_argument(
-        "-config_file", type=str, default=None, help="name of config file"
+        "-config_file", type=str, required=True, help="name of config file"
     )
     parser.add_argument(
         "-python_module",

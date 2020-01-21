@@ -1,0 +1,32 @@
+{
+	"experiment": [
+				{
+					"n_episodes": [50000],
+					"max_episode_steps": [0],
+					"episode_eval_freq": [1],
+					"output_dir": ["~/scratch/puddleworld/puddleworldtilecoding"]
+				}
+			],
+	"learners_common": [
+		{
+			"algorithm": ["td", "etd"],
+			"alpha": [0.5],
+			"gamma": [1.0],
+			"lmbda": [0.9],
+			"interest": ["uniform"]
+		}
+
+	],
+	"features_common": [
+						{
+							"features": ["tilecoding"],
+							"tilings": [5],
+							"tiles_per_dim": [6]
+						}
+					],
+	"simulator_common": [
+		{
+			"env": ["puddleworld"]
+		}
+	]
+}

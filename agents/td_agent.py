@@ -1,10 +1,8 @@
 import numpy as np
 
 from agents.base_agent import BaseAgent
+from agents.policies import get_action_from_policy
 from utils.utils import get_feature
-
-LEFT = 0
-RIGHT = 1
 
 
 class TD(BaseAgent):
@@ -16,6 +14,7 @@ class TD(BaseAgent):
         self.lmbda = agent_info.get("lmbda", 0.0)
         self.rand_generator = np.random.RandomState(agent_info.get("seed"))
         self.theta = np.zeros(self.in_features)
+        self.policy = agent_info.get("policy")
 
         self.s_t = None
         self.a_t = None
@@ -24,13 +23,12 @@ class TD(BaseAgent):
         self.reset()
         self.s_t = observation
         self.a_t = self.agent_policy(observation)
-
         return self.a_t
 
     def agent_step(self, reward, observation):
         current_state_feature = get_feature(observation, **self.agent_info)
         last_state_feature = get_feature(self.s_t, **self.agent_info)
-
+        # print(observation, current_state_feature)
         self._learn(reward, current_state_feature, last_state_feature)
 
         self.s_t = observation
@@ -40,13 +38,14 @@ class TD(BaseAgent):
 
     def agent_end(self, reward):
         last_state_feature = get_feature(self.s_t, **self.agent_info)
-
         self._learn(reward, 0.0, last_state_feature)
 
         return
 
     def agent_policy(self, observation):
-        return self.rand_generator.choice([LEFT, RIGHT])
+        return get_action_from_policy(
+            name=self.policy, rand_generator=self.rand_generator
+        )
 
     def agent_message(self, message):
         if message == "get eligibility trace":

@@ -10,7 +10,6 @@ from rl_glue.rl_glue import RLGlue
 from utils.calculate_state_distribution_chain import calculate_state_distribution
 from utils.calculate_value_function_chain import calculate_v_chain
 from utils.objectives import MSVE
-from utils.utils import get_chain_states
 from utils.utils import get_feature
 from utils.utils import get_simple_logger
 from utils.utils import path_exists
@@ -51,12 +50,7 @@ class ChainExp(BaseExperiment):
             np.save(path, true_v)
         self.true_v = np.load(path)
 
-        # Load set S of all nonterminal states
-        path = self.output_dir.parents[0] / f"states_{self.N}.npy"
-        if not path.is_file():
-            states = get_chain_states(agent_info["N"])
-            np.save(path, states)
-        self.states = np.load(path)
+        self.states = np.arange(self.N).reshape((-1, 1))
 
         # Load state distribution
         path = self.output_dir.parents[0] / f"state_distribution_{self.N}.npy"
@@ -97,6 +91,7 @@ class ChainExp(BaseExperiment):
             self._learn(episode)
 
     def _learn(self, episode):
+        # print("episode", episode)
         # Run one episode with `self.max_episode_steps`
         self.rl_glue.rl_episode(self.max_episode_steps)
 

@@ -7,7 +7,7 @@ from utils.utils import get_feature
 def get_fig():
     n_states = 500
     in_features = 1
-    order = 15
+    order = 4
     out_features = (order + 1) ** in_features
     states = np.random.uniform(0, 1, (n_states, in_features))
 
@@ -15,14 +15,8 @@ def get_fig():
         [
             get_feature(
                 states[i],
-                **{
-                    "order": order,
-                    "features": "fourier",
-                    "in_features": out_features,
-                    "v_min": 0,
-                    "v_max": n_states - 1,
-                },
-                unit_norm=True
+                **{"order": order, "features": "fourier", "in_features": out_features},
+                unit_norm=False
             )
             for i in range(n_states)
         ]
@@ -34,6 +28,8 @@ def get_fig():
     for i in range(1, out_features + 1):
         ax = fig.add_subplot(1, out_features, i)
         ax.scatter(states[:, 0], features[:, i - 1])
+        ax.set_xticks([0, 1], [0, 1])
+        ax.set_yticks([-1, 1], [-1, 1])
     plt.show()
 
 

@@ -5,6 +5,7 @@ import numpy as np
 
 from utils.features import get_bases_feature
 from utils.features import get_dependent_feature
+from utils.features import get_feature_state_aggregation
 from utils.features import get_inverted_feature
 from utils.features import get_random_features
 from utils.features import get_tabular_feature
@@ -72,11 +73,9 @@ def get_feature(x, unit_norm=True, **kwargs):
         return get_bases_feature(x, name, order, in_features, v_min, v_max, unit_norm)
     elif name == "random-binary" or name == "random-nonbinary":
         return get_random_features(x, name, in_features, num_ones, seed, unit_norm)
+    elif name == "SA":
+        return get_feature_state_aggregation(x, in_features, seed, unit_norm)
     raise Exception("Unexpected name given.")
-
-
-def get_chain_states(N):
-    return np.arange(N).reshape((-1, 1))
 
 
 def get_simple_logger(module_name, output_filepath):

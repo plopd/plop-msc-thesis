@@ -7,7 +7,7 @@ from experiments.chain_experiment import ChainExp
 
 
 def main():
-    sweep_id = int(sys.argv[1])
+    sweep_id = int(sys.argv[1].strip(","))
     sweep_file_name = sys.argv[2]
 
     sweeper = Sweeper(Path(__file__).parents[1] / "configs" / f"{sweep_file_name}")

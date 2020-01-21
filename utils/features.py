@@ -87,3 +87,39 @@ def get_bases_feature(x, name, order, in_features, v_min, v_max, unit_norm=True)
         features = features / np.linalg.norm(features)
 
     return features
+
+
+def get_feature_state_aggregation(x, in_features, seed, unit_norm=True):
+
+    np.random.seed(seed)
+
+    if in_features == 5:
+        group_sizes = [1, 1, 1, 1, 1]
+    elif in_features == 4:
+        group_sizes = [2, 1, 1, 1]
+    elif in_features == 3:
+        group_sizes = [2, 2, 1]
+    elif in_features == 2:
+        group_sizes = [3, 2]
+    elif in_features == 1:
+        group_sizes = [5]
+    else:
+        raise ValueError("Wrong number of groups. Valid are 1, 2, 3, 4 and 5")
+
+    representations = []
+    for i_g, gs in enumerate(group_sizes):
+        phi = np.zeros((gs, in_features))
+        phi[:, i_g] = 1.0
+        representations.append(phi)
+    representations = np.concatenate(representations, axis=0)
+
+    if unit_norm:
+        representations = np.divide(
+            representations, np.linalg.norm(representations, axis=1).reshape((-1, 1))
+        )
+
+    np.random.shuffle(representations)
+
+    features = representations[x].squeeze()
+
+    return features

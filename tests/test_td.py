@@ -17,6 +17,7 @@ agent_info = {
     "interest": "uniform",
     "alpha": 2 ** -7,
     "seed": None,
+    "policy": "random-chain",
 }
 
 env_info = {"env": "chain", "N": 19}

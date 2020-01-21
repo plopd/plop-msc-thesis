@@ -13,8 +13,8 @@ from utils.utils import path_exists
 @timer
 def main():
     env = gym.make("PuddleWorld-v0")
-    n_runs = 10
-    n_episodes = 1000
+    n_runs = 1
+    n_episodes = 1
     # How to use TimeLimit's _elapsed_steps instead of own increment?
     steps = np.zeros((n_runs, n_episodes))
 
@@ -23,7 +23,9 @@ def main():
             env.reset()
             done = False
             while not done:
-                observation, reward, done, info = env.step(env.action_space.sample())
+                action = env.action_space.sample()
+                print("Action:", action)
+                observation, reward, done, info = env.step(action)
                 steps[i][j] += 1
         print(f"\rRun: {i},\tAvg. Steps: {np.mean(steps[i]):.2f} done.", end="")
         sys.stdout.flush()

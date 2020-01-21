@@ -15,6 +15,7 @@ agent_info = {
     "lmbda": 0.0,
     "interest": "uniform",
     "seed": 0,
+    "policy": "random-chain",
 }
 
 env_info = {"env": "chain", "N": 19}

@@ -35,7 +35,7 @@ def main(kwargs):
     datapath = Path("~/scratch/Chain").expanduser()
     methods = kwargs.get("ms")
     lmbdas = kwargs.get("ls")
-    RESULTS_PATH = Path(__file__).parents[0] / "Chain"
+    RESULTS_PATH = Path(__file__).parents[0] / experiment
     path_exists(RESULTS_PATH)
 
     fig, axes = plt.subplots(1, 3, figsize=(20, 5), sharey="row", dpi=80)
