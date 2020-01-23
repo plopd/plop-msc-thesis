@@ -24,6 +24,7 @@ def test_sweeper_same_keys_for_all_experiments():
         "features": "dependent",
         "in_features": 10,
         "interest": "uniform",
+        "policy": "random-chain",
     }
     for sweep_id in range(sweeper.total_combinations * num_runs):
         rtn_dict = sweeper.parse(sweep_id)
