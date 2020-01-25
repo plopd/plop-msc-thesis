@@ -20,7 +20,7 @@ class TD(BaseAgent):
         self.a_t = None
 
     def agent_start(self, observation):
-        self.reset()
+        self.agent_cleanup()
         self.s_t = observation
         self.a_t = self.agent_policy(observation)
         return self.a_t
@@ -52,20 +52,16 @@ class TD(BaseAgent):
             return self.z
         elif message == "get weight vector":
             return self.theta
-        raise Exception("Unexpected message given.")
+        raise Exception("Unexpected agent message given.")
 
     def agent_cleanup(self):
-        pass
+        self.z = np.zeros(self.in_features)
 
     def _learn(self, reward, current_state_feature, last_state_feature):
+        target = reward + self.gamma * np.dot(self.theta.T, current_state_feature)
+        pred = np.dot(self.theta.T, last_state_feature)
+        delta = target - pred
+
         self.z = self.gamma * self.lmbda * self.z + last_state_feature
-        td_error = (
-            reward
-            + self.gamma * np.dot(self.theta.T, current_state_feature)
-            - np.dot(self.theta.T, last_state_feature)
-        )
 
-        self.theta += self.alpha * td_error * self.z
-
-    def reset(self):
-        self.z = np.zeros(self.in_features)
+        self.theta += self.alpha * delta * self.z

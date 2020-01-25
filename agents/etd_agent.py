@@ -15,7 +15,7 @@ class ETD(TD):
 
     def agent_start(self, observation):
         self.a_t = super().agent_start(observation)
-        self.reset()
+        self.agent_cleanup()
 
         return self.a_t
 
@@ -33,18 +33,16 @@ class ETD(TD):
         self.z = self.gamma * self.lmbda * self.z + self.M * last_state_feature
 
     def _learn(self, reward, current_state_feature, last_state_feature):
+        target = reward + self.gamma * np.dot(self.theta.T, current_state_feature)
+        pred = np.dot(self.theta.T, last_state_feature)
+        delta = target - pred
+
         self.update_traces(last_state_feature)
 
-        td_error = (
-            reward
-            + self.gamma * np.dot(self.theta.T, current_state_feature)
-            - np.dot(self.theta.T, last_state_feature)
-        )
+        self.theta += self.alpha * delta * self.z
 
-        self.theta += self.alpha * td_error * self.z
-
-    def reset(self):
-        super().reset()
+    def agent_cleanup(self):
+        super().agent_cleanup()
         self.i = 1.0
         self.F = 0.0
         self.M = 0.0
