@@ -26,7 +26,7 @@ class LSTD(TD):
 
         return self.a_t
 
-    def _learn(self, reward, current_state_feature, last_state_feature):
+    def learn(self, reward, current_state_feature, last_state_feature):
         self.z = self.gamma * self.lmbda * self.z + last_state_feature
 
         self.A += self.get_A(last_state_feature, current_state_feature)

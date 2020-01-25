@@ -32,7 +32,7 @@ class ETD(TD):
         self.M = self.lmbda * self.i + (1 - self.lmbda) * self.F
         self.z = self.gamma * self.lmbda * self.z + self.M * last_state_feature
 
-    def _learn(self, reward, current_state_feature, last_state_feature):
+    def learn(self, reward, current_state_feature, last_state_feature):
         target = reward + self.gamma * np.dot(self.theta.T, current_state_feature)
         pred = np.dot(self.theta.T, last_state_feature)
         delta = target - pred
