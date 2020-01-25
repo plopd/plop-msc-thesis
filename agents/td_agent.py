@@ -2,7 +2,7 @@ import numpy as np
 
 from agents.base_agent import BaseAgent
 from agents.policies import get_action_from_policy
-from utils.utils import get_feature
+from features.features import get_feature_representation
 
 
 class TD(BaseAgent):
@@ -15,7 +15,9 @@ class TD(BaseAgent):
         self.rand_generator = np.random.RandomState(agent_info.get("seed"))
         self.theta = np.zeros(self.in_features)
         self.policy = agent_info.get("policy")
-
+        self.FR = get_feature_representation(
+            name=agent_info.get("features"), **agent_info
+        )
         self.s_t = None
         self.a_t = None
 
@@ -26,8 +28,8 @@ class TD(BaseAgent):
         return self.a_t
 
     def agent_step(self, reward, observation):
-        current_state_feature = get_feature(observation, **self.agent_info)
-        last_state_feature = get_feature(self.s_t, **self.agent_info)
+        current_state_feature = self.FR[observation]
+        last_state_feature = self.FR[self.s_t]
         self.learn(reward, current_state_feature, last_state_feature)
 
         self.s_t = observation
@@ -36,7 +38,7 @@ class TD(BaseAgent):
         return self.a_t
 
     def agent_end(self, reward):
-        last_state_feature = get_feature(self.s_t, **self.agent_info)
+        last_state_feature = self.FR[self.s_t]
         self.learn(reward, 0.0, last_state_feature)
 
         return

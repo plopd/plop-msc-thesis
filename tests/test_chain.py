@@ -8,7 +8,7 @@ from rl_glue.rl_glue import RLGlue
 agent_info = {
     "N": 5,
     "algorithm": "etd",
-    "features": "tabular",
+    "features": "TF",
     "in_features": 5,
     "order": None,
     "num_ones": None,
