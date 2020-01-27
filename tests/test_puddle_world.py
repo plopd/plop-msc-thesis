@@ -10,9 +10,8 @@ from tqdm import tqdm  # noqa f401
 from agents.policies import get_action_from_policy  # noqa f401
 from utils.utils import path_exists  # noqa f401
 
-# env = gym.make("PuddleWorld-v0")
-
 # # Determine action mapping
+# env = gym.make("PuddleWorld-v0")
 # obs = env.reset()
 # print(obs)
 # done = False
@@ -28,6 +27,7 @@ from utils.utils import path_exists  # noqa f401
 # env.close()
 
 # # Simulate on-policy distribution
+# env = gym.make("PuddleWorld-v0")
 # seed = 0
 # rand_generator = np.random.RandomState(seed)
 # env.seed(seed)
@@ -38,11 +38,12 @@ from utils.utils import path_exists  # noqa f401
 # for t in tqdm(range(timesteps)):
 #     action = get_action_from_policy("semi-random-puddle", rand_generator)
 #     observation, reward, done, info = env.step(action)
+#     if observation.max() > 1.0 or observation.min() < 0.0:
+#         print("Over limits", observation)
 #     states.append(observation)
 #     # env.render("human")
 #     if done:
-#         # print("Done. Reached.", observation)
-#         env.reset()
+#         observation = env.reset()
 # env.close()
 # np.save("/Users/saipiens/scratch/PuddleWorld/states", states, allow_pickle=True)
 
@@ -53,7 +54,7 @@ from utils.utils import path_exists  # noqa f401
 # S = states[idxs, :]
 # states_puddle = np.save("/Users/saipiens/scratch/PuddleWorld/states_puddle", S,
 #                         allow_pickle=True)
-
+# print(S.min(), S.max())
 
 # # Plot states S
 # import matplotlib.pyplot as plt
@@ -71,11 +72,11 @@ from utils.utils import path_exists  # noqa f401
 # plt.show()
 
 # # Get true values by averaging returns
-
 # gamma = 1.
 # n_episodes = 1000
 # states_puddle = np.load("/Users/saipiens/scratch/PuddleWorld/states_puddle.npy",
 #                         allow_pickle=True)
+# print(states_puddle.min(), states_puddle.max())
 #
 # true_values = np.zeros(len(states_puddle))
 #
@@ -97,7 +98,7 @@ from utils.utils import path_exists  # noqa f401
 #                 G = np.sum([gamma ** i * r for i, r in enumerate(rewards)])
 #                 Gs.append(G)
 #     true_value = np.mean(Gs)
-#     print(f"s0: {state}, true value: {true_value}")
+#     # print(f"s0: {state}, true value: {true_value}")
 #     true_values[i] = true_value
 #
-# np.save("/Users/saipiens/scratch/PuddleWorld/true_v_puddle", true_values, allow_pickle=True)
+# np.save("/Users/saipiens/scratch/PuddleWorld/true_v", true_values, allow_pickle=True)
