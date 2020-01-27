@@ -56,6 +56,7 @@ class GridworldExp(BaseExperiment):
         self.state_distribution = np.ones_like(self.true_v) * 1 / len(self.states)
 
         self.msve_error = np.zeros(self.n_episodes // self.episode_eval_freq + 1)
+        # self.emphasis = np.zeros(self.n_episodes // self.episode_eval_freq + 1)
 
         # Load representations of S
         FR = get_feature_representation(name=agent_info.get("features"), **agent_info)
@@ -68,9 +69,9 @@ class GridworldExp(BaseExperiment):
         self.rl_glue = RLGlue(self.env, self.agent)
         self.rl_glue.rl_init(self.agent_info, self.env_info)
 
-    from utils.decorators import timer
+    # from utils.decorators import timer
 
-    @timer
+    # @timer
     def run_experiment(self):
         self.init_experiment()
         self.learn()
@@ -87,10 +88,15 @@ class GridworldExp(BaseExperiment):
         # Counting episodes starts from 1 because the 0-th episode is treated above.
         for episode in tqdm(range(1, self.n_episodes + 1)):
             self._learn(episode)
+            # try:
+            #     self.emphasis[
+            #         episode // self.episode_eval_freq
+            #     ] = self.rl_glue.rl_agent_message("get emphasis trace")
+            #     # print(f"Emphasis stats - mean: {self.emphasis.mean()}\tstd:{self.emphasis.std()}\tmin:{self.emphasis.min()}\tmax:{self.emphasis.max()}")
+            # except Exception:
+            #     pass
 
     def _learn(self, episode):
-        # print("episode", episode)
-        # Run one episode with `self.max_episode_steps`
         self.rl_glue.rl_episode(self.max_episode_steps)
 
         if episode % self.episode_eval_freq == 0:
@@ -98,6 +104,8 @@ class GridworldExp(BaseExperiment):
             self.msve_error[episode // self.episode_eval_freq] = MSVE(
                 self.true_v, current_approx_v, self.state_distribution
             )
+
+        # print(f"Episode: {episode}; timesteps: {self.rl_glue.rl_env_message('get length episode')}")
 
         if episode % 1000 == 0:
             precision = int(np.log10(self.n_episodes)) + 1
