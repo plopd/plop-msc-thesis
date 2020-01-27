@@ -3,7 +3,7 @@ from pathlib import Path
 
 from alphaex.sweeper import Sweeper
 
-from experiments.chain_experiment import ChainExp
+from experiments.experiments import get_experiment
 
 
 def main():
@@ -29,6 +29,8 @@ def main():
         "seed": param_cfg.get("run"),
         "interest": param_cfg.get("interest"),
         "policy": param_cfg.get("policy"),
+        "tilings": param_cfg.get("tilings"),
+        "tiles_per_dim": param_cfg.get("tiles_per_dim"),
     }
 
     env_info = {
@@ -38,6 +40,7 @@ def main():
     }
 
     exp_info = {
+        "problem": param_cfg.get("problem"),
         "id": sweep_id,
         "max_episode_steps": param_cfg.get("max_episode_steps"),
         "episode_eval_freq": param_cfg.get("episode_eval_freq"),
@@ -45,7 +48,7 @@ def main():
         "output_dir": param_cfg.get("output_dir"),
     }
 
-    exp = ChainExp(agent_info, env_info, exp_info)
+    exp = get_experiment(exp_info.get("problem"), agent_info, env_info, exp_info)
     exp.run_experiment()
 
 
