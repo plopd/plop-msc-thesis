@@ -21,23 +21,27 @@ class PuddleWorld(BaseEnvironment):
 
     def env_init(self, env_info={}):
         self.env = gym.make("PuddleWorld-v0")
+        self.len_episode = 0
 
     def env_start(self):
         reward = 0
         is_terminal = False
         observation = self.env.reset()
+        self.len_episode = 0
         self.reward_obs_term = (reward, observation, is_terminal)
 
         return self.reward_obs_term[1]
 
     def env_step(self, action):
-        observation, reward, done, info = self.env.step(self.env.action_space.sample())
+        observation, reward, done, info = self.env.step(action)
         self.reward_obs_term = (reward, observation, done)
-
+        self.len_episode += 1
         return self.reward_obs_term
 
     def env_cleanup(self):
         pass
 
     def env_message(self, message):
-        pass
+        if message == "get length episode":
+            return self.len_episode
+        raise Exception("Unexpected environment message given.")
