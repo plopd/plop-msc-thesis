@@ -2,20 +2,19 @@ import json
 from pathlib import Path
 
 import numpy as np
+from tqdm import tqdm
 
 import agents.agents as agents
 import environments.environments as envs
 from experiments.base_experiment import BaseExperiment
 from features.features import get_feature_representation
 from rl_glue.rl_glue import RLGlue
-from utils.calculate_state_distribution_chain import calculate_state_distribution
-from utils.calculate_value_function_chain import calculate_v_chain
 from utils.objectives import MSVE
 from utils.utils import get_simple_logger
 from utils.utils import path_exists
 
 
-class ChainExp(BaseExperiment):
+class GridworldExp(BaseExperiment):
     def __init__(self, agent_info, env_info, experiment_info):
         super().__init__()
         self.agent_info = agent_info
@@ -43,21 +42,18 @@ class ChainExp(BaseExperiment):
             json.dumps([self.agent_info, self.env_info, self.experiment_info], indent=4)
         )
 
+        self.states = np.load(
+            self.output_dir.parents[0] / "states_puddle.npy", allow_pickle=True
+        )
+
         # Load value function
-        path = self.output_dir.parents[0] / f"true_v_{self.N}.npy"
-        if not path.is_file():
-            true_v = calculate_v_chain(agent_info["N"])
-            np.save(path, true_v)
-        self.true_v = np.load(path)
+        path = self.output_dir.parents[0] / f"true_v.npy"
+        self.true_v = np.load(path, allow_pickle=True)
 
-        self.states = np.arange(self.N).reshape((-1, 1))
-
-        # Load state distribution
-        path = self.output_dir.parents[0] / f"state_distribution_{self.N}.npy"
-        if not path.is_file():
-            state_dist = calculate_state_distribution(agent_info["N"])
-            np.save(path, state_dist)
-        self.state_distribution = np.load(path)
+        self.states = np.load(
+            self.output_dir.parents[0] / f"states_puddle.npy", allow_pickle=True
+        )
+        self.state_distribution = np.ones_like(self.true_v) * 1 / len(self.states)
 
         self.msve_error = np.zeros(self.n_episodes // self.episode_eval_freq + 1)
 
@@ -65,13 +61,16 @@ class ChainExp(BaseExperiment):
         FR = get_feature_representation(name=agent_info.get("features"), **agent_info)
 
         self.representations = np.array(
-            [FR[self.states[i]] for i in range(self.states.shape[0])]
-        ).reshape(self.states.shape[0], -1)
+            [FR[self.states[i]] for i in range(len(self.states))]
+        ).reshape(len(self.states), -1)
 
     def init_experiment(self):
         self.rl_glue = RLGlue(self.env, self.agent)
         self.rl_glue.rl_init(self.agent_info, self.env_info)
 
+    from utils.decorators import timer
+
+    @timer
     def run_experiment(self):
         self.init_experiment()
         self.learn()
@@ -86,7 +85,7 @@ class ChainExp(BaseExperiment):
 
         # Learn for `self.n_episodes`.
         # Counting episodes starts from 1 because the 0-th episode is treated above.
-        for episode in range(1, self.n_episodes + 1):
+        for episode in tqdm(range(1, self.n_episodes + 1)):
             self._learn(episode)
 
     def _learn(self, episode):
@@ -117,6 +116,6 @@ class ChainExp(BaseExperiment):
     def message_experiment(self, message):
         if message == "get state value":
             current_theta = self.rl_glue.rl_agent_message("get weight vector")
-            current_approx_v = np.dot(self.representations, current_theta)
+            current_approx_v = np.sum(current_theta[self.representations], axis=1)
             return current_approx_v
         raise Exception("Unexpected message given.")
