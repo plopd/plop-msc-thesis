@@ -16,13 +16,12 @@ class ETD(TD):
     def agent_start(self, observation):
         self.a_t = super().agent_start(observation)
         self.agent_cleanup()
-
         return self.a_t
 
     def agent_message(self, message):
         if message == "get followon trace":
             return self.F
-        if message == "get emphasis trace":
+        elif message == "get emphasis trace":
             return self.M
         response = super().agent_message(message)
         return response
@@ -37,7 +36,6 @@ class ETD(TD):
         self.eligibility = (
             self.gamma * self.lmbda * self.eligibility + self.M * last_state_feature
         )
-
         self.weights += self.alpha * delta * self.eligibility
 
     def learnTC(self, reward, current_state_feature, last_state_feature):
