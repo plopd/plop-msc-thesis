@@ -1,6 +1,7 @@
 {
 	"experiment": [
 				{
+					"problem": ["Chain"],
 					"n_episodes": [100000],
 					"max_episode_steps": [0],
 					"episode_eval_freq": [1],

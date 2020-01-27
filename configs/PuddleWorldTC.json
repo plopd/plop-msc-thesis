@@ -1,0 +1,37 @@
+{
+	"experiment": [
+				{
+					"problem": ["Gridworld"],
+					"n_episodes": [1000],
+					"max_episode_steps": [0],
+					"episode_eval_freq": [10],
+					"output_dir": ["~/scratch/PuddleWorld/PuddleWorldTC"]
+				}
+			],
+	"learners_common": [
+		{
+			"algorithm": ["td","etd"],
+			"alpha": [0.001, 1.1920928955078125e-07],
+			"gamma": [1.0],
+			"lmbda": [0.0],
+			"interest": ["uniform"],
+			"policy": ["semi-random-puddle"]
+		}
+
+	],
+	"features_common": [
+						{
+							"features": ["TC"],
+							"tilings": [5],
+							"tiles_per_dim": [5],
+							"v_min": [0.0],
+							"v_max": [1.1],
+							"in_features": [2]
+						}
+					],
+	"simulator_common": [
+		{
+			"env": ["puddleworld"]
+		}
+	]
+}
