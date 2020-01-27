@@ -1,5 +1,6 @@
 from .chain import Chain
 from .deterministic_chain import DeterministicChain
+from .puddle_world import PuddleWorld
 
 
 def get_environment(name):
@@ -7,5 +8,7 @@ def get_environment(name):
         return Chain
     elif name == "deterministic-chain":
         return DeterministicChain
+    elif name == "puddleworld":
+        return PuddleWorld
 
-    raise Exception("Unexpected environment given")
+    raise Exception("Unexpected environment given.")
