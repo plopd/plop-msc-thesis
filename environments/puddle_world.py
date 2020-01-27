@@ -18,6 +18,8 @@ class PuddleWorld(BaseEnvironment):
 
     def __init__(self):
         super(PuddleWorld, self).__init__()
+        self.env = None
+        self.len_episode = None
 
     def env_init(self, env_info={}):
         self.env = gym.make("PuddleWorld-v0")
