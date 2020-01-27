@@ -1,20 +1,20 @@
 from features.basis_features import BasisFeatures
 from features.dependent_features import DependentFeatures
 from features.random_features import RandomFeatures
+from features.state_aggregation import StateAggregation
 from features.tabular_features import TabularFeatures
-
-# from utils.tilecoding import TileCoder
+from features.tilecoding import TileCoder
 
 
 def get_feature_representation(name, unit_norm=True, **kwargs):
     if name == "TC":
-        # n_dim = 1
-        # tiles_per_dim = 10
-        # lims = [(0, 10)]
-        # tilings = 8
-        # T = TileCoder(tiles_per_dim, lims, tilings)
+        num_dims = kwargs.get("in_features")
+        tiles_per_dim = [kwargs.get("tiles_per_dim")] * num_dims
+        lims = [(kwargs.get("v_min"), (kwargs.get("v_max")))] * num_dims
+        tilings = kwargs.get("tilings")
+        T = TileCoder(tiles_per_dim, lims, tilings)
 
-        return NotImplementedError
+        return T
     elif name == "DF":
         num_states = kwargs.get("N")
         num_features = kwargs.get("in_features")
@@ -41,5 +41,11 @@ def get_feature_representation(name, unit_norm=True, **kwargs):
         num_states = kwargs.get("N")
         TF = TabularFeatures(num_states)
         return TF
+    elif name == "SA":
+        num_dims = kwargs.get("in_features")
+        seed = kwargs.get("seed")
+        SA = StateAggregation(num_dims, seed, unit_norm)
+
+        return SA
 
     raise Exception("Unexpected features representation given.")

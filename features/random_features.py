@@ -8,6 +8,8 @@ class RandomFeatures:
         if name != "RB" and name != "RNB":
             raise Exception("Unknown name given.")
 
+        self.num_features = num_features
+
         np.random.seed(seed)
 
         if name == "RNB":

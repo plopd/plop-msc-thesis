@@ -5,6 +5,8 @@ import numpy as np
 class TabularFeatures:
     def __init__(self, num_states):
 
+        self.num_features = num_states
+
         self.features = np.eye(num_states)
 
     def __getitem__(self, x):

@@ -9,6 +9,7 @@ class DependentFeatures:
         middle = np.ones(num_features)
         lower = np.triu(np.ones((num_states // 2, num_features)), k=1)
         self.features = np.vstack((upper, middle, lower))
+        self.num_features = num_features
 
         if unit_norm:
             self.features = np.divide(
