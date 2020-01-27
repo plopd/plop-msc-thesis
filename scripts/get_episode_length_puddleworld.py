@@ -1,6 +1,7 @@
 from pathlib import Path
 
 import gym
+import gym_puddle  # noqa f401
 import numpy as np
 
 from agents.policies import get_action_from_policy  # noqa f401
@@ -25,9 +26,11 @@ def main():
                 # action = env.action_space.sample()
                 action = get_action_from_policy("semi-random-puddle", rand_generator)
                 observation, reward, done, info = env.step(action)
+                # env.render("human")
                 steps[i][j] += 1
                 if done:
                     env.reset()
+            print(f"Episode: {j}: Length: {steps[i][j]}")
         print(f"Run: {i},\tAvg. Steps: {np.mean(steps[i]):.2f} done.", end="\n")
         # sys.stdout.flush()
         path = Path(__file__).parents[1] / "results" / "PuddleWorld"
