@@ -8,4 +8,4 @@ def get_action_from_policy(name, rand_generator=None):
         east = 1
         return rand_generator.choice([north, east], p=[0.5, 0.5])
 
-    raise Exception("Unexpected agent given")
+    raise Exception("Unexpected policy given")

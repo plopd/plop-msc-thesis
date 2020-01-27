@@ -27,19 +27,34 @@ class ETD(TD):
         response = super().agent_message(message)
         return response
 
-    def update_traces(self, last_state_feature):
-        self.F = self.gamma * self.F + self.i
-        self.M = self.lmbda * self.i + (1 - self.lmbda) * self.F
-        self.z = self.gamma * self.lmbda * self.z + self.M * last_state_feature
-
     def learn(self, reward, current_state_feature, last_state_feature):
-        target = reward + self.gamma * np.dot(self.theta.T, current_state_feature)
-        pred = np.dot(self.theta.T, last_state_feature)
+        target = reward + self.gamma * np.dot(self.weights.T, current_state_feature)
+        pred = np.dot(self.weights.T, last_state_feature)
         delta = target - pred
 
-        self.update_traces(last_state_feature)
+        self.F = self.gamma * self.F + self.i
+        self.M = self.lmbda * self.i + (1 - self.lmbda) * self.F
+        self.eligibility = (
+            self.gamma * self.lmbda * self.eligibility + self.M * last_state_feature
+        )
 
-        self.theta += self.alpha * delta * self.z
+        self.weights += self.alpha * delta * self.eligibility
+
+    def learnTC(self, reward, current_state_feature, last_state_feature):
+        target = (
+            reward
+            if current_state_feature is None
+            else reward + self.gamma * self.weights[current_state_feature].sum()
+        )
+        pred = self.weights[last_state_feature].sum()
+        delta = target - pred
+
+        self.F = self.gamma * self.F + self.i
+        self.M = self.lmbda * self.i + (1 - self.lmbda) * self.F
+        self.eligibility = self.gamma * self.lmbda * self.eligibility
+        self.eligibility[last_state_feature] += self.M
+
+        self.weights += (self.alpha / self.FR.tilings) * delta * self.eligibility
 
     def agent_cleanup(self):
         super().agent_cleanup()

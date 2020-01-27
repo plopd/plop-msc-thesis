@@ -22,8 +22,8 @@ class BaseAgent:
         self.alpha = None
         self.gamma = None
         self.lmbda = None
-        self.theta = None
-        self.z = None
+        self.weights = None
+        self.eligibility = None
 
         self.s_t = None
         self.a_t = None

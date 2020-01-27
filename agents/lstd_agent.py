@@ -13,8 +13,8 @@ class LSTD(TD):
     def agent_init(self, agent_info):
         super().agent_init(agent_info)
         self.total_steps = 0
-        self.A = np.zeros((self.in_features, self.in_features))
-        self.b = np.zeros((self.in_features, 1))
+        self.A = np.zeros((self.FR.num_features, self.FR.num_features))
+        self.b = np.zeros((self.FR.num_features, 1))
 
     def agent_start(self, observation):
         self.a_t = super().agent_start(observation)
@@ -27,19 +27,16 @@ class LSTD(TD):
         return self.a_t
 
     def learn(self, reward, current_state_feature, last_state_feature):
-        self.z = self.gamma * self.lmbda * self.z + last_state_feature
+        self.eligibility = (
+            self.gamma * self.lmbda * self.eligibility + last_state_feature
+        )
 
-        self.A += self.get_A(last_state_feature, current_state_feature)
-
-        self.b += self.get_b(reward)
-
-    def get_A(self, last_state_feature, current_state_feature):
-        A = (
+        self.A += (
             1
             / self.total_steps
             * (
                 np.dot(
-                    np.expand_dims(self.z, axis=1),
+                    np.expand_dims(self.eligibility, axis=1),
                     np.expand_dims(
                         last_state_feature - self.gamma * current_state_feature, axis=1
                     ).T,
@@ -47,11 +44,12 @@ class LSTD(TD):
                 - self.A
             )
         )
-        return A
 
-    def get_b(self, reward):
-        b = 1 / self.total_steps * (reward * np.expand_dims(self.z, axis=1) - self.b)
-        return b
+        self.b += (
+            1
+            / self.total_steps
+            * (reward * np.expand_dims(self.eligibility, axis=1) - self.b)
+        )
 
     def agent_message(self, message):
         if message == "get A":
@@ -61,9 +59,9 @@ class LSTD(TD):
         elif message == "get weight vector":
             try:
                 inv_A = np.linalg.inv(self.A)
-                self.theta = np.dot(inv_A, self.b).squeeze()
+                self.weights = np.dot(inv_A, self.b).squeeze()
             except np.linalg.LinAlgError:
-                return self.theta
+                return self.weights
         elif message == "get steps":
             return self.total_steps
         response = super().agent_message(message)

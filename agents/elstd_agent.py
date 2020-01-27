@@ -1,3 +1,5 @@
+import numpy as np
+
 from agents.etd_agent import ETD
 from agents.lstd_agent import LSTD
 
@@ -15,11 +17,31 @@ class ELSTD(LSTD, ETD):
         return self.a_t
 
     def learn(self, reward, current_state_feature, last_state_feature):
-        super().update_traces(last_state_feature)
+        self.F = self.gamma * self.F + self.i
+        self.M = self.lmbda * self.i + (1 - self.lmbda) * self.F
+        self.eligibility = (
+            self.gamma * self.lmbda * self.eligibility + self.M * last_state_feature
+        )
 
-        self.A += self.get_A(last_state_feature, current_state_feature)
+        self.A += (
+            1
+            / self.total_steps
+            * (
+                np.dot(
+                    np.expand_dims(self.eligibility, axis=1),
+                    np.expand_dims(
+                        last_state_feature - self.gamma * current_state_feature, axis=1
+                    ).T,
+                )
+                - self.A
+            )
+        )
 
-        self.b += self.get_b(reward)
+        self.b += (
+            1
+            / self.total_steps
+            * (reward * np.expand_dims(self.eligibility, axis=1) - self.b)
+        )
 
     def agent_message(self, message):
         response = super().agent_message(message)
