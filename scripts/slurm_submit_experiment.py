@@ -4,30 +4,32 @@ from alphaex.submitter import Submitter
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Submit experiment to slurm clusters.")
-    parser.add_argument(
-        "-num_jobs", type=int, help="number of jobs to run", required=True
+    parser = argparse.ArgumentParser(
+        description="Submit experiments to slurm clusters."
     )
     parser.add_argument(
-        "-config_file", type=str, required=True, help="name of config file"
+        "--num_jobs", type=int, help="number of jobs to run", required=True
     )
     parser.add_argument(
-        "-python_module",
+        "--config_file", type=str, required=True, help="name of config file"
+    )
+    parser.add_argument(
+        "--python_module",
         type=str,
         default="scripts.run_experiment",
-        help="python module to execute",
+        help="python script to run",
     )
     parser.add_argument(
-        "-script_path",
+        "--script_path",
         type=str,
         help="script path for submitter",
         default="slurm_submit_jobs.sh",
     )
 
-    parser.add_argument("-time", type=str, help="time [HH:MM:SS]", required=True)
+    parser.add_argument("--time", type=str, help="time [HH:MM:SS]", required=True)
 
     parser.add_argument(
-        "-mem_per_cpu", type=str, help="mem-per-cpu (e.g. G or MB)", default="1G"
+        "--mem_per_cpu", type=str, help="mem-per-cpu (e.g. G or MB)", default="1G"
     )
 
     args = parser.parse_args()
