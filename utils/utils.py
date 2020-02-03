@@ -3,13 +3,6 @@ import os
 
 import numpy as np
 
-from utils.features import get_bases_feature
-from utils.features import get_dependent_feature
-from utils.features import get_feature_state_aggregation
-from utils.features import get_inverted_feature
-from utils.features import get_random_features
-from utils.features import get_tabular_feature
-
 
 def path_exists(path):
     if not path.exists():
@@ -41,41 +34,6 @@ def get_interest(name, **kwargs):
         return random_array
 
     raise Exception("Unexpected interest given.")
-
-
-def get_feature(x, unit_norm=True, **kwargs):
-    """ Construct various features from states.
-
-    Args:
-        x: ndarray, shape (k,)
-        name: str,
-        unit_norm: (boolean),
-
-    Returns:
-
-    """
-
-    name = kwargs.get("features")
-    order = kwargs.get("order")
-    in_features = kwargs.get("in_features")
-    num_ones = kwargs.get("num_ones", 0)
-    seed = kwargs.get("seed")
-    v_min = kwargs.get("v_min")
-    v_max = kwargs.get("v_max")
-
-    if name == "tabular":
-        return get_tabular_feature(x, in_features)
-    elif name == "inverted":
-        return get_inverted_feature(x, in_features, unit_norm)
-    elif name == "dependent":
-        return get_dependent_feature(x, in_features, unit_norm)
-    elif name == "poly" or name == "fourier":
-        return get_bases_feature(x, name, order, in_features, v_min, v_max, unit_norm)
-    elif name == "random-binary" or name == "random-nonbinary":
-        return get_random_features(x, name, in_features, num_ones, seed, unit_norm)
-    elif name == "SA":
-        return get_feature_state_aggregation(x, in_features, seed, unit_norm)
-    raise Exception("Unexpected name given.")
 
 
 def get_simple_logger(module_name, output_filepath):

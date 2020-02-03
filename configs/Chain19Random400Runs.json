@@ -4,16 +4,17 @@
 	    {
 			"experiment": [
 				{
+					"problem": ["Chain"],
 					"n_episodes": [50000],
 					"max_episode_steps": [0],
 					"episode_eval_freq": [1],
-					"output_dir": ["~/scratch/Chain/Chain5Random"]
+					"output_dir": ["~/scratch/Chain/Chain19Random400Runs"]
 				}
 			],
 	        "simulator": [
 				{
 					"env": ["chain"],
-					"N": [5]
+					"N": [19]
 				}
 			],
 	        "learner": [
@@ -26,12 +27,8 @@
 					"representations": [
 						{
 							"representations": ["RB"],
-							"num_ones": [3],
-							"in_features": [4]
-						},
-						{
-							"representations": ["RNB"],
-							"in_features": [4]
+							"in_features": [17],
+							"num_ones": [9]
 						}
 					],
 					"interest": ["uniform"]

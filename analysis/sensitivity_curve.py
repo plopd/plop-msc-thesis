@@ -7,7 +7,7 @@ from analysis.colormap import colors
 from analysis.results import get_data_by
 
 
-def get_SSA(ax, result, search_dct, cutoff, name, **param_dict):
+def get_SSA(ax, result, search_dct, name, **param_dict):
     n_runs = param_dict.get("n_runs")
     stepsizes = result.get_param_val("alpha", search_dct, n_runs)
     stepsizes = sorted(stepsizes)
@@ -22,7 +22,8 @@ def get_SSA(ax, result, search_dct, cutoff, name, **param_dict):
         if data is None:
             continue
         mean, se = get_data_by(data, name)
-        if mean < cutoff:
+        cutoff = data[:, 0].mean()
+        if mean <= cutoff:
             m.append(mean)
             s.append(se)
         else:
@@ -42,9 +43,11 @@ def get_SSA(ax, result, search_dct, cutoff, name, **param_dict):
     se_lower = m - 2.5 * s
     ax.fill_between(xs, m, se_upper, color=colors[search_dct["algorithm"]], alpha=0.15)
     ax.fill_between(xs, m, se_lower, color=colors[search_dct["algorithm"]], alpha=0.15)
-    ax.set_xscale("log")
+    ax.set_xscale("log", basex=2)
     ax.spines["right"].set_visible(False)
     ax.spines["top"].set_visible(False)
-    ax.set_xlabel("Stepsize", labelpad=25)
+
+    ax.set_yticks(param_dict.get("yticks"))
+    ax.set_yticklabels(param_dict.get("yticks"))
 
     return ax

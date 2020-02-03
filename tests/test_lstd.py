@@ -6,8 +6,8 @@ from rl_glue.rl_glue import RLGlue
 
 agent_info = {
     "N": 19,
-    "algorithm": "lstd",
-    "features": "TF",
+    "algorithm": "LSTD",
+    "representations": "TF",
     "order": None,
     "in_features": 19,
     "num_ones": None,
@@ -21,7 +21,7 @@ agent_info = {
 env_info = {"env": "chain", "N": 19}
 
 
-@pytest.mark.parametrize("algorithm", ["lstd", "elstd"])
+@pytest.mark.parametrize("algorithm", ["LSTD", "ELSTD"])
 def test_increasing_steps_over_episodes(algorithm):
     environment = get_environment(env_info["env"])
     agent_info["algorithm"] = algorithm

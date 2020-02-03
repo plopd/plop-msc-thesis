@@ -32,52 +32,52 @@
 			],
 	        "learner": [
 	            {
-					"features": [
+					"representations": [
 						{
-							"features": ["tabular"],
+							"representations": ["tabular"],
 							"in_features": [5]
 						},
 						{
-							"features": ["dependent"],
+							"representations": ["DF"],
 							"in_features": [3]
 						},
 						{
-							"features": ["fourier"],
+							"representations": ["fourier"],
 							"order": [1],
 							"in_features": [2],
                             "v_min": [0],
 							"v_max": [4]
 						},
 						{
-							"features": ["fourier"],
+							"representations": ["fourier"],
 							"order": [2],
 							"in_features": [3],
                             "v_min": [0],
 							"v_max": [4]
 						},
 						{
-							"features": ["fourier"],
+							"representations": ["fourier"],
 							"order": [3],
 							"in_features": [4],
                             "v_min": [0],
 							"v_max": [4]
 						},
 						{
-							"features": ["poly"],
+							"representations": ["poly"],
 							"order": [1],
 							"in_features": [2],
                             "v_min": [0],
 							"v_max": [4]
 						},
 						{
-							"features": ["poly"],
+							"representations": ["poly"],
 							"order": [2],
 							"in_features": [3],
                             "v_min": [0],
 							"v_max": [4]
 						},
 						{
-							"features": ["poly"],
+							"representations": ["poly"],
 							"order": [3],
 							"in_features": [4],
                             "v_min": [0],
@@ -95,52 +95,52 @@
 			],
 	        "learner": [
 	            {
-					"features": [
+					"representations": [
 						{
-							"features": ["tabular"],
+							"representations": ["tabular"],
 							"in_features": [19]
 						},
 						{
-							"features": ["dependent"],
+							"representations": ["DF"],
 							"in_features": [10]
 						},
 						{
-							"features": ["fourier"],
+							"representations": ["fourier"],
 							"order": [5],
 							"in_features": [6],
                             "v_min": [0],
 							"v_max": [18]
 						},
 						{
-							"features": ["fourier"],
+							"representations": ["fourier"],
 							"order": [10],
 							"in_features": [11],
                             "v_min": [0],
 							"v_max": [18]
 						},
 						{
-							"features": ["fourier"],
+							"representations": ["fourier"],
 							"order": [15],
 							"in_features": [16],
                             "v_min": [0],
 							"v_max": [18]
 						},
 						{
-							"features": ["poly"],
+							"representations": ["poly"],
 							"order": [5],
 							"in_features": [6],
                             "v_min": [0],
 							"v_max": [18]
 						},
 						{
-							"features": ["poly"],
+							"representations": ["poly"],
 							"order": [10],
 							"in_features": [11],
                             "v_min": [0],
 							"v_max": [18]
 						},
 						{
-							"features": ["poly"],
+							"representations": ["poly"],
 							"order": [15],
 							"in_features": [16],
                             "v_min": [0],

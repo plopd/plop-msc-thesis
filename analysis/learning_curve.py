@@ -56,10 +56,9 @@ def get_LCA(ax, result, search_dct, metric, **param_dict):
     mean_err = optim_stepsize_data.mean(axis=0)
     s = optim_stepsize_data.std(axis=0) / np.sqrt(n_runs)
 
-    steps = np.arange(len(mean_err))
     line_plotter(
         ax,
-        steps,
+        np.arange(param_dict.get("timesteps") + 1),
         mean_err,
         param_dict={
             "label": f"{search_dct['algorithm']}"
@@ -87,8 +86,8 @@ def get_LCA(ax, result, search_dct, metric, **param_dict):
 
     ax.spines["right"].set_visible(False)
     ax.spines["top"].set_visible(False)
-    ax.set_xlabel("Walks/Episodes", labelpad=25)
-    ax.set_ylabel(f"RMSVE over {n_runs} runs", labelpad=25)
-    ax.legend(loc="upper right")
+
+    ax.set_yticks(param_dict.get("yticks"))
+    ax.set_yticklabels(param_dict.get("yticks"))
 
     return ax

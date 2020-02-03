@@ -8,7 +8,7 @@ def get_environment(name):
         return Chain
     elif name == "deterministic-chain":
         return DeterministicChain
-    elif name == "puddleworld":
+    elif name == "puddle-world":
         return PuddleWorld
 
     raise Exception("Unexpected environment given.")

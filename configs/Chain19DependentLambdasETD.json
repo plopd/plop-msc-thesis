@@ -32,9 +32,9 @@
 			],
 	        "learner": [
 	            {
-					"features": [
+					"representations": [
 						{
-							"features": ["dependent"],
+							"representations": ["DF"],
 							"in_features": [10]
 						}
 					]

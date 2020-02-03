@@ -7,8 +7,8 @@ from rl_glue.rl_glue import RLGlue
 
 agent_info = {
     "N": 5,
-    "algorithm": "etd",
-    "features": "TF",
+    "algorithm": "ETD",
+    "representations": "TF",
     "in_features": 5,
     "order": None,
     "num_ones": None,
@@ -38,7 +38,7 @@ def test_chain_init(N):
     assert last_state == N // 2
 
 
-@pytest.mark.parametrize("method", ["td", "etd"])
+@pytest.mark.parametrize("method", ["TD", "ETD"])
 def test_same_episodes_for_each_run_for_different_methods(method):
     runs_with_episodes = {
         0: [[2, 1, 2, 3, 2, 3, 4], [2, 3, 4], [2, 3, 2, 1, 2, 1, 0]],

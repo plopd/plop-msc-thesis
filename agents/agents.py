@@ -6,15 +6,15 @@ from .td_agent import TD
 
 
 def get_agent(name):
-    if name == "td":
+    if name == "TD":
         return TD
-    elif name == "etd":
+    elif name == "ETD":
         return ETD
-    elif name == "mc":
+    elif name == "MC":
         return MC
-    elif name == "lstd":
+    elif name == "LSTD":
         return LSTD
-    elif name == "elstd":
+    elif name == "ELSTD":
         return ELSTD
 
-    raise Exception("Unexpected agent given")
+    raise Exception("Unexpected agent given.")

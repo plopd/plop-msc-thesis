@@ -19,8 +19,8 @@ def main():
 
     agent_info = {
         "N": N,
-        "algorithm": "td",
-        "features": "tabular",
+        "algorithm": "TD",
+        "representations": "tabular",
         "in_features": N,
         "gamma": 1,
         "lmbda": 0,

@@ -19,14 +19,6 @@ class BaseAgent:
     @abstractmethod
     def __init__(self):
         self.rand_generator = None
-        self.alpha = None
-        self.gamma = None
-        self.lmbda = None
-        self.weights = None
-        self.eligibility = None
-
-        self.s_t = None
-        self.a_t = None
 
     @abstractmethod
     def agent_init(self, agent_info):

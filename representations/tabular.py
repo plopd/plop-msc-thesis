@@ -2,7 +2,7 @@
 import numpy as np
 
 
-class TabularFeatures:
+class TabularRepresentations:
     def __init__(self, num_states):
 
         self.num_features = num_states

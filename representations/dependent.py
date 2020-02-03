@@ -2,7 +2,7 @@
 import numpy as np
 
 
-class DependentFeatures:
+class DependentRepresentations:
     def __init__(self, num_states, num_features, unit_norm=True):
 
         upper = np.tril(np.ones((num_states // 2, num_features)), k=0)

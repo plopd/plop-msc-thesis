@@ -8,7 +8,7 @@ from analysis.colormap import locs
 from analysis.results import get_data_by
 
 
-def get_WF(ax, result, search_dct, cutoff, name, methods, **param_dict):
+def get_WF(ax, result, search_dct, name, methods, **param_dict):
     n_runs = param_dict.get("n_runs")
     stepsizes = result.get_param_val("alpha", search_dct, n_runs)
     stepsizes = sorted(stepsizes)
@@ -23,6 +23,7 @@ def get_WF(ax, result, search_dct, cutoff, name, methods, **param_dict):
         if data is None:
             continue
         mean, _ = get_data_by(data, name)
+        cutoff = data[:, 0].mean()
         if mean <= cutoff:
             m.append(mean)
         else:
@@ -36,7 +37,11 @@ def get_WF(ax, result, search_dct, cutoff, name, methods, **param_dict):
         )
     m = np.array(m)
     ax.scatter(
-        xs, m, facecolors="none", edgecolors=colors[search_dct["algorithm"]], s=100
+        xs,
+        m,
+        facecolors=colors[search_dct["algorithm"]],
+        edgecolors=colors[search_dct["algorithm"]],
+        s=75,
     )
     ax.spines["right"].set_visible(False)
     ax.spines["top"].set_visible(False)
@@ -48,6 +53,5 @@ def get_WF(ax, result, search_dct, cutoff, name, methods, **param_dict):
     )
     ax.set_xticks(ticks=[locs[m] for m in methods])
     ax.set_xticklabels(labels=[m.upper() for m in methods])
-    ax.set_xlabel("Methods", labelpad=25)
 
     return ax

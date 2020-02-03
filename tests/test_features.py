@@ -1,13 +1,13 @@
 import numpy as np
 import pytest
 
-from features.features import get_feature_representation
+from representations.representations import get_representation
 
 
 @pytest.mark.parametrize("num_states", [5, 19])
 def test_tabular_features(num_states):
     states = np.arange(num_states).reshape(-1, 1)
-    TF = get_feature_representation("TF", **{"N": num_states})
+    TF = get_representation("TF", **{"N": num_states})
 
     tabular_features = np.vstack([TF[states[i]] for i in range(num_states)])
     assert np.allclose(np.sum(tabular_features, axis=1), np.ones(num_states))
@@ -20,7 +20,7 @@ def test_tabular_features(num_states):
 #         [
 #             get_feature(
 #                 states[i],
-#                 **{"features": "inverted", "in_features": num_states},
+#                 **{"representations": "inverted", "in_features": num_states},
 #                 unit_norm=False
 #             )
 #             for i in range(num_states)
@@ -34,7 +34,7 @@ def test_tabular_features(num_states):
 @pytest.mark.parametrize("num_states", [5, 19])
 def test_dependent_features_all_columns_sum_up_to_in_features(num_states):
     states = np.arange(num_states).reshape(-1, 1)
-    DF = get_feature_representation(
+    DF = get_representation(
         "DF", unit_norm=False, **{"N": num_states, "in_features": num_states // 2 + 1}
     )
     dependent_features = np.vstack([DF[states[i]] for i in range(num_states)])
@@ -48,7 +48,7 @@ def test_dependent_features_all_columns_sum_up_to_in_features(num_states):
 def test_random_features_binary_num_ones(num_states):
     states = np.arange(num_states).reshape(-1, 1)
     num_ones = num_states // 4 + 1
-    RF = get_feature_representation(
+    RF = get_representation(
         "RB",
         **{
             "N": num_states,
@@ -66,7 +66,7 @@ def test_random_features_binary_num_ones(num_states):
 @pytest.mark.parametrize("num_states", [5, 19])
 def test_random_features_nonbinary_is_unit_norm(num_states):
     states = np.arange(num_states).reshape(-1, 1)
-    RF = get_feature_representation(
+    RF = get_representation(
         "RNB", **{"N": num_states, "seed": 0, "in_features": num_states // 2}
     )
 
@@ -79,7 +79,7 @@ def test_random_features_nonbinary_is_unit_norm(num_states):
 def test_fourier_features_num_features(num_states, order, out_features):
     states = np.arange(num_states).reshape(-1, 1)
 
-    BF = get_feature_representation("F", **{"order": order, "in_features": 1})
+    BF = get_representation("F", **{"order": order, "in_features": 1})
 
     features = np.vstack([BF[states[i]] for i in range(num_states)])
     assert features.shape[1] == out_features
@@ -88,7 +88,7 @@ def test_fourier_features_num_features(num_states, order, out_features):
 def test_same_random_feature_for_state_in_an_episode():
     states = np.array([1, 1, 2, 2, 2, 3, 3]).reshape(-1, 1)
 
-    RF = get_feature_representation(
+    RF = get_representation(
         "RB", **{"N": 7, "seed": 6, "in_features": 7 // 2, "num_ones": 2}
     )
 

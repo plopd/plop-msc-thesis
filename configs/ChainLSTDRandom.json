@@ -32,14 +32,14 @@
 			],
 	        "learner": [
 	            {
-					"features": [
+					"representations": [
 						{
-							"features": ["random-binary"],
+							"representations": ["RB"],
 							"num_ones": [3],
 							"in_features": [4]
 						},
 						{
-							"features": ["random-nonbinary"],
+							"representations": ["RNB"],
 							"in_features": [4]
 						}
 					]
@@ -54,14 +54,14 @@
 			],
 	        "learner": [
 	            {
-					"features": [
+					"representations": [
 						{
-							"features": ["random-binary"],
+							"representations": ["RB"],
 							"in_features": [17],
 							"num_ones": [9]
 						},
 						{
-							"features": ["random-nonbinary"],
+							"representations": ["RNB"],
 							"in_features": [17]
 						}
 					]

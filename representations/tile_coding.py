@@ -39,14 +39,3 @@ class TileCoder:
     @property
     def num_features(self):
         return self._n_tiles
-
-
-# if __name__ == '__main__':
-#     # number of tile spanning each dimension
-#     tiles_per_dim = [10, 10]
-#     # value limits of each dimension
-#     lims = [(0.0, 10.), (0.0, 10.)]
-#     # number of tilings
-#     tilings = 9
-#     T = TileCoder(tiles_per_dim, lims, tilings)
-#     print(T._offsets)

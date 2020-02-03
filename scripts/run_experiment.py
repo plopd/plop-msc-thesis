@@ -17,7 +17,7 @@ def main():
     agent_info = {
         "N": param_cfg.get("N"),
         "algorithm": param_cfg.get("algorithm"),
-        "features": param_cfg.get("features"),
+        "representations": param_cfg.get("representations"),
         "in_features": param_cfg.get("in_features"),
         "order": param_cfg.get("order"),
         "num_ones": param_cfg.get("num_ones", 0),
@@ -49,7 +49,7 @@ def main():
     }
 
     exp = get_experiment(exp_info.get("problem"), agent_info, env_info, exp_info)
-    exp.run_experiment()
+    exp.start()
 
 
 if __name__ == "__main__":

@@ -7,7 +7,7 @@ from tqdm import tqdm
 import agents.agents as agents
 import environments.environments as envs
 from experiments.base_experiment import BaseExperiment
-from features.features import get_feature_representation
+from representations.representations import get_representation
 from rl_glue.rl_glue import RLGlue
 from utils.objectives import MSVE
 from utils.utils import get_simple_logger
@@ -59,27 +59,27 @@ class GridworldExp(BaseExperiment):
         # self.emphasis = np.zeros(self.n_episodes // self.episode_eval_freq + 1)
 
         # Load representations of S
-        FR = get_feature_representation(name=agent_info.get("features"), **agent_info)
+        FR = get_representation(name=agent_info.get("representations"), **agent_info)
 
         self.representations = np.array(
             [FR[self.states[i]] for i in range(len(self.states))]
         ).reshape(len(self.states), -1)
 
-    def init_experiment(self):
+    def init(self):
         self.rl_glue = RLGlue(self.env, self.agent)
         self.rl_glue.rl_init(self.agent_info, self.env_info)
 
-    # from utils.decorators import timer
+    from utils.decorators import timer
 
-    # @timer
-    def run_experiment(self):
-        self.init_experiment()
+    @timer
+    def start(self):
+        self.init()
         self.learn()
-        self.save_experiment()
+        self.save()
 
     def learn(self):
         # Log error prior to learning
-        current_approx_v = self.message_experiment("get state value")
+        current_approx_v = self.message("get state value")
         self.msve_error[0] = MSVE(
             self.true_v, current_approx_v, self.state_distribution
         )
@@ -100,7 +100,7 @@ class GridworldExp(BaseExperiment):
         self.rl_glue.rl_episode(self.max_episode_steps)
 
         if episode % self.episode_eval_freq == 0:
-            current_approx_v = self.message_experiment("get state value")
+            current_approx_v = self.message("get state value")
             self.msve_error[episode // self.episode_eval_freq] = MSVE(
                 self.true_v, current_approx_v, self.state_distribution
             )
@@ -115,13 +115,13 @@ class GridworldExp(BaseExperiment):
                 f"\tMSVE: {self.msve_error[episode // self.episode_eval_freq]:.4f}"
             )
 
-    def save_experiment(self):
+    def save(self):
         np.save(self.output_dir / f"{self.id}_msve", self.msve_error)
 
-    def cleanup_experiment(self):
+    def cleanup(self):
         pass
 
-    def message_experiment(self, message):
+    def message(self, message):
         if message == "get state value":
             current_theta = self.rl_glue.rl_agent_message("get weight vector")
             current_approx_v = np.sum(current_theta[self.representations], axis=1)

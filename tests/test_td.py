@@ -8,7 +8,7 @@ from rl_glue.rl_glue import RLGlue
 agent_info = {
     "N": 19,
     "algorithm": "etd",
-    "features": "TF",
+    "representations": "TF",
     "order": None,
     "in_features": 19,
     "num_ones": None,
@@ -23,7 +23,7 @@ agent_info = {
 env_info = {"env": "chain", "N": 19}
 
 
-@pytest.mark.parametrize("algorithm", ["elstd"])
+@pytest.mark.parametrize("algorithm", ["ELSTD"])
 def test_agent_start(algorithm):
     environment = get_environment(env_info["env"])
     agent_info["algorithm"] = algorithm
@@ -54,7 +54,7 @@ def test_linear_followon_trace():
     agent_info["lmbda"] = 0.0
     agent_info["interest"] = "uniform"
     environment = get_environment(env_info["env"])
-    agent = get_agent("etd")
+    agent = get_agent("ETD")
 
     rl_glue = RLGlue(environment, agent)
 
@@ -69,7 +69,7 @@ def test_constant_emphasis():
     agent_info["lmbda"] = 1.0
     agent_info["interest"] = "uniform"
     environment = get_environment(env_info["env"])
-    agent = get_agent("etd")
+    agent = get_agent("ETD")
 
     rl_glue = RLGlue(environment, agent)
 
@@ -79,7 +79,7 @@ def test_constant_emphasis():
         assert rl_glue.rl_agent_message("get emphasis trace") == 1.0
 
 
-@pytest.mark.parametrize("algorithm", ["td", "etd", "lstd", "elstd"])
+@pytest.mark.parametrize("algorithm", ["TD", "ETD", "LSTD", "ELSTD"])
 def test_eligibility_trace_reset_at_start_of_episode(algorithm):
     environment = get_environment(env_info["env"])
     agent_info["algorithm"] = algorithm
@@ -92,7 +92,7 @@ def test_eligibility_trace_reset_at_start_of_episode(algorithm):
     assert np.allclose(e, np.zeros(e.shape[0]))
 
 
-@pytest.mark.parametrize("algorithm", ["etd", "elstd"])
+@pytest.mark.parametrize("algorithm", ["ETD", "ELSTD"])
 def test_emphasis_reset_at_start_of_episode(algorithm):
     environment = get_environment(env_info["env"])
     agent_info["algorithm"] = algorithm
@@ -106,7 +106,7 @@ def test_emphasis_reset_at_start_of_episode(algorithm):
 
 
 @pytest.mark.parametrize(
-    "env, algorithm", [("deterministic-chain", "td"), ("deterministic-chain", "etd")]
+    "env, algorithm", [("deterministic-chain", "TD"), ("deterministic-chain", "ETD")]
 )
 def test_one_step_td_update(env, algorithm):
     agent_info["algorithm"] = algorithm

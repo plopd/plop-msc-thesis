@@ -12,7 +12,7 @@ class BaseExperiment:
     __metaclass__ = ABCMeta
 
     @abstractmethod
-    def init_experiment(self):
+    def init(self):
         """
 
         Returns:
@@ -20,7 +20,7 @@ class BaseExperiment:
         """
 
     @abstractmethod
-    def save_experiment(self):
+    def save(self):
         """
 
         Returns:
@@ -28,7 +28,7 @@ class BaseExperiment:
         """
 
     @abstractmethod
-    def run_experiment(self):
+    def start(self):
         """
 
         Returns:
@@ -52,7 +52,7 @@ class BaseExperiment:
         """
 
     @abstractmethod
-    def cleanup_experiment(self):
+    def cleanup(self):
         """
 
         Returns:
@@ -60,7 +60,7 @@ class BaseExperiment:
         """
 
     @abstractmethod
-    def message_experiment(self, message):
+    def message(self, message):
         """
         Args:
             message: The message passed to the agent.

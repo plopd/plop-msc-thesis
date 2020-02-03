@@ -88,10 +88,10 @@ def run_exact_lstd(P_pi, Gamma, Lmbda, Phi, r_pi, d_mu, i, true_v, which):
     Returns:
 
     """
-    if which == "etd":
+    if which == "ETD":
         M = calculate_M(P_pi, Gamma, Lmbda, i, d_mu)
         M = M / np.sum(M)
-    elif which == "td":
+    elif which == "TD":
         M = np.diag(d_mu)
     else:
         raise Exception("Unexpected which given.")

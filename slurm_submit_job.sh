@@ -1,8 +1,6 @@
 #!/bin/bash
 
-#SBATCH --account=def-sutton
-#SBATCH --time=00:40:00
-#SBATCH --mem-per-cpu=1G
+#SBATCH --job-name submit.sh
 #SBATCH --output=/home/plopd/scratch/output/slurm-%A_%5a.txt
 #SBATCH --error=/home/plopd/scratch/error/slurm-%A_%5a.txt
 

@@ -4,7 +4,7 @@ import itertools
 import numpy as np
 
 
-class BasisFeatures:
+class PolynomialRepresentation:
     def __init__(self, name, num_dims, order, v_min, v_max, unit_norm=True):
         self.name = name
         self.unit_norm = unit_norm

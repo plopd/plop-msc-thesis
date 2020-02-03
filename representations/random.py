@@ -2,7 +2,7 @@
 import numpy as np
 
 
-class RandomFeatures:
+class RandomRepresentations:
     def __init__(self, name, num_states, num_features, num_ones, seed, unit_norm=True):
 
         if name != "RB" and name != "RNB":
@@ -20,7 +20,7 @@ class RandomFeatures:
             self.features = np.zeros((num_states, num_features))
 
             for j in range(num_states):
-                random_array = np.array([0] * num_ones + [1] * num_zeros)
+                random_array = np.array([1] * num_ones + [0] * num_zeros)
                 np.random.shuffle(random_array)
                 self.features[j, :] = random_array
 

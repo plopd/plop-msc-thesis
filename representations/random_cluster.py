@@ -2,7 +2,7 @@
 import numpy as np
 
 
-class StateAggregation:
+class RandomClusterRepresentation:
     def __init__(self, num_features, seed, unit_norm=True):
 
         self.num_features = num_features
@@ -20,7 +20,7 @@ class StateAggregation:
         elif num_features == 1:
             group_sizes = [5]
         else:
-            raise ValueError("Wrong number of groups. Valid are 1, 2, 3, 4 and 5")
+            raise ValueError("Wrong number of groups. Valid are 1, 2, 3, 4 and 5.")
 
         self.features = []
         for i_g, gs in enumerate(group_sizes):

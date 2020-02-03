@@ -1,9 +1,9 @@
-step_size_colors = {"td": "red", "etd": "blue"}
+step_size_colors = {"TD": "red", "ETD": "blue"}
 
-colors = {"td": "red", "etd": "blue"}
+colors = {"TD": "red", "ETD": "blue"}
 
 
-locs = {"td": 1, "etd": 2}
+locs = {"TD": 1, "ETD": 2}
 
 lmbdas = {
     0: "red",
@@ -16,4 +16,4 @@ lmbdas = {
     1.0: "pink",
 }
 
-linestyles = {"td": "-", "etd": "--"}
+linestyles = {"TD": "-", "ETD": "--"}

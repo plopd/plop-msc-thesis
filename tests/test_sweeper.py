@@ -21,7 +21,7 @@ def test_sweeper_same_keys_for_all_experiments():
         "alpha": 1.192_092_895_507_812_5e-07,
         "gamma": 1.0,
         "lmbda": 0.0,
-        "features": "dependent",
+        "representations": "DF",
         "in_features": 10,
         "interest": "uniform",
         "policy": "random-chain",
@@ -33,10 +33,10 @@ def test_sweeper_same_keys_for_all_experiments():
 
 
 @pytest.mark.parametrize(
-    "name, features",
-    [("td", "tabular"), ("td", "dependent"), ("etd", "tabular"), ("etd", "dependent")],
+    "name, representations",
+    [("TD", "tabular"), ("TD", "DF"), ("ETD", "tabular"), ("ETD", "DF")],
 )
-def test_sweeper_number_of_stepsizes_for_method(name, features):
+def test_sweeper_number_of_stepsizes_for_method(name, representations):
     cfg_filename, num_runs = "Test_Sweeper", 100
     result = Result(f"{cfg_filename}.json", None, "Test_Sweeper")
 
@@ -45,7 +45,7 @@ def test_sweeper_number_of_stepsizes_for_method(name, features):
         {
             "algorithm": name,
             "env": "chain",
-            "features": features,
+            "representations": representations,
             "interest": "uniform",
             "N": 19,
         },
@@ -56,10 +56,10 @@ def test_sweeper_number_of_stepsizes_for_method(name, features):
 
 
 @pytest.mark.parametrize(
-    "name, features",
-    [("td", "tabular"), ("td", "dependent"), ("etd", "tabular"), ("etd", "dependent")],
+    "name, representations",
+    [("TD", "tabular"), ("TD", "DF"), ("ETD", "tabular"), ("ETD", "DF")],
 )
-def test_sweeper_number_of_experiments_for_learner_and_features(name, features):
+def test_sweeper_number_of_experiments_for_learner_and_features(name, representations):
     cfg_filename, num_runs = "Test_Sweeper", 100
     sweeper = Sweeper(f"{Path(__file__).parents[1]}/configs/{cfg_filename}.json")
 
@@ -67,7 +67,7 @@ def test_sweeper_number_of_experiments_for_learner_and_features(name, features):
         {
             "algorithm": name,
             "env": "chain",
-            "features": features,
+            "representations": representations,
             "interest": "uniform",
             "N": 19,
         },
@@ -80,7 +80,7 @@ def test_sweeper_number_of_experiments_for_learner_and_features(name, features):
         assert len(lst["ids"]) == 100
 
 
-@pytest.mark.parametrize("name", ["td", "etd"])
+@pytest.mark.parametrize("name", ["TD", "ETD"])
 def test_sweeper_number_of_experiments_for_learner(name):
     cfg_filename, num_runs = "Test_Sweeper", 100
     sweeper = Sweeper(f"{Path(__file__).parents[1]}/configs/{cfg_filename}.json")

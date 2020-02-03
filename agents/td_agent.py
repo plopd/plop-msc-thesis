@@ -2,19 +2,19 @@ import numpy as np
 
 from agents.base_agent import BaseAgent
 from agents.policies import get_action_from_policy
-from features.features import get_feature_representation
+from representations.representations import get_representation
 
 
 class TD(BaseAgent):
     def agent_init(self, agent_info):
         self.agent_info = agent_info
         self.alpha = agent_info.get("alpha")
-        self.gamma = agent_info.get("gamma", 1.0)
-        self.lmbda = agent_info.get("lmbda", 0.0)
+        self.gamma = agent_info.get("gamma")
+        self.lmbda = agent_info.get("lmbda")
         self.rand_generator = np.random.RandomState(agent_info.get("seed"))
         self.policy = agent_info.get("policy")
-        self.FR = get_feature_representation(
-            name=agent_info.get("features"), **agent_info
+        self.FR = get_representation(
+            name=agent_info.get("representations"), **agent_info
         )
         self.weights = np.zeros(self.FR.num_features)
         self.s_t = None
@@ -30,7 +30,7 @@ class TD(BaseAgent):
         current_state_feature = self.FR[observation]
         last_state_feature = self.FR[self.s_t]
 
-        if self.agent_info.get("features") == "TC":
+        if self.agent_info.get("representations") == "TC":
             self.learnTC(reward, current_state_feature, last_state_feature)
         else:
             self.learn(reward, current_state_feature, last_state_feature)
@@ -43,7 +43,7 @@ class TD(BaseAgent):
     def agent_end(self, reward):
         last_state_feature = self.FR[self.s_t]
 
-        if self.agent_info.get("features") == "TC":
+        if self.agent_info.get("representations") == "TC":
             self.learnTC(reward, None, last_state_feature)
         else:
             self.learn(reward, 0.0, last_state_feature)

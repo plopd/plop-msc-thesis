@@ -15,7 +15,11 @@ def get_fig():
         [
             get_feature(
                 states[i],
-                **{"order": order, "features": "fourier", "in_features": out_features},
+                **{
+                    "order": order,
+                    "representations": "fourier",
+                    "in_features": out_features,
+                },
                 unit_norm=False
             )
             for i in range(n_states)

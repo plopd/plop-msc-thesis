@@ -11,8 +11,8 @@ from rl_glue.rl_glue import RLGlue
 def calculate_state_distribution(N):
     agent_info = {
         "N": N,
-        "algorithm": "td",
-        "features": "tabular",
+        "algorithm": "TD",
+        "representations": "tabular",
         "gamma": 1,
         "lmbda": 0,
         "alpha": 0.125,
