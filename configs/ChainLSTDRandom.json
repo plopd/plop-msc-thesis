@@ -12,7 +12,7 @@
 			"algorithm": ["lstd", "elstd"],
 			"gamma": [1.0],
 			"lmbda": [0.0],
-			"interest": ["uniform"],
+			"interest": ["UI"],
 			"policy": ["random-chain"]
 		}
 	],
@@ -36,11 +36,11 @@
 						{
 							"representations": ["RB"],
 							"num_ones": [3],
-							"in_features": [4]
+							"num_dims": [4]
 						},
 						{
 							"representations": ["RNB"],
-							"in_features": [4]
+							"num_dims": [4]
 						}
 					]
 	            }
@@ -57,12 +57,12 @@
 					"representations": [
 						{
 							"representations": ["RB"],
-							"in_features": [17],
+							"num_dims": [17],
 							"num_ones": [9]
 						},
 						{
 							"representations": ["RNB"],
-							"in_features": [17]
+							"num_dims": [17]
 						}
 					]
 	            }

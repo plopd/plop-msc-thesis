@@ -13,7 +13,7 @@
 			"alpha": [0.005],
 			"gamma": [1.0],
 			"lmbda": [0.0],
-			"interest": ["uniform"],
+			"interest": ["UI"],
 			"policy": ["random-chain"]
 		}
 	],
@@ -36,38 +36,38 @@
 					"representations": [
 						{
 							"representations": ["tabular"],
-							"in_features": [5]
+							"num_dims": [5]
 						},
 						{
 							"representations": ["DF"],
-							"in_features": [3]
+							"num_dims": [3]
 						},
 						{
 							"representations": ["fourier"],
 							"order": [3],
-							"in_features": [4],
+							"num_dims": [4],
 							"v_min": [0],
 							"v_max": [4]
 						},
 						{
 							"representations": ["poly"],
 							"order": [3],
-							"in_features": [4],
+							"num_dims": [4],
 							"v_min": [0],
 							"v_max": [4]
 						},
 						{
 							"representations": ["random-binary"],
-							"in_features": [4],
+							"num_dims": [4],
 							"num_ones": [2]
 						},
 						{
 							"representations": ["random-nonbinary"],
-							"in_features": [4]
+							"num_dims": [4]
 						},
 						{
 							"representations": ["state-aggregation"],
-							"in_features": [4]
+							"num_dims": [4]
 						}
 					]
 	            }
@@ -84,34 +84,34 @@
 					"representations": [
 						{
 							"representations": ["tabular"],
-							"in_features": [19]
+							"num_dims": [19]
 						},
 						{
 							"representations": ["DF"],
-							"in_features": [10]
+							"num_dims": [10]
 						},
 						{
 							"representations": ["fourier"],
 							"order": [10],
-							"in_features": [11],
+							"num_dims": [11],
 							"v_min": [0],
 							"v_max": [18]
 						},
 						{
 							"representations": ["poly"],
 							"order": [5],
-							"in_features": [6],
+							"num_dims": [6],
 							"v_min": [0],
 							"v_max": [18]
 						},
 						{
 							"representations": ["random-binary"],
-							"in_features": [17],
+							"num_dims": [17],
 							"num_ones": [10]
 						},
 						{
 							"representations": ["random-nonbinary"],
-							"in_features": [10]
+							"num_dims": [10]
 						}
 					]
 	            }

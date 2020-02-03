@@ -13,7 +13,7 @@
 			"algorithm": ["lstd", "elstd"],
 			"gamma": [1.0],
 			"lmbda": [0.0],
-			"interest": ["uniform"],
+			"interest": ["UI"],
 			"policy": ["random-chain"]
 		}
 	],
@@ -35,51 +35,51 @@
 					"representations": [
 						{
 							"representations": ["tabular"],
-							"in_features": [5]
+							"num_dims": [5]
 						},
 						{
 							"representations": ["DF"],
-							"in_features": [3]
+							"num_dims": [3]
 						},
 						{
 							"representations": ["fourier"],
 							"order": [1],
-							"in_features": [2],
+							"num_dims": [2],
                             "v_min": [0],
 							"v_max": [4]
 						},
 						{
 							"representations": ["fourier"],
 							"order": [2],
-							"in_features": [3],
+							"num_dims": [3],
                             "v_min": [0],
 							"v_max": [4]
 						},
 						{
 							"representations": ["fourier"],
 							"order": [3],
-							"in_features": [4],
+							"num_dims": [4],
                             "v_min": [0],
 							"v_max": [4]
 						},
 						{
 							"representations": ["poly"],
 							"order": [1],
-							"in_features": [2],
+							"num_dims": [2],
                             "v_min": [0],
 							"v_max": [4]
 						},
 						{
 							"representations": ["poly"],
 							"order": [2],
-							"in_features": [3],
+							"num_dims": [3],
                             "v_min": [0],
 							"v_max": [4]
 						},
 						{
 							"representations": ["poly"],
 							"order": [3],
-							"in_features": [4],
+							"num_dims": [4],
                             "v_min": [0],
 							"v_max": [4]
 						}
@@ -98,51 +98,51 @@
 					"representations": [
 						{
 							"representations": ["tabular"],
-							"in_features": [19]
+							"num_dims": [19]
 						},
 						{
 							"representations": ["DF"],
-							"in_features": [10]
+							"num_dims": [10]
 						},
 						{
 							"representations": ["fourier"],
 							"order": [5],
-							"in_features": [6],
+							"num_dims": [6],
                             "v_min": [0],
 							"v_max": [18]
 						},
 						{
 							"representations": ["fourier"],
 							"order": [10],
-							"in_features": [11],
+							"num_dims": [11],
                             "v_min": [0],
 							"v_max": [18]
 						},
 						{
 							"representations": ["fourier"],
 							"order": [15],
-							"in_features": [16],
+							"num_dims": [16],
                             "v_min": [0],
 							"v_max": [18]
 						},
 						{
 							"representations": ["poly"],
 							"order": [5],
-							"in_features": [6],
+							"num_dims": [6],
                             "v_min": [0],
 							"v_max": [18]
 						},
 						{
 							"representations": ["poly"],
 							"order": [10],
-							"in_features": [11],
+							"num_dims": [11],
                             "v_min": [0],
 							"v_max": [18]
 						},
 						{
 							"representations": ["poly"],
 							"order": [15],
-							"in_features": [16],
+							"num_dims": [16],
                             "v_min": [0],
 							"v_max": [18]
 						}

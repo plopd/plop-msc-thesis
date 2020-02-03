@@ -22,8 +22,8 @@ def test_sweeper_same_keys_for_all_experiments():
         "gamma": 1.0,
         "lmbda": 0.0,
         "representations": "DF",
-        "in_features": 10,
-        "interest": "uniform",
+        "num_dims": 10,
+        "interest": "UI",
         "policy": "random-chain",
     }
     for sweep_id in range(sweeper.total_combinations * num_runs):
@@ -46,7 +46,7 @@ def test_sweeper_number_of_stepsizes_for_method(name, representations):
             "algorithm": name,
             "env": "chain",
             "representations": representations,
-            "interest": "uniform",
+            "interest": "UI",
             "N": 19,
         },
         n_runs=num_runs,
@@ -68,7 +68,7 @@ def test_sweeper_number_of_experiments_for_learner_and_features(name, representa
             "algorithm": name,
             "env": "chain",
             "representations": representations,
-            "interest": "uniform",
+            "interest": "UI",
             "N": 19,
         },
         num_runs,
@@ -86,7 +86,7 @@ def test_sweeper_number_of_experiments_for_learner(name):
     sweeper = Sweeper(f"{Path(__file__).parents[1]}/configs/{cfg_filename}.json")
 
     search_lst = sweeper.search(
-        {"algorithm": name, "env": "chain", "interest": "uniform", "N": 19}, num_runs
+        {"algorithm": name, "env": "chain", "interest": "UI", "N": 19}, num_runs
     )
 
     assert len(search_lst) == 24

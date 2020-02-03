@@ -27,15 +27,15 @@
 					"representations": [
 						{
 							"representations": ["RB"],
-							"in_features": [17],
+							"num_dims": [17],
 							"num_ones": [9]
 						},
 						{
 							"representations": ["RNB"],
-							"in_features": [17]
+							"num_dims": [17]
 						}
 					],
-					"interest": ["uniform"]
+					"interest": ["UI"]
 	            }
 	        ]
 	    }

@@ -21,7 +21,7 @@ matplotlib.rcParams.update({"font.size": 18})
 
 def main(kwargs):
     CUTOFF_ERR = 270
-    interest = kwargs.get("interest", "uniform")
+    interest = kwargs.get("interest", "UI")
     environment = kwargs.get("env")
     experiment = kwargs.get("exp")
     experiment_bl = kwargs.get("exp_bl")
@@ -48,7 +48,7 @@ def main(kwargs):
                 stepsize_search_dct = {
                     "algorithm": method,
                     "env": environment,
-                    "in_features": in_features,
+                    "num_dims": in_features,
                     "representations": features,
                     # "order": order,
                     # "num_ones": num_ones,

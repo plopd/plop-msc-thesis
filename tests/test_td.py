@@ -10,11 +10,11 @@ agent_info = {
     "algorithm": "etd",
     "representations": "TF",
     "order": None,
-    "in_features": 19,
+    "num_dims": 19,
     "num_ones": None,
     "gamma": 1.0,
     "lmbda": 0.0,
-    "interest": "uniform",
+    "interest": "UI",
     "alpha": 2 ** -7,
     "seed": None,
     "policy": "random-chain",
@@ -52,7 +52,7 @@ def test_agent_start(algorithm):
 def test_linear_followon_trace():
     agent_info["gamma"] = 1.0
     agent_info["lmbda"] = 0.0
-    agent_info["interest"] = "uniform"
+    agent_info["interest"] = "UI"
     environment = get_environment(env_info["env"])
     agent = get_agent("ETD")
 
@@ -67,7 +67,7 @@ def test_linear_followon_trace():
 def test_constant_emphasis():
     agent_info["gamma"] = 1.0
     agent_info["lmbda"] = 1.0
-    agent_info["interest"] = "uniform"
+    agent_info["interest"] = "UI"
     environment = get_environment(env_info["env"])
     agent = get_agent("ETD")
 

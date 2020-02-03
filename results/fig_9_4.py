@@ -14,7 +14,7 @@ def get_fig(name):
         [
             get_feature(
                 states[i],
-                **{"order": 5, "representations": name, "in_features": out_features},
+                **{"order": 5, "representations": name, "num_dims": out_features},
                 unit_norm=False
             )
             for i in range(n_states)

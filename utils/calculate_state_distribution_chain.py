@@ -17,7 +17,7 @@ def calculate_state_distribution(N):
         "lmbda": 0,
         "alpha": 0.125,
         "seed": 0,
-        "interest": "uniform",
+        "interest": "UI",
     }
 
     env_info = {"env": "chain", "N": N}

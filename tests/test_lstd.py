@@ -9,11 +9,11 @@ agent_info = {
     "algorithm": "LSTD",
     "representations": "TF",
     "order": None,
-    "in_features": 19,
+    "num_dims": 19,
     "num_ones": None,
     "gamma": 1.0,
     "lmbda": 0.0,
-    "interest": "uniform",
+    "interest": "UI",
     "seed": 0,
     "policy": "random-chain",
 }

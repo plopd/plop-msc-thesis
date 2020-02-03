@@ -14,7 +14,7 @@
 			"alpha": [0.125, 0.03125, 0.0078125, 0.001953125, 0.00048828125, 0.0001220703125, 3.0517578125e-05, 7.62939453125e-06],
 			"gamma": [1.0],
 			"lmbda": [0.0],
-			"interest": ["uniform"],
+			"interest": ["UI"],
 			"policy": ["random-chain"]
 		}
 	],
@@ -27,7 +27,7 @@
 	"features_common": [
 		{
 			"representations": ["SA"],
-			"in_features": [4]
+			"num_dims": [4]
 		}
 	]
 }

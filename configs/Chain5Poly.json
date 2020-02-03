@@ -13,7 +13,7 @@
 			"alpha": [0.5, 0.125, 0.03125, 0.0078125, 0.001953125, 0.00048828125, 0.0001220703125, 3.0517578125e-05, 7.62939453125e-06, 1.9073486328125e-06, 4.76837158203125e-07, 1.1920928955078125e-07],
 			"gamma": [1.0],
 			"lmbda": [0.0],
-			"interest": ["uniform"],
+			"interest": ["UI"],
 			"policy": ["random-chain"]
 		}
 
@@ -44,17 +44,17 @@
 						{
 							"representations": ["poly"],
 							"order": [1],
-							"in_features": [2]
+							"num_dims": [2]
 						},
 						{
 							"representations": ["poly"],
 							"order": [2],
-							"in_features": [3]
+							"num_dims": [3]
 						},
 						{
 							"representations": ["poly"],
 							"order": [3],
-							"in_features": [4]
+							"num_dims": [4]
 						}
 					]
 	            }

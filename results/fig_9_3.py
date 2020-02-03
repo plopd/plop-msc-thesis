@@ -18,7 +18,7 @@ def get_fig():
                 **{
                     "order": order,
                     "representations": "fourier",
-                    "in_features": out_features,
+                    "num_dims": out_features,
                 },
                 unit_norm=False
             )

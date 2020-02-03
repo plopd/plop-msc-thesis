@@ -20,7 +20,7 @@ def main():
         "N": param_cfg.get("N"),
         "algorithm": param_cfg.get("algorithm"),
         "representations": param_cfg.get("representations"),
-        "in_features": param_cfg.get("in_features"),
+        "num_dims": param_cfg.get("num_dims"),
         "order": param_cfg.get("order"),
         "num_ones": param_cfg.get("num_ones", 0),
         "gamma": param_cfg.get("gamma"),

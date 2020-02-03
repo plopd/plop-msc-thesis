@@ -26,7 +26,7 @@ def get_interest(name, **kwargs):
 
     N, seed = kwargs.get("N"), kwargs.get("seed")
 
-    if name == "uniform":
+    if name == "UI":
         return np.ones(N)
     elif name == "random-binary":
         np.random.seed(seed)

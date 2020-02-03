@@ -47,14 +47,14 @@ def main():
             # "random-binary": {
             #     "experiment": "Chain5Random",
             #     "params": {
-            #         "in_features": 4,
+            #         "num_dims": 4,
             #         "num_ones": 3
             #     },
             # },
             # "random-nonbinary": {
             #     "experiment": "Chain5Random",
             #     "params": {
-            #         "in_features": 4,
+            #         "num_dims": 4,
             #     },
             # },
         }

@@ -68,11 +68,11 @@ def main():
             # "RB": {
             #     "experiment": "Chain19Random400Runs",
             #     "params": {
-            #         "in_features": 17,
+            #         "num_dims": 17,
             #         "num_ones": 9
             #     },
             # },
-            "RNB": {"experiment": "Chain5Random", "params": {"in_features": 4}}
+            "RNB": {"experiment": "Chain5Random", "params": {"num_dims": 4}}
         }
     )
 
