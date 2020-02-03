@@ -14,7 +14,7 @@ from utils.utils import get_simple_logger
 from utils.utils import path_exists
 
 
-class GridworldExp(BaseExperiment):
+class GridWorldExperiment(BaseExperiment):
     def __init__(self, agent_info, env_info, experiment_info):
         super().__init__()
         self.agent_info = agent_info
@@ -56,7 +56,6 @@ class GridworldExp(BaseExperiment):
         self.state_distribution = np.ones_like(self.true_v) * 1 / len(self.states)
 
         self.msve_error = np.zeros(self.n_episodes // self.episode_eval_freq + 1)
-        # self.emphasis = np.zeros(self.n_episodes // self.episode_eval_freq + 1)
 
         # Load representations of S
         FR = get_representation(name=agent_info.get("representations"), **agent_info)
@@ -88,13 +87,6 @@ class GridworldExp(BaseExperiment):
         # Counting episodes starts from 1 because the 0-th episode is treated above.
         for episode in tqdm(range(1, self.n_episodes + 1)):
             self._learn(episode)
-            # try:
-            #     self.emphasis[
-            #         episode // self.episode_eval_freq
-            #     ] = self.rl_glue.rl_agent_message("get emphasis trace")
-            #     # print(f"Emphasis stats - mean: {self.emphasis.mean()}\tstd:{self.emphasis.std()}\tmin:{self.emphasis.min()}\tmax:{self.emphasis.max()}")
-            # except Exception:
-            #     pass
 
     def _learn(self, episode):
         self.rl_glue.rl_episode(self.max_episode_steps)
@@ -104,8 +96,6 @@ class GridworldExp(BaseExperiment):
             self.msve_error[episode // self.episode_eval_freq] = MSVE(
                 self.true_v, current_approx_v, self.state_distribution
             )
-
-        # print(f"Episode: {episode}; timesteps: {self.rl_glue.rl_env_message('get length episode')}")
 
         if episode % 1000 == 0:
             precision = int(np.log10(self.n_episodes)) + 1

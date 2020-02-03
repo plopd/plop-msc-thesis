@@ -8,8 +8,6 @@ import environments.environments as envs
 from experiments.base_experiment import BaseExperiment
 from representations.representations import get_representation
 from rl_glue.rl_glue import RLGlue
-from utils.calculate_state_distribution_chain import calculate_state_distribution
-from utils.calculate_value_function_chain import calculate_v_chain
 from utils.objectives import MSVE
 from utils.utils import get_simple_logger
 from utils.utils import path_exists
@@ -22,46 +20,29 @@ class ChainExp(BaseExperiment):
         self.env_info = env_info
         self.experiment_info = experiment_info
 
-        self.agent = agents.get_agent(agent_info["algorithm"])
+        self.agent = agents.get_agent(agent_info.get("algorithm"))
 
         self.N = env_info["N"]
-        self.env = envs.get_environment(env_info["env"])
+        self.env = envs.get_environment(env_info.get("env"))
 
-        self.n_episodes = experiment_info["n_episodes"]
-        self.episode_eval_freq = experiment_info["episode_eval_freq"]
-        self.id = experiment_info["id"]
-        self.max_episode_steps = experiment_info["max_episode_steps"]
-
-        self.output_dir = Path(experiment_info["output_dir"]).expanduser()
+        self.n_episodes = experiment_info.get("n_episodes")
+        self.episode_eval_freq = experiment_info.get("episode_eval_freq")
+        self.id = experiment_info.get("id")
+        self.max_episode_steps = experiment_info.get("max_episode_steps")
+        self.output_dir = Path(experiment_info.get("output_dir")).expanduser()
+        self.log_every_nth_episode = experiment_info.get("log_every_nth_episode", 1000)
         path_exists(self.output_dir)
-
         self.logger = get_simple_logger(
             __name__, self.output_dir / f"{self.id}_info.log"
         )
-
         self.logger.info(
             json.dumps([self.agent_info, self.env_info, self.experiment_info], indent=4)
         )
-
-        # Load value function
         path = self.output_dir.parents[0] / f"true_v_{self.N}.npy"
-        if not path.is_file():
-            true_v = calculate_v_chain(agent_info["N"])
-            np.save(path, true_v)
         self.true_v = np.load(path)
-
         self.states = np.arange(self.N).reshape((-1, 1))
-
-        # Load state distribution
-        path = self.output_dir.parents[0] / f"state_distribution_{self.N}.npy"
-        if not path.is_file():
-            state_dist = calculate_state_distribution(agent_info["N"])
-            np.save(path, state_dist)
-        self.state_distribution = np.load(path)
-
+        self.state_distribution = np.ones_like(self.true_v) * 1 / len(self.states)
         self.msve_error = np.zeros(self.n_episodes // self.episode_eval_freq + 1)
-
-        # Load representations of S
         FR = get_representation(name=agent_info.get("representations"), **agent_info)
 
         self.representations = np.array(
@@ -78,20 +59,15 @@ class ChainExp(BaseExperiment):
         self.save()
 
     def learn(self):
-        # Log error prior to learning
         current_approx_v = self.message("get state value")
         self.msve_error[0] = MSVE(
             self.true_v, current_approx_v, self.state_distribution
         )
 
-        # Learn for `self.n_episodes`.
-        # Counting episodes starts from 1 because the 0-th episode is treated above.
         for episode in range(1, self.n_episodes + 1):
             self._learn(episode)
 
     def _learn(self, episode):
-        # print("episode", episode)
-        # Run one episode with `self.max_episode_steps`
         self.rl_glue.rl_episode(self.max_episode_steps)
 
         if episode % self.episode_eval_freq == 0:
@@ -100,12 +76,11 @@ class ChainExp(BaseExperiment):
                 self.true_v, current_approx_v, self.state_distribution
             )
 
-        if episode % 1000 == 0:
-            precision = int(np.log10(self.n_episodes)) + 1
+        if episode % self.experiment_info.get("log_every_nth_episode") == 0:
             self.logger.info(
                 f"Episodes: "
-                f"{episode:0{precision}d}/{self.n_episodes:0{precision}d},"
-                f"\tMSVE: {self.msve_error[episode // self.episode_eval_freq]:.4f}"
+                f"{episode}/{self.n_episodes}, "
+                f"MSVE: {self.msve_error[episode // self.episode_eval_freq]:.4f}"
             )
 
     def save(self):
