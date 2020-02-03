@@ -19,12 +19,9 @@ class ChainExp(BaseExperiment):
         self.agent_info = agent_info
         self.env_info = env_info
         self.experiment_info = experiment_info
-
         self.agent = agents.get_agent(agent_info.get("algorithm"))
-
         self.N = env_info["N"]
         self.env = envs.get_environment(env_info.get("env"))
-
         self.n_episodes = experiment_info.get("n_episodes")
         self.episode_eval_freq = experiment_info.get("episode_eval_freq")
         self.id = experiment_info.get("id")
