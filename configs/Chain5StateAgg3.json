@@ -11,17 +11,17 @@
 	"learners_common": [
 		{
 			"algorithm": ["TD", "ETD"],
-			"alpha": [0.125, 0.03125, 0.0078125, 0.001953125, 0.00048828125, 0.0001220703125, 3.0517578125e-05, 7.62939453125e-06],
-			"gamma": [1.0],
-			"lmbda": [0.0],
+			"step_size": [0.125, 0.03125, 0.0078125, 0.001953125, 0.00048828125, 0.0001220703125, 3.0517578125e-05, 7.62939453125e-06],
+			"discount_rate": [1.0],
+			"trace_decay": [0.0],
 			"interest": ["UI"],
 			"policy": ["random-chain"]
 		}
 	],
 	"simulator_common": [
 		{
-			"env": ["chain"],
-			"N": [5]
+			"env": ["Chain"],
+			"num_states": [5]
 		}
 	],
 	"features_common": [

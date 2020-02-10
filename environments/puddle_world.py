@@ -1,7 +1,7 @@
 import gym
 import gym_puddle  # noqa f401
 
-from environments.base_environment import BaseEnvironment
+from environments.base import BaseEnvironment
 
 
 class PuddleWorld(BaseEnvironment):

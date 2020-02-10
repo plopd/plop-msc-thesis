@@ -10,23 +10,24 @@
 	"learners_common": [
 		{
 			"algorithm": ["TD", "ETD"],
-			"alpha": [0.5, 0.125, 0.03125, 0.0078125, 0.001953125, 0.00048828125, 0.0001220703125, 3.0517578125e-05, 7.62939453125e-06, 1.9073486328125e-06, 4.76837158203125e-07, 1.1920928955078125e-07],
-			"gamma": [1.0],
-			"lmbda": [0.0],
+			"step_size": [0.5, 0.125, 0.03125, 0.0078125, 0.001953125, 0.00048828125, 0.0001220703125, 3.0517578125e-05, 7.62939453125e-06, 1.9073486328125e-06, 4.76837158203125e-07, 1.1920928955078125e-07],
+			"discount_rate": [1.0],
+			"trace_decay": [0.0],
 			"interest": ["UI"],
 			"policy": ["random-chain"]
 		}
 
 	],
-	"features_common": [
+	"representations_common": [
 						{
 							"v_min": [0],
-							"v_max": [4]
+							"v_max": [4],
+							"num_dims": [1]
 						}
 					],
 	"simulator_common": [
 		{
-			"env": ["chain"]
+			"env": ["Chain"]
 		}
 	],
 	"experiments":
@@ -35,7 +36,7 @@
 
 	        "simulator": [
 				{
-					"N": [5]
+					"num_states": [5]
 				}
 			],
 	        "learner": [
@@ -43,18 +44,15 @@
 					"representations": [
 						{
 							"representations": ["fourier"],
-							"order": [1],
-							"num_dims": [2]
+							"order": [1]
 						},
 						{
 							"representations": ["fourier"],
-							"order": [2],
-							"num_dims": [3]
+							"order": [2]
 						},
 						{
 							"representations": ["fourier"],
-							"order": [3],
-							"num_dims": [4]
+							"order": [3]
 						}
 					]
 	            }

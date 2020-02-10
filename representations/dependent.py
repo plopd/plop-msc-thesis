@@ -3,8 +3,9 @@ import numpy as np
 
 
 class DependentRepresentations:
-    def __init__(self, num_states, num_features, unit_norm=True):
+    def __init__(self, num_states, unit_norm=True):
 
+        num_features = num_states // 2 + 1
         upper = np.tril(np.ones((num_states // 2, num_features)), k=0)
         middle = np.ones(num_features)
         lower = np.triu(np.ones((num_states // 2, num_features)), k=1)

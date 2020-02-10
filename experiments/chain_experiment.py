@@ -6,21 +6,21 @@ import numpy as np
 import agents.agents as agents
 import environments.environments as envs
 from experiments.base_experiment import BaseExperiment
+from objectives.objectives import get_objective
 from representations.representations import get_representation
 from rl_glue.rl_glue import RLGlue
-from utils.objectives import MSVE
 from utils.utils import get_simple_logger
 from utils.utils import path_exists
 
 
-class ChainExp(BaseExperiment):
+class Chain(BaseExperiment):
     def __init__(self, agent_info, env_info, experiment_info):
         super().__init__()
         self.agent_info = agent_info
         self.env_info = env_info
         self.experiment_info = experiment_info
         self.agent = agents.get_agent(agent_info.get("algorithm"))
-        self.N = env_info["N"]
+        self.N = env_info["num_states"]
         self.env = envs.get_environment(env_info.get("env"))
         self.n_episodes = experiment_info.get("n_episodes")
         self.episode_eval_freq = experiment_info.get("episode_eval_freq")
@@ -36,15 +36,22 @@ class ChainExp(BaseExperiment):
             json.dumps([self.agent_info, self.env_info, self.experiment_info], indent=4)
         )
         path = self.output_dir.parents[0] / f"true_v_{self.N}.npy"
-        self.true_v = np.load(path)
+        self.true_values = np.load(path)
         self.states = np.arange(self.N).reshape((-1, 1))
-        self.state_distribution = np.ones_like(self.true_v) * 1 / len(self.states)
+        self.state_distribution = np.ones_like(self.true_values) * 1 / len(self.states)
         self.msve_error = np.zeros(self.n_episodes // self.episode_eval_freq + 1)
         FR = get_representation(name=agent_info.get("representations"), **agent_info)
 
         self.representations = np.array(
             [FR[self.states[i]] for i in range(self.states.shape[0])]
         ).reshape(self.states.shape[0], -1)
+
+        self.error = get_objective(
+            "MSVE",
+            self.true_values,
+            self.state_distribution,
+            np.ones(len(self.true_values)),
+        )
 
     def init(self):
         self.rl_glue = RLGlue(self.env, self.agent)
@@ -56,10 +63,8 @@ class ChainExp(BaseExperiment):
         self.save()
 
     def learn(self):
-        current_approx_v = self.message("get state value")
-        self.msve_error[0] = MSVE(
-            self.true_v, current_approx_v, self.state_distribution
-        )
+        estimated_state_values = self.message("get state value")
+        self.msve_error[0] = self.error.value(estimated_state_values)
 
         for episode in range(1, self.n_episodes + 1):
             self._learn(episode)
@@ -68,9 +73,9 @@ class ChainExp(BaseExperiment):
         self.rl_glue.rl_episode(self.max_episode_steps)
 
         if episode % self.episode_eval_freq == 0:
-            current_approx_v = self.message("get state value")
-            self.msve_error[episode // self.episode_eval_freq] = MSVE(
-                self.true_v, current_approx_v, self.state_distribution
+            estimated_state_values = self.message("get state value")
+            self.msve_error[episode // self.episode_eval_freq] = self.error.value(
+                estimated_state_values
             )
 
         if episode % self.experiment_info.get("log_every_nth_episode") == 0:

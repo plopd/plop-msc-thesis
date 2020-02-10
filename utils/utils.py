@@ -8,6 +8,13 @@ def path_exists(path):
     if not path.exists():
         os.makedirs(path, exist_ok=True)
 
+    return path
+
+
+def set_emphatic_step_size(alpha, i, gamma, lmbda):
+    step_size = alpha * (1 - gamma) / (i + gamma * lmbda)
+    return step_size
+
 
 def remove_keys_with_none_value(dct):
     """
@@ -24,7 +31,7 @@ def remove_keys_with_none_value(dct):
 
 def get_interest(name, **kwargs):
 
-    N, seed = kwargs.get("N"), kwargs.get("seed")
+    N, seed = kwargs.get("num_states"), kwargs.get("seed")
 
     if name == "UI":
         return np.ones(N)

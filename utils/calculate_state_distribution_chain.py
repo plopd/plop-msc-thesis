@@ -10,17 +10,17 @@ from rl_glue.rl_glue import RLGlue
 
 def calculate_state_distribution(N):
     agent_info = {
-        "N": N,
+        "num_states": N,
         "algorithm": "TD",
         "representations": "tabular",
-        "gamma": 1,
-        "lmbda": 0,
-        "alpha": 0.125,
+        "discount_rate": 1,
+        "trace_decay": 0,
+        "step_size": 0.125,
         "seed": 0,
         "interest": "UI",
     }
 
-    env_info = {"env": "chain", "N": N}
+    env_info = {"env": "Chain", "num_states": N}
 
     exp_info = {
         "max_timesteps_episode": 1000000,
@@ -34,7 +34,7 @@ def calculate_state_distribution(N):
 
     rl_glue.rl_init(agent_info, env_info)
 
-    eta = np.zeros(env_info["N"])
+    eta = np.zeros(env_info["num_states"])
     last_state, _ = rl_glue.rl_start()
     for _ in tqdm(range(1, int(exp_info["max_timesteps_episode"]) + 1)):
         eta[last_state] += 1

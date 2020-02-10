@@ -7,7 +7,7 @@ from representations.representations import get_representation
 @pytest.mark.parametrize("num_states", [5, 19])
 def test_tabular_features(num_states):
     states = np.arange(num_states).reshape(-1, 1)
-    TF = get_representation("TF", **{"N": num_states})
+    TF = get_representation("TA", **{"num_states": num_states})
 
     tabular_features = np.vstack([TF[states[i]] for i in range(num_states)])
     assert np.allclose(np.sum(tabular_features, axis=1), np.ones(num_states))
@@ -35,7 +35,9 @@ def test_tabular_features(num_states):
 def test_dependent_features_all_columns_sum_up_to_in_features(num_states):
     states = np.arange(num_states).reshape(-1, 1)
     DF = get_representation(
-        "DF", unit_norm=False, **{"N": num_states, "num_dims": num_states // 2 + 1}
+        "D",
+        unit_norm=False,
+        **{"num_states": num_states, "num_dims": num_states // 2 + 1}
     )
     dependent_features = np.vstack([DF[states[i]] for i in range(num_states)])
     assert np.allclose(
@@ -51,9 +53,9 @@ def test_random_features_binary_num_ones(num_states):
     RF = get_representation(
         "RB",
         **{
-            "N": num_states,
+            "num_states": num_states,
             "seed": 0,
-            "num_dims": num_states // 2 + 1,
+            "num_features": num_states // 2 + 1,
             "num_ones": num_ones,
         }
     )
@@ -67,7 +69,7 @@ def test_random_features_binary_num_ones(num_states):
 def test_random_features_nonbinary_is_unit_norm(num_states):
     states = np.arange(num_states).reshape(-1, 1)
     RF = get_representation(
-        "RNB", **{"N": num_states, "seed": 0, "num_dims": num_states // 2}
+        "RNB", **{"num_states": num_states, "seed": 0, "num_features": num_states // 2}
     )
 
     random_features = np.vstack([RF[states[i]] for i in range(num_states)])
@@ -89,7 +91,7 @@ def test_same_random_feature_for_state_in_an_episode():
     states = np.array([1, 1, 2, 2, 2, 3, 3]).reshape(-1, 1)
 
     RF = get_representation(
-        "RB", **{"N": 7, "seed": 6, "num_dims": 7 // 2, "num_ones": 2}
+        "RB", **{"num_states": 7, "seed": 6, "num_features": 7 // 2, "num_ones": 2}
     )
 
     random_features = np.vstack([RF[states[i]] for i in range(7)])

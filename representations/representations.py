@@ -15,18 +15,19 @@ def get_representation(name, unit_norm=True, **kwargs):
         T = TileCoder(tiles_per_dim, lims, tilings)
 
         return T
-    elif name == "DF":
-        num_states = kwargs.get("N")
-        num_features = kwargs.get("num_dims")
-        D = DependentRepresentations(num_states, num_features, unit_norm)
+    elif name == "D":
+        num_states = kwargs.get("num_states")
+        DR = DependentRepresentations(num_states, unit_norm)
 
-        return D
+        return DR
     elif name == "RB" or name == "RNB":
-        num_states = kwargs.get("N")
-        num_features = kwargs.get("num_dims")
+        num_states = kwargs.get("num_states")
+        num_features = kwargs.get("num_features")
         num_ones = kwargs.get("num_ones", 0)
         seed = kwargs.get("seed")
-        RF = RandomRepresentations(name, num_states, num_features, num_ones, seed)
+        RF = RandomRepresentations(
+            name, num_states, num_features, num_ones, seed, unit_norm
+        )
 
         return RF
     elif name == "P" or name == "F":
@@ -34,18 +35,18 @@ def get_representation(name, unit_norm=True, **kwargs):
         num_dims = kwargs.get("num_dims")
         v_min = kwargs.get("v_min")
         v_max = kwargs.get("v_max")
-        BF = PolynomialRepresentation(name, num_dims, order, v_min, v_max)
+        BR = PolynomialRepresentation(name, num_dims, order, v_min, v_max, unit_norm)
 
-        return BF
-    elif name == "TF":
-        num_states = kwargs.get("N")
-        TF = TabularRepresentations(num_states)
-        return TF
-    elif name == "SA":
+        return BR
+    elif name == "TA":
+        num_states = kwargs.get("num_states")
+        TR = TabularRepresentations(num_states)
+        return TR
+    elif name == "RC":
         num_dims = kwargs.get("num_dims")
         seed = kwargs.get("seed")
-        SA = RandomClusterRepresentation(num_dims, seed, unit_norm)
+        RCR = RandomClusterRepresentation(num_dims, seed, unit_norm)
 
-        return SA
+        return RCR
 
     raise Exception("Unexpected representations given.")

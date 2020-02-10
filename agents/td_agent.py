@@ -8,9 +8,9 @@ from representations.representations import get_representation
 class TD(BaseAgent):
     def agent_init(self, agent_info):
         self.agent_info = agent_info
-        self.alpha = agent_info.get("alpha")
-        self.gamma = agent_info.get("gamma")
-        self.lmbda = agent_info.get("lmbda")
+        self.alpha = agent_info.get("step_size")
+        self.gamma = agent_info.get("discount_rate")
+        self.lmbda = agent_info.get("trace_decay")
         self.rand_generator = np.random.RandomState(agent_info.get("seed"))
         self.policy = agent_info.get("policy")
         self.FR = get_representation(

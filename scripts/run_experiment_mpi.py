@@ -2,13 +2,15 @@ import sys
 from pathlib import Path
 
 from alphaex.sweeper import Sweeper
+from mpi4py import MPI
 
 from experiments.experiments import get_experiment
 
 
 def main():
-    sweep_id = int(sys.argv[1].strip(","))
-    sweep_file_name = sys.argv[2]
+    comm = MPI.COMM_WORLD
+    sweep_id = comm.Get_rank()
+    sweep_file_name = sys.argv[1]
 
     sweeper = Sweeper(Path(__file__).parents[1] / "configs" / f"{sweep_file_name}")
 
@@ -50,8 +52,8 @@ def main():
         "log_every_nth_episode": param_cfg.get("log_every_nth_episode", 1000),
     }
 
-    experiment = get_experiment(exp_info.get("problem"), agent_info, env_info, exp_info)
-    experiment.start()
+    exp = get_experiment(exp_info.get("problem"), agent_info, env_info, exp_info)
+    exp.start()
 
 
 if __name__ == "__main__":

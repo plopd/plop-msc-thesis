@@ -15,12 +15,12 @@ def test_sweeper_same_keys_for_all_experiments():
         "max_episode_steps": 0,
         "episode_eval_freq": 1,
         "output_dir": "~/scratch/Chain/ChainTabularDependent",
-        "env": "chain",
-        "N": 19,
+        "env": "Chain",
+        "num_states": 19,
         "algorithm": "etd",
-        "alpha": 1.192_092_895_507_812_5e-07,
-        "gamma": 1.0,
-        "lmbda": 0.0,
+        "step_size": 1.192_092_895_507_812_5e-07,
+        "discount_rate": 1.0,
+        "trace_decay": 0.0,
         "representations": "DF",
         "num_dims": 10,
         "interest": "UI",
@@ -41,13 +41,13 @@ def test_sweeper_number_of_stepsizes_for_method(name, representations):
     result = Result(f"{cfg_filename}.json", None, "Test_Sweeper")
 
     param_vals = result.get_param_val(
-        "alpha",
+        "step_size",
         {
             "algorithm": name,
-            "env": "chain",
+            "env": "Chain",
             "representations": representations,
             "interest": "UI",
-            "N": 19,
+            "num_states": 19,
         },
         n_runs=num_runs,
     )
@@ -66,10 +66,10 @@ def test_sweeper_number_of_experiments_for_learner_and_features(name, representa
     search_lst = sweeper.search(
         {
             "algorithm": name,
-            "env": "chain",
+            "env": "Chain",
             "representations": representations,
             "interest": "UI",
-            "N": 19,
+            "num_states": 19,
         },
         num_runs,
     )
@@ -86,7 +86,8 @@ def test_sweeper_number_of_experiments_for_learner(name):
     sweeper = Sweeper(f"{Path(__file__).parents[1]}/configs/{cfg_filename}.json")
 
     search_lst = sweeper.search(
-        {"algorithm": name, "env": "chain", "interest": "UI", "N": 19}, num_runs
+        {"algorithm": name, "env": "Chain", "interest": "UI", "num_states": 19},
+        num_runs,
     )
 
     assert len(search_lst) == 24

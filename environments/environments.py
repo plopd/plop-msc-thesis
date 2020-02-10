@@ -4,11 +4,11 @@ from .puddle_world import PuddleWorld
 
 
 def get_environment(name):
-    if name == "chain":
+    if name == "Chain":
         return Chain
-    elif name == "deterministic-chain":
+    elif name == "ChainDeterministic":
         return DeterministicChain
-    elif name == "puddle-world":
+    elif name == "PuddleWorld":
         return PuddleWorld
 
     raise Exception("Unexpected environment given.")

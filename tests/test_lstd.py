@@ -5,20 +5,20 @@ from environments.environments import get_environment
 from rl_glue.rl_glue import RLGlue
 
 agent_info = {
-    "N": 19,
+    "num_states": 19,
     "algorithm": "LSTD",
-    "representations": "TF",
+    "representations": "TA",
     "order": None,
     "num_dims": 19,
     "num_ones": None,
-    "gamma": 1.0,
-    "lmbda": 0.0,
+    "discount_rate": 1.0,
+    "trace_decay": 0.0,
     "interest": "UI",
     "seed": 0,
     "policy": "random-chain",
 }
 
-env_info = {"env": "chain", "N": 19}
+env_info = {"env": "Chain", "num_states": 19}
 
 
 @pytest.mark.parametrize("algorithm", ["LSTD", "ELSTD"])

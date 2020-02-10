@@ -6,36 +6,36 @@ from environments.environments import get_environment
 from rl_glue.rl_glue import RLGlue
 
 agent_info = {
-    "N": 5,
+    "num_states": 5,
     "algorithm": "ETD",
-    "representations": "TF",
+    "representations": "TA",
     "num_dims": 5,
     "order": None,
     "num_ones": None,
-    "gamma": 1.0,
-    "lmbda": 0.0,
-    "alpha": 2 ** -7,
+    "discount_rate": 1.0,
+    "trace_decay": 0.0,
+    "step_size": 2 ** -7,
     "seed": None,
     "interest": "UI",
     "policy": "random-chain",
 }
 
-env_info = {"env": "chain", "N": 5}
+env_info = {"env": "Chain", "num_states": 5}
 
 
-@pytest.mark.parametrize("N", [5, 19])
-def test_chain_init(N):
+@pytest.mark.parametrize("num_states", [5, 19])
+def test_chain_init(num_states):
     environment = get_environment(env_info["env"])
-    env_info["N"] = N
-    agent_info["N"] = N
-    agent_info["num_dims"] = N
+    env_info["num_states"] = num_states
+    agent_info["num_states"] = num_states
+    agent_info["num_dims"] = num_states
     agent = get_agent(agent_info["algorithm"])
     rl_glue = RLGlue(environment, agent)
     rl_glue.rl_init(agent_init_info=agent_info, env_init_info=env_info)
 
     (last_state, _) = rl_glue.rl_start()
 
-    assert last_state == N // 2
+    assert last_state == num_states // 2
 
 
 @pytest.mark.parametrize("method", ["TD", "ETD"])
@@ -50,8 +50,8 @@ def test_same_episodes_for_each_run_for_different_methods(method):
     }
 
     env_info["log_episodes"] = 1
-    env_info["N"] = 5
-    agent_info["N"] = 5
+    env_info["num_states"] = 5
+    agent_info["num_states"] = 5
     agent_info["num_dims"] = 5
     for i in range(len(runs_with_episodes)):
         agent_info["algorithm"] = method

@@ -54,24 +54,13 @@ class Result:
 
         return param_vals
 
-    def load(self, ids, filename_ext="msve", file_ext="npy"):
+    def load(self, ids, filename_ext="msve"):
         data = []
         for idx in ids:
-            try:
-                data.append(
-                    np.load(
-                        self.datapath
-                        / f"{self.exp}"
-                        / f"{idx}_{filename_ext}.{file_ext}"
-                    )
-                )
-            except IOError:
-                continue
-
-        try:
-            data = np.vstack(data)
-        except ValueError:
-            return None
+            data.append(
+                np.load(self.datapath / f"{self.exp}" / f"{idx}_{filename_ext}.npy")
+            )
+        data = np.vstack(data)
         return data
 
 
@@ -83,9 +72,9 @@ def get_data_auc(data):
     return auc_runs.mean(), auc_runs.std() / np.sqrt(n_runs)
 
 
-def get_data_end(data):
+def get_data_end(data, percent=0.0025):
     n_runs, n_episodes = data.shape
-    steps = int(n_episodes * 0.01)
+    steps = int(n_episodes * percent)
     end_data = data[:, -steps:]
 
     end_data = end_data.mean(axis=1)

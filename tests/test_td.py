@@ -6,21 +6,21 @@ from environments.environments import get_environment
 from rl_glue.rl_glue import RLGlue
 
 agent_info = {
-    "N": 19,
+    "num_states": 19,
     "algorithm": "etd",
-    "representations": "TF",
+    "representations": "TA",
     "order": None,
     "num_dims": 19,
     "num_ones": None,
-    "gamma": 1.0,
-    "lmbda": 0.0,
+    "discount_rate": 1.0,
+    "trace_decay": 0.0,
     "interest": "UI",
-    "alpha": 2 ** -7,
+    "step_size": 2 ** -7,
     "seed": None,
     "policy": "random-chain",
 }
 
-env_info = {"env": "chain", "N": 19}
+env_info = {"env": "Chain", "num_states": 19}
 
 
 @pytest.mark.parametrize("algorithm", ["ELSTD"])
@@ -50,8 +50,8 @@ def test_agent_start(algorithm):
 
 
 def test_linear_followon_trace():
-    agent_info["gamma"] = 1.0
-    agent_info["lmbda"] = 0.0
+    agent_info["discount_rate"] = 1.0
+    agent_info["trace_decay"] = 0.0
     agent_info["interest"] = "UI"
     environment = get_environment(env_info["env"])
     agent = get_agent("ETD")
@@ -65,8 +65,8 @@ def test_linear_followon_trace():
 
 
 def test_constant_emphasis():
-    agent_info["gamma"] = 1.0
-    agent_info["lmbda"] = 1.0
+    agent_info["discount_rate"] = 1.0
+    agent_info["trace_decay"] = 1.0
     agent_info["interest"] = "UI"
     environment = get_environment(env_info["env"])
     agent = get_agent("ETD")
@@ -106,12 +106,12 @@ def test_emphasis_reset_at_start_of_episode(algorithm):
 
 
 @pytest.mark.parametrize(
-    "env, algorithm", [("deterministic-chain", "TD"), ("deterministic-chain", "ETD")]
+    "env, algorithm", [("ChainDeterministic", "TD"), ("ChainDeterministic", "ETD")]
 )
 def test_one_step_td_update(env, algorithm):
     agent_info["algorithm"] = algorithm
-    agent_info["lmbda"] = 1.0
-    agent_info["gamma"] = 0.0
+    agent_info["trace_decay"] = 1.0
+    agent_info["discount_rate"] = 0.0
     env_info["env"] = env
     agent = get_agent(agent_info["algorithm"])
     environment = get_environment(env_info["env"])

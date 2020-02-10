@@ -52,7 +52,7 @@ def main(kwargs):
                     "representations": features,
                     # "order": order,
                     # "num_ones": num_ones,
-                    # "N": num_states,
+                    # "num_states": num_states,
                     "tilings": ts,
                 }
 
@@ -133,7 +133,7 @@ if __name__ == "__main__":
     parser.add_argument("-ls", nargs="+", type=float, default=[0.0])
     parser.add_argument("-ts", nargs="+", type=int)
     parser.add_argument("-ms", nargs="+", type=str, default=["TD", "ETD"])
-    parser.add_argument("-env", type=str, default="chain")
+    parser.add_argument("-env", type=str, default="Chain")
 
     args = parser.parse_args()
 

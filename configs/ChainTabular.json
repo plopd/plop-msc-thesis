@@ -1,0 +1,51 @@
+{
+	"experiment": [
+				{
+					"problem": ["Chain"],
+					"n_episodes": [1000],
+					"max_episode_steps": [0],
+					"episode_eval_freq": [10],
+					"output_dir": ["~/scratch/Chain/ChainTabular"],
+					"log_every_nth_episode": [100]
+				}
+			],
+	"learners_common": [
+		{
+			"discount_rate": [0.99],
+			"trace_decay": [0.0],
+			"interest": ["UI"],
+			"policy": ["random-chain"],
+			"representations": [
+						{
+							"representations": ["TA"]
+						}
+					]
+		}
+	],
+	"simulator_common": [
+		{
+			"env": ["Chain"]
+		}
+	],
+	"experiments":
+	[
+	    {
+
+	        "simulator": [
+				{
+					"num_states": [19]
+				}
+			],
+	        "learner": [
+	            {
+					"algorithm": ["TD"],
+					"step_size": [0.00625, 0.025, 0.1, 0.4]
+	            },
+				{
+					"algorithm": ["ETD"],
+					"step_size": [0.00625, 0.025, 0.1, 0.4]
+	            }
+	        ]
+	    }
+	]
+}

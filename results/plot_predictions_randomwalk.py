@@ -1,18 +1,15 @@
 import argparse
-import copy
 import json
-from collections import OrderedDict
 from pathlib import Path
 
 import matplotlib
 import matplotlib.pyplot as plt
+import numpy as np
 
 from analysis.colormap import colors
-from analysis.colormap import linestyles
-from analysis.learning_curve import get_LCA
+from analysis.results import get_data_by
 from analysis.results import Result
-from analysis.sensitivity_curve import get_SSA
-from analysis.waterfall import get_WF
+from analysis.utils import plot_CI
 from utils.utils import path_exists
 from utils.utils import remove_keys_with_none_value
 
@@ -24,125 +21,88 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--num_states", dest="num_states", type=int)
     parser.add_argument("--num_runs", dest="num_runs", type=int)
-    parser.add_argument("--num_timesteps", dest="num_timesteps", type=int)
     parser.add_argument("--order", dest="order", type=int)
     parser.add_argument("--metric", dest="metric", type=str)
-    parser.add_argument(
-        "--yticks",
-        dest="yticks",
-        type=float,
-        nargs="+",
-        default=[0.4, 0.3, 0.2, 0.1, 0.0],
-    )
+    parser.add_argument("--experiment", dest="experiment", type=str)
+    parser.add_argument("--env", dest="env", type=str)
+    parser.add_argument("--representations", dest="representations", type=str)
+    parser.add_argument("--num_ones", dest="num_ones", type=int)
+    parser.add_argument("--num_features", dest="num_features", type=int)
+    parser.add_argument("--num_dims", dest="num_dims", type=int)
+    parser.add_argument("--interest", dest="interest", type=str, default="UI")
+
+    parser.add_argument("--algos", dest="algos", nargs="+", default=["TD", "ETD"])
     args = parser.parse_args()
-    print(args.__dict__)
 
-    num_states = args.num_states
-    environment = "chain"
-    # order = args.order
+    datapath = Path(f"~/scratch/{args.env}").expanduser()
+    save_path = path_exists(Path(__file__).parents[0])
 
-    experiments = OrderedDict(
-        {
-            # "tabular": {
-            #     "experiment": "ChainTabularDependent",
-            #     "params": {
-            #     },
-            # },
-            # "DF": {
-            #     "experiment": "ChainTabularDependent",
-            #     "params": {
-            #     },
-            # },
-            # "poly": {
-            #     "experiment": f"Chain{num_states}Poly",
-            #     "params": {
-            #         "order": order
-            #     },
-            # },
-            # "fourier": {
-            #     "experiment": f"Chain{num_states}Fourier",
-            #     "params": {
-            #         "order": order
-            #     },
-            # },
-            # "RB": {
-            #     "experiment": "Chain19Random400Runs",
-            #     "params": {
-            #         "num_dims": 17,
-            #         "num_ones": 9
-            #     },
-            # },
-            "RNB": {"experiment": "Chain5Random", "params": {"num_dims": 4}}
-        }
-    )
+    fig, axes = plt.subplots(1, 2, figsize=(12, 5), sharey="all", dpi=100)
 
-    n_runs = args.num_runs
-    timesteps = args.num_timesteps
-    metric = args.metric
-    yticks = args.yticks
-    datapath = Path("~/scratch/Chain").expanduser()
-    save_path = Path(__file__).parents[0]
+    results = Result(f"{args.experiment}.json", datapath, args.experiment)
 
-    path_exists(save_path)
+    config = args.__dict__.copy()
+    config.pop("experiment", None)
+    config.pop("algos", None)
+    config.pop("metric", None)
+    config.pop("num_runs", None)
 
-    fig, axes = plt.subplots(1, 3, figsize=(20, 5), sharey="all", dpi=80)
-    for row, (features, params) in enumerate(experiments.items()):
-        experiment = params["experiment"]
-        features_params = params["params"]
-        for method in ["TD", "ETD"]:
-            result = Result(f"{experiment}.json", datapath, experiment)
+    remove_keys_with_none_value(config)
 
-            stepsize_search_dct = {
-                "algorithm": method,
-                "env": environment,
-                "representations": features,
-                "N": num_states,
-            }
-            stepsize_search_dct.update(features_params)
-            print(stepsize_search_dct)
+    print(json.dumps(config, indent=4))
 
-            param_dict = {"n_runs": n_runs, "yticks": yticks, "timesteps": timesteps}
+    for algo in args.algos:
+        config["algorithm"] = algo
+        config.pop("step_size", None)
+        step_sizes = results.get_param_val("step_size", config, args.num_runs)
+        step_sizes = sorted(step_sizes)
+        means = []
+        std_errors = []
+        xs = []
+        optim_step_size = None
+        current_optim_err = np.inf
+        for stepsize in step_sizes:
+            config["step_size"] = stepsize
+            ids = results.find_experiment_by(config, args.num_runs)
+            data = results.load(ids)
+            mean, se = get_data_by(data, name=args.metric)
+            cutoff = data[:, 0].mean()
+            if mean < current_optim_err:
+                current_optim_err = mean
+                optim_step_size = stepsize
+            if mean <= cutoff:
+                means.append(mean)
+                std_errors.append(se)
+            else:
+                means.append(cutoff)
+                std_errors.append(0.0)
+            xs.append(stepsize)
+        means = np.array(means)
+        std_errors = np.array(std_errors)
 
-            # remove any keys with value None
-            remove_keys_with_none_value(stepsize_search_dct)
+        axes[1].plot(xs, means, c=colors.get(config.get("algorithm")), marker="o")
+        axes[1] = plot_CI(
+            axes[1], xs, means, std_errors, colors.get(config.get("algorithm"))
+        )
+        axes[1].set_xscale("log", basex=2)
+        axes[1].spines["right"].set_visible(False)
+        axes[1].spines["top"].set_visible(False)
 
-            # pretty print criteria
-            print(json.dumps(stepsize_search_dct, indent=4))
+        config["step_size"] = optim_step_size
+        ids = results.find_experiment_by(config, args.num_runs)
+        data = results.load(ids)
 
-            experiment_baseline = "ChainLSTDRandom"
-            if experiment_baseline is not None:
-                result_bl = Result(
-                    f"{experiment_baseline}.json", datapath, experiment_baseline
-                )
-                baseline_search_dct = copy.deepcopy(stepsize_search_dct)
-                baseline_search_dct["algorithm"] = "LSTD" if method == "TD" else "ELSTD"
-                print(json.dumps(baseline_search_dct, indent=4))
-                idx_data = result_bl.find_experiment_by(baseline_search_dct, n_runs)
-                data = result_bl.load(idx_data)
-                if data is not None:
-                    print("Adding baseline...")
-                    data = data[:, -1]
-                    m = data.mean()
-                    axes[0].axhline(
-                        m,
-                        0,
-                        timesteps,
-                        color=colors[stepsize_search_dct["algorithm"]],
-                        linestyle=linestyles[stepsize_search_dct["algorithm"]],
-                    )
+        mean = data.mean(axis=0)
 
-            get_LCA(axes[0], result, stepsize_search_dct, metric, **param_dict)
-            get_SSA(axes[1], result, stepsize_search_dct, metric, **param_dict)
-            get_WF(
-                axes[2],
-                result,
-                stepsize_search_dct,
-                metric,
-                ["TD", "ETD"],
-                **param_dict,
-            )
-            plt.tight_layout()
-            plt.savefig(save_path / f"Chain-{num_states}-{metric}-{features}")
+        axes[0].plot(mean, c=colors.get(config.get("algorithm")))
+
+        axes[0].spines["right"].set_visible(False)
+        axes[0].spines["top"].set_visible(False)
+
+        plt.tight_layout()
+        plt.savefig(
+            save_path / f"{args.experiment}-{args.representations}-{args.metric}"
+        )
 
 
 if __name__ == "__main__":

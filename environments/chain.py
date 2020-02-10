@@ -1,6 +1,6 @@
 import numpy as np
 
-from environments.base_environment import BaseEnvironment
+from environments.base import BaseEnvironment
 
 LEFT = 0
 RIGHT = 1
@@ -17,7 +17,7 @@ class Chain(BaseEnvironment):
 
     def env_init(self, env_info={}):
         self.rand_generator = np.random.RandomState(env_info.get("seed"))
-        self.N = env_info.get("N")
+        self.N = env_info.get("num_states")
         self.log_episodes = env_info.get("log_episodes", 0)
 
     def env_start(self):
@@ -46,7 +46,6 @@ class Chain(BaseEnvironment):
         is_terminal = False
 
         if np.array_equal(current_state, np.ones_like(current_state) * -1):
-            reward = -1
             is_terminal = True
         elif np.array_equal(current_state, np.ones_like(current_state) * self.N):
             reward = 1

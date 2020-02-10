@@ -36,7 +36,13 @@ class ETD(TD):
         self.eligibility = (
             self.gamma * self.lmbda * self.eligibility + self.M * last_state_feature
         )
-        self.weights += self.alpha * delta * self.eligibility
+        self.weights += (
+            self.alpha
+            * (1 - self.gamma)
+            / (self.i + self.gamma * self.lmbda)
+            * delta
+            * self.eligibility
+        )
 
     def learnTC(self, reward, current_state_feature, last_state_feature):
         target = (

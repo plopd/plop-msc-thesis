@@ -7,9 +7,9 @@ from tqdm import tqdm
 import agents.agents as agents
 import environments.environments as envs
 from experiments.base_experiment import BaseExperiment
+from objectives.objectives import get_objective
 from representations.representations import get_representation
 from rl_glue.rl_glue import RLGlue
-from utils.objectives import MSVE
 from utils.utils import get_simple_logger
 from utils.utils import path_exists
 
@@ -23,7 +23,7 @@ class GridWorldExperiment(BaseExperiment):
 
         self.agent = agents.get_agent(agent_info["algorithm"])
 
-        self.N = env_info["N"]
+        self.N = env_info["num_states"]
         self.env = envs.get_environment(env_info["env"])
 
         self.n_episodes = experiment_info["n_episodes"]
@@ -64,6 +64,13 @@ class GridWorldExperiment(BaseExperiment):
             [FR[self.states[i]] for i in range(len(self.states))]
         ).reshape(len(self.states), -1)
 
+        self.error = get_objective(
+            "MSVE",
+            self.true_values,
+            self.state_distribution,
+            np.ones(len(self.true_values)),
+        )
+
     def init(self):
         self.rl_glue = RLGlue(self.env, self.agent)
         self.rl_glue.rl_init(self.agent_info, self.env_info)
@@ -78,10 +85,8 @@ class GridWorldExperiment(BaseExperiment):
 
     def learn(self):
         # Log error prior to learning
-        current_approx_v = self.message("get state value")
-        self.msve_error[0] = MSVE(
-            self.true_v, current_approx_v, self.state_distribution
-        )
+        estimated_values = self.message("get state value")
+        self.msve_error[0] = self.error.value(estimated_values)
 
         # Learn for `self.n_episodes`.
         # Counting episodes starts from 1 because the 0-th episode is treated above.
@@ -92,9 +97,8 @@ class GridWorldExperiment(BaseExperiment):
         self.rl_glue.rl_episode(self.max_episode_steps)
 
         if episode % self.episode_eval_freq == 0:
-            current_approx_v = self.message("get state value")
-            self.msve_error[episode // self.episode_eval_freq] = MSVE(
-                self.true_v, current_approx_v, self.state_distribution
+            self.msve_error[episode // self.episode_eval_freq] = self.error.value(
+                self.message("get state value")
             )
 
         if episode % 1000 == 0:

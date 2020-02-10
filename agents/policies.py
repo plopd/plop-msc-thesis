@@ -7,5 +7,7 @@ def get_action_from_policy(name, rand_generator):
         north = 3
         east = 1
         return rand_generator.choice([north, east])
+    elif name == "mountain-car-prediction":
+        raise NotImplementedError
 
     raise Exception("Unexpected policy given.")
