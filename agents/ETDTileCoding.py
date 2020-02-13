@@ -1,3 +1,5 @@
+import numpy as np
+
 from agents.ETD import ETD
 from agents.TDTileCoding import TDTileCoding
 
@@ -9,7 +11,7 @@ class ETDTileCoding(ETD, TDTileCoding):
     def learn(self, reward, current_state_feature, last_state_feature):
         target = (
             reward
-            if not current_state_feature
+            if np.isscalar(current_state_feature)
             else reward + self.gamma * self.weights[current_state_feature].sum()
         )
         pred = self.weights[last_state_feature].sum()

@@ -1,17 +1,13 @@
+import numpy as np
+
 from agents.TD import TD
 
 
 class TDTileCoding(TD):
-    def agent_end(self, reward):
-        last_state_feature = super().agent_end(reward)
-        self.learn(reward, [], last_state_feature)
-
-        return last_state_feature
-
     def learn(self, reward, current_state_feature, last_state_feature):
         target = (
             reward
-            if not current_state_feature
+            if np.isscalar(current_state_feature)
             else reward + self.gamma * self.weights[current_state_feature].sum()
         )
         pred = self.weights[last_state_feature].sum()

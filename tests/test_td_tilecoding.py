@@ -105,10 +105,7 @@ def test_emphasis_reset_at_start_of_episode(algorithm):
     assert rl_glue.rl_agent_message("get emphasis trace") == 0.0
 
 
-@pytest.mark.parametrize(
-    "env, algorithm",
-    [("ChainDeterministic", "TDTileCoding"), ("ChainDeterministic", "ETDTileCoding")],
-)
+@pytest.mark.parametrize("env, algorithm", [("ChainDeterministic", "ETDTileCoding")])
 def test_one_step_td_update(env, algorithm):
     agent_info["algorithm"] = algorithm
     agent_info["trace_decay"] = 1.0
