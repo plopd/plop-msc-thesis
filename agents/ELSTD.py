@@ -11,11 +11,6 @@ class ELSTD(LSTD, ETD):
     def agent_init(self, agent_info):
         super().agent_init(agent_info)
 
-    def agent_start(self, observation):
-        self.a_t = super().agent_start(observation)
-
-        return self.a_t
-
     def learn(self, reward, current_state_feature, last_state_feature):
         self.F = self.gamma * self.F + self.i
         self.M = self.lmbda * self.i + (1 - self.lmbda) * self.F
@@ -25,23 +20,20 @@ class ELSTD(LSTD, ETD):
 
         self.A += (
             1
-            / self.total_steps
+            / self.timesteps
             * (
-                np.dot(
-                    np.expand_dims(self.eligibility, axis=1),
-                    np.expand_dims(
-                        last_state_feature - self.gamma * current_state_feature, axis=1
-                    ).T,
+                np.outer(
+                    self.eligibility,
+                    last_state_feature - self.gamma * current_state_feature,
                 )
                 - self.A
             )
         )
 
-        self.b += (
-            1
-            / self.total_steps
-            * (reward * np.expand_dims(self.eligibility, axis=1) - self.b)
-        )
+        self.b += 1 / self.timesteps * (reward * self.eligibility - self.b)
+
+    def agent_cleanup(self):
+        super().agent_cleanup()
 
     def agent_message(self, message):
         response = super().agent_message(message)

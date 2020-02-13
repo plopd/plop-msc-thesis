@@ -12,16 +12,16 @@ class LSTD(TD):
 
     def agent_init(self, agent_info):
         super().agent_init(agent_info)
-        self.total_steps = 0
+        self.timesteps = 0
         self.A = np.zeros((self.FR.num_features, self.FR.num_features))
-        self.b = np.zeros((self.FR.num_features, 1))
+        self.b = np.zeros((self.FR.num_features,))
 
     def agent_start(self, observation):
         self.a_t = super().agent_start(observation)
         return self.a_t
 
     def agent_step(self, reward, observation):
-        self.total_steps += 1
+        self.timesteps += 1
         self.a_t = super().agent_step(reward, observation)
 
         return self.a_t
@@ -33,23 +33,15 @@ class LSTD(TD):
 
         self.A += (
             1
-            / self.total_steps
-            * (
-                np.dot(
-                    np.expand_dims(self.eligibility, axis=1),
-                    np.expand_dims(
-                        last_state_feature - self.gamma * current_state_feature, axis=1
-                    ).T,
-                )
-                - self.A
+            / self.timesteps
+            * np.outer(
+                self.eligibility,
+                last_state_feature - self.gamma * current_state_feature,
             )
+            - self.A
         )
 
-        self.b += (
-            1
-            / self.total_steps
-            * (reward * np.expand_dims(self.eligibility, axis=1) - self.b)
-        )
+        self.b += 1 / self.timesteps * (reward * self.eligibility - self.b)
 
     def agent_message(self, message):
         if message == "get A":
@@ -58,12 +50,11 @@ class LSTD(TD):
             return self.b
         elif message == "get weight vector":
             try:
-                inv_A = np.linalg.inv(self.A)
-                self.weights = np.dot(inv_A, self.b).squeeze()
+                self.weights = np.dot(np.linalg.inv(self.A), self.b)
             except np.linalg.LinAlgError:
                 return self.weights
         elif message == "get steps":
-            return self.total_steps
+            return self.timesteps
         response = super().agent_message(message)
 
         return response

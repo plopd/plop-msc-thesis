@@ -8,9 +8,7 @@ agent_info = {
     "num_states": 19,
     "algorithm": "LSTD",
     "representations": "TA",
-    "order": None,
     "num_dims": 19,
-    "num_ones": None,
     "discount_rate": 1.0,
     "trace_decay": 0.0,
     "interest": "UI",
@@ -21,7 +19,7 @@ agent_info = {
 env_info = {"env": "Chain", "num_states": 19}
 
 
-@pytest.mark.parametrize("algorithm", ["LSTD", "ELSTD"])
+@pytest.mark.parametrize("algorithm", ["ELSTD"])
 def test_increasing_steps_over_episodes(algorithm):
     environment = get_environment(env_info["env"])
     agent_info["algorithm"] = algorithm
