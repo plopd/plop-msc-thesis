@@ -46,15 +46,15 @@
 							"representations": ["fourier"],
 							"order": [3],
 							"num_dims": [4],
-							"v_min": [0],
-							"v_max": [4]
+							"min_x": [0],
+							"max_x": [4]
 						},
 						{
 							"representations": ["poly"],
 							"order": [3],
 							"num_dims": [4],
-							"v_min": [0],
-							"v_max": [4]
+							"min_x": [0],
+							"max_x": [4]
 						},
 						{
 							"representations": ["random-binary"],
@@ -94,15 +94,15 @@
 							"representations": ["fourier"],
 							"order": [10],
 							"num_dims": [11],
-							"v_min": [0],
-							"v_max": [18]
+							"min_x": [0],
+							"max_x": [18]
 						},
 						{
 							"representations": ["poly"],
 							"order": [5],
 							"num_dims": [6],
-							"v_min": [0],
-							"v_max": [18]
+							"min_x": [0],
+							"max_x": [18]
 						},
 						{
 							"representations": ["random-binary"],

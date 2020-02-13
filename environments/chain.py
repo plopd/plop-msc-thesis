@@ -13,18 +13,18 @@ class Chain(BaseEnvironment):
 
     def __init__(self):
         super().__init__()
-        self.N = None
+        self.num_states = None
 
     def env_init(self, env_info={}):
         self.rand_generator = np.random.RandomState(env_info.get("seed"))
-        self.N = env_info.get("num_states")
+        self.num_states = env_info.get("num_states")
         self.log_episodes = env_info.get("log_episodes", 0)
 
     def env_start(self):
         if self.log_episodes:
             self.experience_episode = []
         reward = 0
-        observation = np.array((self.N // 2,))
+        observation = np.array((self.num_states // 2,))
         is_terminal = False
 
         self.reward_obs_term = (reward, observation, is_terminal)
@@ -38,7 +38,7 @@ class Chain(BaseEnvironment):
         if action == LEFT:
             current_state = np.maximum(-1, last_state - 1)
         elif action == RIGHT:
-            current_state = np.minimum(self.N, last_state + 1)
+            current_state = np.minimum(self.num_states, last_state + 1)
         else:
             raise Exception("Unexpected action given.")
 
@@ -47,7 +47,9 @@ class Chain(BaseEnvironment):
 
         if np.array_equal(current_state, np.ones_like(current_state) * -1):
             is_terminal = True
-        elif np.array_equal(current_state, np.ones_like(current_state) * self.N):
+        elif np.array_equal(
+            current_state, np.ones_like(current_state) * self.num_states
+        ):
             reward = 1
             is_terminal = True
 

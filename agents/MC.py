@@ -1,6 +1,6 @@
 import numpy as np
 
-from agents.td_agent import TD
+from agents.TD import TD
 
 
 class MC(TD):

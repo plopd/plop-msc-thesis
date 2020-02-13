@@ -24,8 +24,8 @@
 							"representations": ["TC"],
                             "tilings": [15, 10, 5, 1],
 							"tiles_per_dim": [10],
-							"v_min": [0.0],
-							"v_max": [1.1],
+							"min_x": [0.0],
+							"max_x": [1.1],
 							"num_dims": [2]
 						}
     ],

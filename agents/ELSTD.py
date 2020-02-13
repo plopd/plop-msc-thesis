@@ -1,7 +1,7 @@
 import numpy as np
 
-from agents.etd_agent import ETD
-from agents.lstd_agent import LSTD
+from agents.ETD import ETD
+from agents.LSTD import LSTD
 
 
 class ELSTD(LSTD, ETD):

@@ -11,7 +11,7 @@ def get_fig(N):
     path = Path("~/scratch/Chain").expanduser() / f"state_distribution_{N}.npy"
     state_distribution = np.load(path)
 
-    fig, ax = plt.subplots(figsize=(12, 9), dpi=100)
+    fig, ax = plt.subplots(figsize=(12, 9))
     true_v = [f"{true_v[i]:.2f}" for i in range(len(true_v))]
     ax.plot(np.arange(len(true_v)), true_v, color="red", marker="o")
     ax.set_title("True state value function")

@@ -1,5 +1,5 @@
 from representations.dependent import DependentRepresentations
-from representations.polynomial import PolynomialRepresentation
+from representations.polynomial import BasisRepresentation
 from representations.random import RandomRepresentations
 from representations.random_cluster import RandomClusterRepresentation
 from representations.tabular import TabularRepresentations
@@ -10,7 +10,7 @@ def get_representation(name, unit_norm=True, **kwargs):
     if name == "TC":
         num_dims = kwargs.get("num_dims")
         tiles_per_dim = [kwargs.get("tiles_per_dim")] * num_dims
-        lims = [(kwargs.get("v_min"), (kwargs.get("v_max")))] * num_dims
+        lims = [(kwargs.get("min_x"), (kwargs.get("max_x")))] * num_dims
         tilings = kwargs.get("tilings")
         T = TileCoder(tiles_per_dim, lims, tilings)
 
@@ -33,9 +33,11 @@ def get_representation(name, unit_norm=True, **kwargs):
     elif name == "P" or name == "F":
         order = kwargs.get("order")
         num_dims = kwargs.get("num_dims")
-        v_min = kwargs.get("v_min")
-        v_max = kwargs.get("v_max")
-        BR = PolynomialRepresentation(name, num_dims, order, v_min, v_max, unit_norm)
+        min_x = kwargs.get("min_x")
+        max_x = kwargs.get("max_x")
+        a = kwargs.get("a")
+        b = kwargs.get("b")
+        BR = BasisRepresentation(name, num_dims, order, min_x, max_x, a, b, unit_norm)
 
         return BR
     elif name == "TA":

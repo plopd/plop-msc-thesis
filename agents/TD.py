@@ -1,6 +1,6 @@
 import numpy as np
 
-from agents.base_agent import BaseAgent
+from agents.Base import BaseAgent
 from agents.policies import get_action_from_policy
 from representations.representations import get_representation
 
@@ -24,31 +24,24 @@ class TD(BaseAgent):
         self.agent_cleanup()
         self.s_t = observation
         self.a_t = self.agent_policy(observation)
+
         return self.a_t
 
     def agent_step(self, reward, observation):
         current_state_feature = self.FR[observation]
         last_state_feature = self.FR[self.s_t]
-
-        if self.agent_info.get("representations") == "TC":
-            self.learnTC(reward, current_state_feature, last_state_feature)
-        else:
-            self.learn(reward, current_state_feature, last_state_feature)
-
         self.s_t = observation
         self.a_t = self.agent_policy(observation)
+
+        self.learn(reward, current_state_feature, last_state_feature)
 
         return self.a_t
 
     def agent_end(self, reward):
         last_state_feature = self.FR[self.s_t]
+        self.learn(reward, 0.0, last_state_feature)
 
-        if self.agent_info.get("representations") == "TC":
-            self.learnTC(reward, None, last_state_feature)
-        else:
-            self.learn(reward, 0.0, last_state_feature)
-
-        return
+        return last_state_feature
 
     def agent_policy(self, observation):
         return get_action_from_policy(
@@ -72,16 +65,3 @@ class TD(BaseAgent):
             self.gamma * self.lmbda * self.eligibility + last_state_feature
         )
         self.weights += self.alpha * (target - pred) * self.eligibility
-
-    def learnTC(self, reward, current_state_feature, last_state_feature):
-        target = (
-            reward
-            if current_state_feature is None
-            else reward + self.gamma * self.weights[current_state_feature].sum()
-        )
-        pred = self.weights[last_state_feature].sum()
-        self.eligibility = self.gamma * self.lmbda * self.eligibility
-        self.eligibility[last_state_feature] += 1
-        self.weights += (
-            (self.alpha / self.FR.tilings) * (target - pred) * self.eligibility
-        )

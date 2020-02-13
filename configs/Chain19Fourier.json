@@ -20,8 +20,8 @@
 	],
 	"features_common": [
 						{
-							"v_min": [0],
-							"v_max": [18]
+							"min_x": [0],
+							"max_x": [18]
 						}
 					],
 	"simulator_common": [

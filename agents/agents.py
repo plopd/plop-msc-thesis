@@ -1,13 +1,19 @@
-from .elstd_agent import ELSTD
-from .etd_agent import ETD
-from .lstd_agent import LSTD
-from .mc_agent import MC
-from .td_agent import TD
+from .ELSTD import ELSTD
+from .ETD import ETD
+from .ETDTileCoding import ETDTileCoding
+from .LSTD import LSTD
+from .MC import MC
+from .TD import TD
+from .TDTileCoding import TDTileCoding
 
 
 def get_agent(name):
     if name == "TD":
         return TD
+    elif name == "TDTileCoding":
+        return TDTileCoding
+    elif name == "ETDTileCoding":
+        return ETDTileCoding
     elif name == "ETD":
         return ETD
     elif name == "MC":

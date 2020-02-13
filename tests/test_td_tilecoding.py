@@ -7,8 +7,12 @@ from rl_glue.rl_glue import RLGlue
 
 agent_info = {
     "num_states": 19,
-    "representations": "TA",
-    "num_dims": 19,
+    "representations": "TC",
+    "num_dims": 1,
+    "tiles_per_dim": 19,
+    "tilings": 1,
+    "min_x": 0,
+    "max_x": 18,
     "discount_rate": 1.0,
     "trace_decay": 0.0,
     "interest": "UI",
@@ -19,7 +23,7 @@ agent_info = {
 env_info = {"env": "Chain", "num_states": 19}
 
 
-@pytest.mark.parametrize("algorithm", ["ELSTD"])
+@pytest.mark.parametrize("algorithm", ["TDTileCoding"])
 def test_agent_start(algorithm):
     environment = get_environment(env_info["env"])
     agent_info["algorithm"] = algorithm
@@ -50,7 +54,7 @@ def test_linear_followon_trace():
     agent_info["trace_decay"] = 0.0
     agent_info["interest"] = "UI"
     environment = get_environment(env_info["env"])
-    agent = get_agent("ETD")
+    agent = get_agent("ETDTileCoding")
 
     rl_glue = RLGlue(environment, agent)
 
@@ -65,7 +69,7 @@ def test_constant_emphasis():
     agent_info["trace_decay"] = 1.0
     agent_info["interest"] = "UI"
     environment = get_environment(env_info["env"])
-    agent = get_agent("ETD")
+    agent = get_agent("ETDTileCoding")
 
     rl_glue = RLGlue(environment, agent)
 
@@ -75,7 +79,7 @@ def test_constant_emphasis():
         assert rl_glue.rl_agent_message("get emphasis trace") == 1.0
 
 
-@pytest.mark.parametrize("algorithm", ["TD", "ETD", "LSTD", "ELSTD"])
+@pytest.mark.parametrize("algorithm", ["TDTileCoding", "ETDTileCoding"])
 def test_eligibility_trace_reset_at_start_of_episode(algorithm):
     environment = get_environment(env_info["env"])
     agent_info["algorithm"] = algorithm
@@ -88,7 +92,7 @@ def test_eligibility_trace_reset_at_start_of_episode(algorithm):
     assert np.allclose(e, np.zeros(e.shape[0]))
 
 
-@pytest.mark.parametrize("algorithm", ["ETD", "ELSTD"])
+@pytest.mark.parametrize("algorithm", ["ETDTileCoding"])
 def test_emphasis_reset_at_start_of_episode(algorithm):
     environment = get_environment(env_info["env"])
     agent_info["algorithm"] = algorithm
@@ -102,7 +106,8 @@ def test_emphasis_reset_at_start_of_episode(algorithm):
 
 
 @pytest.mark.parametrize(
-    "env, algorithm", [("ChainDeterministic", "TD"), ("ChainDeterministic", "ETD")]
+    "env, algorithm",
+    [("ChainDeterministic", "TDTileCoding"), ("ChainDeterministic", "ETDTileCoding")],
 )
 def test_one_step_td_update(env, algorithm):
     agent_info["algorithm"] = algorithm

@@ -4,12 +4,14 @@ import itertools
 import numpy as np
 
 
-class PolynomialRepresentation:
-    def __init__(self, name, num_dims, order, v_min, v_max, unit_norm=True):
+class BasisRepresentation:
+    def __init__(self, name, num_dims, order, min_x, max_x, a, b, unit_norm=True):
         self.name = name
         self.unit_norm = unit_norm
-        self.v_min = v_min
-        self.v_max = v_max
+        self.min_x = min_x
+        self.max_x = max_x
+        self.a = a
+        self.b = b
 
         if name != "P" and name != "F":
             raise Exception("Unknown name given.")
@@ -23,8 +25,16 @@ class PolynomialRepresentation:
 
     def __getitem__(self, x):
 
-        if self.v_min is not None and self.v_max is not None:
-            x = (x - self.v_min) / (self.v_max - self.v_min)
+        if (
+            self.min_x is not None
+            and self.max_x is not None
+            and self.a is not None
+            and self.b is not None
+        ):
+            # https://stats.stackexchange.com/questions/178626/how-to-normalize-data-between-1-and-1
+            x = (self.b - self.a) * (x - self.min_x) / (
+                self.max_x - self.min_x
+            ) + self.a
 
         features = np.zeros(self.num_features)
 

@@ -13,7 +13,7 @@ class DeterministicChain(Chain):
         reward = 0
         is_terminal = False
 
-        if current_state == self.N:
+        if current_state == self.num_states:
             reward = 1
             is_terminal = True
 
