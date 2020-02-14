@@ -13,19 +13,19 @@ agent_info = {
     "tilings": 1,
     "min_x": 0,
     "max_x": 18,
-    "discount_rate": 1.0,
-    "trace_decay": 0.0,
+    "discount_rate": 0.99,
+    "trace_decay": 0.5,
     "interest": "UI",
-    "step_size": 2 ** -7,
+    "step_size": 0.001,
     "policy": "random-chain",
 }
 
 env_info = {"env": "Chain", "num_states": 19}
+environment = get_environment(env_info["env"])
 
 
-@pytest.mark.parametrize("algorithm", ["TDTileCoding"])
+@pytest.mark.parametrize("algorithm", ["ETDTileCoding", "TDTileCoding"])
 def test_agent_start(algorithm):
-    environment = get_environment(env_info["env"])
     agent_info["algorithm"] = algorithm
     agent = get_agent(agent_info["algorithm"])
 
@@ -44,16 +44,15 @@ def test_agent_start(algorithm):
     except Exception:
         pass
 
-    assert np.allclose(z, np.zeros(z.shape[0]))
+    assert np.array_equal(z, np.zeros(z.shape[0]))
 
-    assert np.allclose(w, np.zeros(w.shape[0]))
+    assert np.array_equal(w, np.zeros(w.shape[0]))
 
 
 def test_linear_followon_trace():
     agent_info["discount_rate"] = 1.0
     agent_info["trace_decay"] = 0.0
     agent_info["interest"] = "UI"
-    environment = get_environment(env_info["env"])
     agent = get_agent("ETDTileCoding")
 
     rl_glue = RLGlue(environment, agent)
@@ -68,7 +67,6 @@ def test_constant_emphasis():
     agent_info["discount_rate"] = 1.0
     agent_info["trace_decay"] = 1.0
     agent_info["interest"] = "UI"
-    environment = get_environment(env_info["env"])
     agent = get_agent("ETDTileCoding")
 
     rl_glue = RLGlue(environment, agent)
@@ -81,7 +79,6 @@ def test_constant_emphasis():
 
 @pytest.mark.parametrize("algorithm", ["TDTileCoding", "ETDTileCoding"])
 def test_eligibility_trace_reset_at_start_of_episode(algorithm):
-    environment = get_environment(env_info["env"])
     agent_info["algorithm"] = algorithm
     agent = get_agent(agent_info["algorithm"])
 
@@ -94,7 +91,6 @@ def test_eligibility_trace_reset_at_start_of_episode(algorithm):
 
 @pytest.mark.parametrize("algorithm", ["ETDTileCoding"])
 def test_emphasis_reset_at_start_of_episode(algorithm):
-    environment = get_environment(env_info["env"])
     agent_info["algorithm"] = algorithm
     agent = get_agent(agent_info["algorithm"])
 
@@ -105,14 +101,16 @@ def test_emphasis_reset_at_start_of_episode(algorithm):
     assert rl_glue.rl_agent_message("get emphasis trace") == 0.0
 
 
-@pytest.mark.parametrize("env, algorithm", [("ChainDeterministic", "ETDTileCoding")])
-def test_one_step_td_update(env, algorithm):
+@pytest.mark.parametrize(
+    "env, algorithm",
+    [("ChainDeterministic", "TDTileCoding"), ("ChainDeterministic", "ETDTileCoding")],
+)
+def test_td_update_one_timestep(env, algorithm):
     agent_info["algorithm"] = algorithm
     agent_info["trace_decay"] = 1.0
     agent_info["discount_rate"] = 0.0
     env_info["env"] = env
     agent = get_agent(agent_info["algorithm"])
-    environment = get_environment(env_info["env"])
 
     rl_glue = RLGlue(environment, agent)
 

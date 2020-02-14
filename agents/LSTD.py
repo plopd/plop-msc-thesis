@@ -8,7 +8,7 @@ class LSTD(TD):
         super().__init__()
         self.A = None
         self.b = None
-        self.total_steps = None
+        self.timesteps = None
 
     def agent_init(self, agent_info):
         super().agent_init(agent_info)
@@ -28,7 +28,8 @@ class LSTD(TD):
 
     def learn(self, reward, current_state_feature, last_state_feature):
         self.eligibility = (
-            self.gamma * self.lmbda * self.eligibility + last_state_feature
+            self.discount_rate * self.trace_decay * self.eligibility
+            + last_state_feature
         )
 
         self.A += (
@@ -36,7 +37,7 @@ class LSTD(TD):
             / self.timesteps
             * np.outer(
                 self.eligibility,
-                last_state_feature - self.gamma * current_state_feature,
+                last_state_feature - self.discount_rate * current_state_feature,
             )
             - self.A
         )

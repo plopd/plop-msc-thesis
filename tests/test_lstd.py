@@ -6,11 +6,10 @@ from rl_glue.rl_glue import RLGlue
 
 agent_info = {
     "num_states": 19,
-    "algorithm": "LSTD",
     "representations": "TA",
     "num_dims": 19,
-    "discount_rate": 1.0,
-    "trace_decay": 0.0,
+    "discount_rate": 0.99,
+    "trace_decay": 0.5,
     "interest": "UI",
     "seed": 0,
     "policy": "random-chain",
@@ -19,7 +18,7 @@ agent_info = {
 env_info = {"env": "Chain", "num_states": 19}
 
 
-@pytest.mark.parametrize("algorithm", ["ELSTD"])
+@pytest.mark.parametrize("algorithm", ["LSTD", "ELSTD"])
 def test_increasing_steps_over_episodes(algorithm):
     environment = get_environment(env_info["env"])
     agent_info["algorithm"] = algorithm

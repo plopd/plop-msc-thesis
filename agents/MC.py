@@ -35,9 +35,9 @@ class MC(TD):
     def agent_end(self, reward):
         self.trajectory.append((self.s_t, reward))
         for (s_t, r) in self.trajectory[::-1]:
-            self.G = self.gamma * self.G + r
+            self.G = self.discount_rate * self.G + r
             delta = self.G - np.dot(self.theta.T, self.feature_type[s_t])
-            self.theta = self.theta + self.alpha * delta * self.feature_type[s_t]
+            self.theta = self.theta + self.step_size * delta * self.feature_type[s_t]
 
         return
 
