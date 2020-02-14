@@ -12,14 +12,17 @@ class ETDTileCoding(ETD, TDTileCoding):
         target = (
             reward
             if np.isscalar(current_state_feature)
-            else reward + self.gamma * self.weights[current_state_feature].sum()
+            else reward + self.discount_rate * self.weights[current_state_feature].sum()
         )
         pred = self.weights[last_state_feature].sum()
         delta = target - pred
 
-        self.F = self.gamma * self.F + self.i
-        self.M = self.lmbda * self.i + (1 - self.lmbda) * self.F
-        self.eligibility = self.gamma * self.lmbda * self.eligibility
-        self.eligibility[last_state_feature] += self.M
+        self.followon_trace = self.discount_rate * self.followon_trace + self.interest
+        self.emphasis = (
+            self.trace_decay * self.interest
+            + (1 - self.trace_decay) * self.followon_trace
+        )
+        self.eligibility = self.discount_rate * self.trace_decay * self.eligibility
+        self.eligibility[last_state_feature] += self.emphasis
 
-        self.weights += (self.alpha / self.FR.tilings) * delta * self.eligibility
+        self.weights += (self.step_size / self.FR.tilings) * delta * self.eligibility

@@ -12,10 +12,14 @@ class ELSTD(LSTD, ETD):
         super().agent_init(agent_info)
 
     def learn(self, reward, current_state_feature, last_state_feature):
-        self.F = self.gamma * self.F + self.i
-        self.M = self.lmbda * self.i + (1 - self.lmbda) * self.F
+        self.followon_trace = self.discount_rate * self.followon_trace + self.interest
+        self.emphasis = (
+            self.trace_decay * self.interest
+            + (1 - self.trace_decay) * self.followon_trace
+        )
         self.eligibility = (
-            self.gamma * self.lmbda * self.eligibility + self.M * last_state_feature
+            self.discount_rate * self.trace_decay * self.eligibility
+            + self.emphasis * last_state_feature
         )
 
         self.A += (
@@ -24,7 +28,7 @@ class ELSTD(LSTD, ETD):
             * (
                 np.outer(
                     self.eligibility,
-                    last_state_feature - self.gamma * current_state_feature,
+                    last_state_feature - self.discount_rate * current_state_feature,
                 )
                 - self.A
             )
