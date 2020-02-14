@@ -34,13 +34,7 @@ class ETD(TD):
             self.discount_rate * self.trace_decay * self.eligibility
             + self.emphasis * last_state_feature
         )
-        self.weights += (
-            self.step_size
-            * (1 - self.discount_rate)
-            / (self.interest + self.discount_rate * self.trace_decay)
-            * delta
-            * self.eligibility
-        )
+        self.weights += self.step_size * delta * self.eligibility
 
     def agent_cleanup(self):
         super().agent_cleanup()

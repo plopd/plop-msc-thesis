@@ -7,8 +7,10 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 from analysis.colormap import colors
+from analysis.colormap import linestyles
 from analysis.results import get_data_by
 from analysis.results import Result
+from utils.utils import emphatic_multiplier_step_size
 from utils.utils import path_exists
 from utils.utils import remove_keys_with_none_value
 
@@ -29,6 +31,9 @@ def main():
     parser.add_argument("--num_features", dest="num_features", type=int)
     parser.add_argument("--num_dims", dest="num_dims", type=int)
     parser.add_argument("--interest", dest="interest", type=str, default="UI")
+    parser.add_argument("--discount_rate", dest="discount_rate", type=float)
+    parser.add_argument("--trace_decay", dest="trace_decay", type=float)
+    parser.add_argument("--baseline", type=int, default=1)
 
     parser.add_argument("--algos", dest="algos", nargs="+", default=["TD", "ETD"])
     args = parser.parse_args()
@@ -45,6 +50,7 @@ def main():
     config.pop("algos", None)
     config.pop("metric", None)
     config.pop("num_runs", None)
+    config.pop("baseline", None)
     remove_keys_with_none_value(config)
     print(json.dumps(config, indent=4))
 
@@ -58,6 +64,7 @@ def main():
         xs = []
         optim_step_size = None
         current_optim_err = np.inf
+
         for step_size in step_sizes:
             config["step_size"] = step_size
             ids = results.find_experiment_by(config, args.num_runs)
@@ -76,6 +83,11 @@ def main():
                 means.append(cutoff)
                 std_errors.append(0.0)
             xs.append(step_size)
+
+        if algo == "ETD":
+            xs = np.array(xs) / emphatic_multiplier_step_size(
+                1, args.discount_rate, args.trace_decay
+            )
         means = np.array(means)
         std_errors = np.array(std_errors)
 
@@ -83,10 +95,9 @@ def main():
         axes[1].errorbar(
             xs,
             means,
-            yerr=2.5 * std_errors,
+            xerr=2.5 * std_errors,
             color=colors.get(config.get("algorithm")),
             capsize=5,
-            fmt="none",
         )
 
         axes[1].set_xscale("log", basex=2)
@@ -105,6 +116,22 @@ def main():
         axes[0].spines["right"].set_visible(False)
         axes[0].spines["top"].set_visible(False)
 
+        if args.baseline == 1:
+            config["algorithm"] = "LSTD" if algo == "TD" else "ELSTD"
+            config.pop("step_size", None)
+            ids = results.find_experiment_by(config, args.num_runs)
+            data = results.load(ids)
+            data = data[:, -1]
+            mean = data.mean()
+
+            axes[0].axhline(
+                mean,
+                xmin=0,
+                xmax=len(data),
+                color=colors.get(algo),
+                linestyle=linestyles.get(algo),
+            )
+
         plt.tight_layout()
         filename = "-".join(
             list(
@@ -117,6 +144,7 @@ def main():
                 )
             )
         )
+        filename = filename.replace(".", "_")
         plt.savefig(save_path / filename)
 
 

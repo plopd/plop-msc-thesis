@@ -26,6 +26,9 @@ class LSTD(TD):
 
         return self.a_t
 
+    def agent_cleanup(self):
+        super().agent_cleanup()
+
     def learn(self, reward, current_state_feature, last_state_feature):
         self.eligibility = (
             self.discount_rate * self.trace_decay * self.eligibility
@@ -35,11 +38,13 @@ class LSTD(TD):
         self.A += (
             1
             / self.timesteps
-            * np.outer(
-                self.eligibility,
-                last_state_feature - self.discount_rate * current_state_feature,
+            * (
+                np.outer(
+                    self.eligibility,
+                    last_state_feature - self.discount_rate * current_state_feature,
+                )
+                - self.A
             )
-            - self.A
         )
 
         self.b += 1 / self.timesteps * (reward * self.eligibility - self.b)

@@ -11,9 +11,9 @@ def path_exists(path):
     return path
 
 
-def set_emphatic_step_size(alpha, i, gamma, lmbda):
-    step_size = alpha * (1 - gamma) / (i + gamma * lmbda)
-    return step_size
+def emphatic_multiplier_step_size(interest, discount_rate, trace_decay):
+    factor = (1 - discount_rate) / (interest + discount_rate * trace_decay)
+    return factor
 
 
 def remove_keys_with_none_value(dct):
