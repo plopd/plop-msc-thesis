@@ -52,6 +52,7 @@ class Chain(BaseExperiment):
             self.state_distribution,
             np.ones(len(self.true_values)),
         )
+        self.timesteps = []
 
     def init(self):
         self.rl_glue = RLGlue(self.env, self.agent)
@@ -68,6 +69,8 @@ class Chain(BaseExperiment):
 
         for episode in range(1, self.n_episodes + 1):
             self._learn(episode)
+            # self.timesteps.append(self.rl_glue.rl_env_message("get timesteps"))
+        # print(np.array(self.timesteps).mean(), np.array(self.timesteps).std())
 
     def _learn(self, episode):
         self.rl_glue.rl_episode(self.max_episode_steps)
@@ -86,7 +89,7 @@ class Chain(BaseExperiment):
             )
 
     def save(self):
-        np.save(self.output_dir / f"{self.id}_msve", self.msve_error)
+        np.save(self.output_dir / f"{self.id}", self.msve_error)
 
     def cleanup(self):
         pass

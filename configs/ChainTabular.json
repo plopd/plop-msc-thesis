@@ -2,13 +2,13 @@
 	"experiment": [
 				{
 					"problem": ["Chain"],
-					"n_episodes": [1000],
+					"n_episodes": [50000],
 					"max_episode_steps": [0],
 					"episode_eval_freq": [10],
 					"output_dir": ["~/scratch/Chain/ChainTabular"],
 					"log_every_nth_episode": [1]
 				}
-			],
+			],`
 	"learners_common": [
 		{
 			"discount_rate": [0.99],

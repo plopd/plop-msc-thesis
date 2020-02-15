@@ -4,7 +4,7 @@ from agents.ETD import ETD
 from agents.LSTD import LSTD
 
 
-class ELSTD(LSTD, ETD):
+class ELSTD(ETD, LSTD):
     def __init__(self):
         super().__init__()
 

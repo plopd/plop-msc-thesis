@@ -28,7 +28,7 @@ def calculate_v_chain(N):
             left = s - 1
             left_reward = 0
             if left < 1:
-                left_reward = 0
+                left_reward = -1
                 left = 0
 
             value_sum += state_prob * (

@@ -6,10 +6,12 @@ from alphaex.sweeper import Sweeper
 
 class Result:
     def __init__(self, config_filename, datapath, experiment):
-        self.cfg = config_filename
+        self.config_filename = config_filename
         self.datapath = datapath
-        self.exp = experiment
-        sweeper_config_file = Path(__file__).parents[1] / "configs" / f"{self.cfg}"
+        self.experiment = experiment
+        sweeper_config_file = (
+            Path(__file__).parents[1] / "configs" / f"{self.config_filename}"
+        )
         self.sweeper = Sweeper(sweeper_config_file)
 
     def find_experiment_by(self, params, n_runs):
@@ -37,29 +39,27 @@ class Result:
 
         return exps
 
-    def get_param_val(self, name, by, n_runs):
+    def get_param_val(self, name, config, n_runs):
         """
-        Find values to parameter `name` by criteria across `runs`
+        Find values to parameter `name` by `config` across `runs`
         Args:
             name: str,
-            by: dict,
+            config: dict,
             n_runs: int,
         Returns:
 
         """
         param_vals = set()
-        exps = self.sweeper.search(by, n_runs)
+        exps = self.sweeper.search(config, n_runs)
         for exp in exps:
             param_vals.add(exp[name])
 
         return param_vals
 
-    def load(self, ids, filename_ext="msve"):
+    def load(self, ids):
         data = []
         for idx in ids:
-            data.append(
-                np.load(self.datapath / f"{self.exp}" / f"{idx}_{filename_ext}.npy")
-            )
+            data.append(np.load(self.datapath / f"{self.experiment}" / f"{idx}.npy"))
         data = np.vstack(data)
         return data
 
@@ -72,7 +72,7 @@ def get_data_auc(data):
     return auc_runs.mean(), auc_runs.std() / np.sqrt(n_runs)
 
 
-def get_data_end(data, percent=0.002):
+def get_data_end(data, percent=0.0025):
     n_runs, n_episodes = data.shape
     steps = int(n_episodes * percent)
     end_data = data[:, -steps:]
@@ -92,7 +92,7 @@ def get_data_interim(data, percent=0.0025):
     return interim_data.mean(), interim_data.std() / np.sqrt(n_runs)
 
 
-def get_data_by(data, name="end"):
+def get_data_by(data, name):
     if name == "end":
         return get_data_end(data)
     elif name == "interim":

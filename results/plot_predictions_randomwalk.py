@@ -5,14 +5,16 @@ from pathlib import Path
 import matplotlib
 import matplotlib.pyplot as plt
 import numpy as np
+from tqdm import tqdm
 
 from analysis.colormap import colors
 from analysis.colormap import linestyles
 from analysis.results import get_data_by
 from analysis.results import Result
-from utils.utils import emphatic_multiplier_step_size
 from utils.utils import path_exists
 from utils.utils import remove_keys_with_none_value
+
+# from utils.utils import emphasis_lim
 
 matplotlib.use("agg")
 matplotlib.rcParams.update({"font.size": 18})
@@ -54,6 +56,7 @@ def main():
     remove_keys_with_none_value(config)
     print(json.dumps(config, indent=4))
 
+    # ax2 = axes[1].twiny()
     for algo in args.algos:
         config["algorithm"] = algo
         config.pop("step_size", None)
@@ -65,12 +68,13 @@ def main():
         optim_step_size = None
         current_optim_err = np.inf
 
-        for step_size in step_sizes:
+        for step_size in tqdm(step_sizes):
             config["step_size"] = step_size
             ids = results.find_experiment_by(config, args.num_runs)
             data = results.load(ids)
             mean, se = get_data_by(data, name=args.metric)
             cutoff = data[:, 0].mean()
+            # print(algo, step_size, mean, cutoff)
             # Find best instance of algorithm
             if mean < current_optim_err:
                 current_optim_err = mean
@@ -84,34 +88,51 @@ def main():
                 std_errors.append(0.0)
             xs.append(step_size)
 
-        if algo == "ETD":
-            xs = np.array(xs) / emphatic_multiplier_step_size(
-                1, args.discount_rate, args.trace_decay
-            )
+        # if algo == "ETD":
+        #     xs = np.array(xs) / emphasis_lim(1, args.discount_rate, args.trace_decay)
         means = np.array(means)
         std_errors = np.array(std_errors)
 
-        axes[1].plot(xs, means, c=colors.get(config.get("algorithm")), marker="o", ms=3)
-        axes[1].errorbar(
+        # ax = ax2 if algo == "ETD" else axes[1]
+
+        ax = axes[1]
+
+        ax.scatter(xs, means, c=colors.get(config.get("algorithm")), marker="o")
+        ax.errorbar(
             xs,
             means,
-            xerr=2.5 * std_errors,
+            yerr=2.5 * std_errors,
             color=colors.get(config.get("algorithm")),
             capsize=5,
         )
 
-        axes[1].set_xscale("log", basex=2)
-        axes[1].spines["right"].set_visible(False)
-        axes[1].spines["top"].set_visible(False)
+        ax.tick_params(axis="x", colors=colors.get(config.get("algorithm")))
+
+        # axes[1].set_xticks(
+        #     [3.0517578125e-06, 2.44140625e-05, 0.0001953125, 0.0015625, 0.0125, 0.1])
+        # axes[1].set_xticklabels(
+        #     [3.0517578125e-06, 2.44140625e-05, 0.0001953125, 0.0015625, 0.0125, 0.1])
+
+        ax.set_xscale("log", basex=2)
+        # axes[1].spines["right"].set_visible(False)
+        # axes[1].spines["top"].set_visible(False)
 
         config["step_size"] = optim_step_size
-        print(f"{algo}, {optim_step_size}")
         ids = results.find_experiment_by(config, args.num_runs)
         data = results.load(ids)
 
         mean = data.mean(axis=0)
 
-        axes[0].plot(mean, c=colors.get(config.get("algorithm")))
+        if args.metric == "interim":
+            steps = int(len(mean) * 0.1)
+            mean = mean[:steps]
+        axes[0].plot(
+            mean,
+            c=colors.get(config.get("algorithm")),
+            label=f"{algo}, {int(np.log10(optim_step_size))}",
+        )
+
+        axes[0].legend()
 
         axes[0].spines["right"].set_visible(False)
         axes[0].spines["top"].set_visible(False)

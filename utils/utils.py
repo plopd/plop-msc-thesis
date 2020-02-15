@@ -11,7 +11,7 @@ def path_exists(path):
     return path
 
 
-def emphatic_multiplier_step_size(interest, discount_rate, trace_decay):
+def emphasis_lim(interest, discount_rate, trace_decay):
     emphasis_lim = (interest - discount_rate * trace_decay * interest) / (
         1 - discount_rate
     )

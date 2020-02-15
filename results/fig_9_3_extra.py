@@ -7,7 +7,7 @@ from representations.representations import get_representation
 def get_fig():
     num_states = 19
     num_dims = 1
-    order = 5
+    order = 15
     num_features = (order + 1) ** num_dims
     states = np.arange(num_states).reshape((-1, num_dims))
 
