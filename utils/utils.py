@@ -12,8 +12,10 @@ def path_exists(path):
 
 
 def emphatic_multiplier_step_size(interest, discount_rate, trace_decay):
-    factor = (1 - discount_rate) / (interest + discount_rate * trace_decay)
-    return factor
+    emphasis_lim = (interest - discount_rate * trace_decay * interest) / (
+        1 - discount_rate
+    )
+    return emphasis_lim
 
 
 def remove_keys_with_none_value(dct):
