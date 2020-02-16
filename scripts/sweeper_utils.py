@@ -24,7 +24,9 @@ parser.add_argument("--config_filename", type=str, required=True)
 args = parser.parse_args()
 
 
-sweeper = Sweeper(Path(__file__).parents[1] / "configs" / f"{args.config_filename}")
+sweeper = Sweeper(
+    Path(__file__).parents[1] / "configs" / f"{args.config_filename}.json"
+)
 
 search_dct = {
     "env": args.env,

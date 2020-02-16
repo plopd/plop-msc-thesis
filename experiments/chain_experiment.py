@@ -29,8 +29,9 @@ class Chain(BaseExperiment):
         self.output_dir = Path(experiment_info.get("output_dir")).expanduser()
         self.log_every_nth_episode = experiment_info.get("log_every_nth_episode", 1000)
         path_exists(self.output_dir)
+        path_exists(self.output_dir / "logs")
         self.logger = get_simple_logger(
-            __name__, self.output_dir / f"{self.id}_info.log"
+            __name__, self.output_dir / "logs" / f"{self.id}.txt"
         )
         self.logger.info(
             json.dumps([self.agent_info, self.env_info, self.experiment_info], indent=4)
