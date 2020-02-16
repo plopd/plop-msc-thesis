@@ -78,4 +78,5 @@ class TD(BaseAgent):
             self.discount_rate * self.trace_decay * self.eligibility
             + last_state_feature
         )
+
         self.weights += self.step_size * (target - pred) * self.eligibility

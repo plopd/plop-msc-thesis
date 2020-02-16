@@ -12,7 +12,7 @@ def main():
     sweep_id = comm.Get_rank()
     sweep_file_name = sys.argv[1]
 
-    sweeper = Sweeper(Path(__file__).parents[1] / "configs" / f"{sweep_file_name}")
+    sweeper = Sweeper(Path(__file__).parents[1] / "configs" / f"{sweep_file_name}.json")
 
     param_cfg = sweeper.parse(sweep_id)
 
@@ -26,6 +26,8 @@ def main():
         "num_ones": param_cfg.get("num_ones", 0),
         "min_x": param_cfg.get("min_x"),
         "max_x": param_cfg.get("max_x"),
+        "a": param_cfg.get("a"),
+        "b": param_cfg.get("b"),
         "discount_rate": param_cfg.get("discount_rate"),
         "trace_decay": param_cfg.get("trace_decay"),
         "step_size": param_cfg.get("step_size"),
