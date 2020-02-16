@@ -28,15 +28,11 @@ def main():
 
     args = parser.parse_args()
 
-    experiment_root_dir = "/home/plopd/scratch"
+    rootdir = "/home/plopd/scratch"
     project_root_dir = "/home/plopd/projects/def-sutton/plopd/plop-msc-thesis"
     script_path = args.script_path
-    output_path = (
-        f"{experiment_root_dir}/{args.experiment_rootdir}/{args.config_filename}/output"
-    )
-    error_path = (
-        f"{experiment_root_dir}/{args.experiment_rootdir}/{args.config_filename}/error"
-    )
+    output_path = f"{rootdir}/{args.experiment_rootdir}/{args.config_filename}/output"
+    error_path = f"{rootdir}/{args.experiment_rootdir}/{args.config_filename}/error"
 
     clusters = [
         {

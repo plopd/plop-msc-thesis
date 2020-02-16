@@ -1,57 +1,101 @@
 {
-	"experiment": [
-				{
-					"problem": ["Chain"],
-					"n_episodes": [50000],
-					"max_episode_steps": [0],
-					"episode_eval_freq": [1],
-					"output_dir": ["~/scratch/Chain/ChainDependent"],
-					"log_every_nth_episode": [1000]
-				}
-			],
-	"learners_common": [
-		{
-			"discount_rate": [0.99],
-			"trace_decay": [0.0],
-			"interest": ["UI"],
-			"policy": ["random-chain"],
-			"representations": [
-						{
-							"representations": ["D"]
-						}
-					]
-		}
-	],
-	"simulator_common": [
-		{
-			"env": ["Chain"]
-		}
-	],
-	"experiments":
-	[
-	    {
-
-	        "simulator": [
-				{
-					"num_states": [5, 19]
-				}
-			],
-	        "learner": [
-	            {
-					"algorithm": ["TD"],
-					"step_size": [2.9802322387695314e-09, 1.1920928955078126e-08, 4.76837158203125e-08, 1.9073486328125e-07, 7.62939453125e-07, 3.0517578125e-06, 1.220703125e-05, 4.8828125e-05, 0.0001953125, 0.00078125, 0.003125, 0.0125, 0.05, 0.2, 0.8]
-				},
-				{
-					"algorithm": ["ETD"],
-					"step_size": [2.9802322387695314e-09, 1.1920928955078126e-08, 4.76837158203125e-08, 1.9073486328125e-07, 7.62939453125e-07, 3.0517578125e-06, 1.220703125e-05, 4.8828125e-05, 0.0001953125, 0.00078125, 0.003125, 0.0125, 0.05, 0.2, 0.8]
-				},
-				{
-					"algorithm": ["LSTD"]
-	            },
-				{
-					"algorithm": ["ELSTD"]
-	            }
-	        ]
-	    }
-	]
+  "experiment": [
+    {
+      "problem": [
+        "Chain"
+      ],
+      "n_episodes": [
+        50000
+      ],
+      "max_episode_steps": [
+        0
+      ],
+      "episode_eval_freq": [
+        1
+      ],
+      "output_dir": [
+        "~/scratch/Chain/ChainDependent"
+      ],
+      "log_every_nth_episode": [
+        1000
+      ]
+    }
+  ],
+  "learners_common": [
+    {
+      "discount_rate": [
+        0.99
+      ],
+      "trace_decay": [
+        0.0
+      ],
+      "interest": [
+        "UI"
+      ],
+      "step_size": [
+        1.52587890625e-06,
+        6.103515625e-06,
+        2.44140625e-05,
+        9.765625e-05,
+        0.000390625,
+        0.0015625,
+        0.00625,
+        0.025,
+        0.1,
+        0.4,
+        1.6
+      ],
+      "policy": [
+        "random-chain"
+      ],
+      "representations": [
+        {
+          "representations": [
+            "D"
+          ]
+        }
+      ]
+    }
+  ],
+  "simulator_common": [
+    {
+      "env": [
+        "Chain"
+      ]
+    }
+  ],
+  "experiments": [
+    {
+      "simulator": [
+        {
+          "num_states": [
+            5,
+            19
+          ]
+        }
+      ],
+      "learner": [
+        {
+          "algorithm": [
+            "TD"
+          ]
+        },
+        {
+          "algorithm": [
+            "ETD"
+          ]
+        },
+        {
+          "algorithm": [
+            "LSTD"
+          ]
+        },
+        {
+          "algorithm": [
+            "ELSTD"
+          ]
+        }
+      ]
+    }
+  ]
 }

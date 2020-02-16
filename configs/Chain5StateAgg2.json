@@ -1,33 +1,71 @@
 {
-	"experiment": [
-				{
-					"n_episodes": [100000],
-					"max_episode_steps": [0],
-					"episode_eval_freq": [1],
-					"output_dir": ["~/scratch/Chain/Chain5StateAgg2"],
-					"logging": [0]
-				}
-			],
-	"learners_common": [
-		{
-			"algorithm": ["TD", "ETD"],
-			"step_size": [0.125, 0.03125, 0.0078125, 0.001953125, 0.00048828125, 0.0001220703125, 3.0517578125e-05, 7.62939453125e-06],
-			"discount_rate": [1.0],
-			"trace_decay": [0.0],
-			"interest": ["UI"],
-			"policy": ["random-chain"]
-		}
-	],
-	"simulator_common": [
-		{
-			"env": ["Chain"],
-			"num_states": [5]
-		}
-	],
-	"features_common": [
-		{
-			"representations": ["SA"],
-			"num_dims": [2]
-		}
-	]
+  "experiment": [
+    {
+      "n_episodes": [
+        100000
+      ],
+      "max_episode_steps": [
+        0
+      ],
+      "episode_eval_freq": [
+        1
+      ],
+      "output_dir": [
+        "~/scratch/Chain/Chain5StateAgg2"
+      ],
+      "logging": [
+        0
+      ]
+    }
+  ],
+  "learners_common": [
+    {
+      "algorithm": [
+        "TD",
+        "ETD"
+      ],
+      "step_size": [
+        0.125,
+        0.03125,
+        0.0078125,
+        0.001953125,
+        0.00048828125,
+        0.0001220703125,
+        3.0517578125e-05,
+        7.62939453125e-06
+      ],
+      "discount_rate": [
+        1.0
+      ],
+      "trace_decay": [
+        0.0
+      ],
+      "interest": [
+        "UI"
+      ],
+      "policy": [
+        "random-chain"
+      ]
+    }
+  ],
+  "simulator_common": [
+    {
+      "env": [
+        "Chain"
+      ],
+      "num_states": [
+        5
+      ]
+    }
+  ],
+  "features_common": [
+    {
+      "representations": [
+        "SA"
+      ],
+      "num_dims": [
+        2
+      ]
+    }
+  ]
 }

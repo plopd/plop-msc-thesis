@@ -1,64 +1,119 @@
 {
-	"experiment": [
-				{
-					"n_episodes": [50000],
-					"max_episode_steps": [0],
-					"episode_eval_freq": [1],
-					"output_dir": ["~/scratch/Chain/Chain19Fourier"]
-				}
-			],
-	"learners_common": [
-		{
-			"algorithm": ["TD", "ETD"],
-			"step_size": [0.5, 0.125, 0.03125, 0.0078125, 0.001953125, 0.00048828125, 0.0001220703125, 3.0517578125e-05, 7.62939453125e-06, 1.9073486328125e-06, 4.76837158203125e-07, 1.1920928955078125e-07],
-			"discount_rate": [1.0],
-			"trace_decay": [0.0],
-			"interest": ["UI"],
-			"policy": ["random-chain"]
-		}
-
-	],
-	"features_common": [
-						{
-							"min_x": [0],
-							"max_x": [18]
-						}
-					],
-	"simulator_common": [
-		{
-			"env": ["Chain"]
-		}
-	],
-	"experiments":
-	[
-	    {
-
-	        "simulator": [
-				{
-					"num_states": [19]
-				}
-			],
-	        "learner": [
-	            {
-					"representations": [
-						{
-							"representations": ["fourier"],
-							"order": [5],
-							"num_dims": [6]
-						},
-						{
-							"representations": ["fourier"],
-							"order": [10],
-							"num_dims": [11]
-						},
-						{
-							"representations": ["fourier"],
-							"order": [15],
-							"num_dims": [16]
-						}
-					]
-	            }
-	        ]
-	    }
-	]
+  "experiment": [
+    {
+      "n_episodes": [
+        50000
+      ],
+      "max_episode_steps": [
+        0
+      ],
+      "episode_eval_freq": [
+        1
+      ],
+      "output_dir": [
+        "~/scratch/Chain/Chain19Fourier"
+      ]
+    }
+  ],
+  "learners_common": [
+    {
+      "algorithm": [
+        "TD",
+        "ETD"
+      ],
+      "step_size": [
+        0.5,
+        0.125,
+        0.03125,
+        0.0078125,
+        0.001953125,
+        0.00048828125,
+        0.0001220703125,
+        3.0517578125e-05,
+        7.62939453125e-06,
+        1.9073486328125e-06,
+        4.76837158203125e-07,
+        1.1920928955078125e-07
+      ],
+      "discount_rate": [
+        1.0
+      ],
+      "trace_decay": [
+        0.0
+      ],
+      "interest": [
+        "UI"
+      ],
+      "policy": [
+        "random-chain"
+      ]
+    }
+  ],
+  "features_common": [
+    {
+      "min_x": [
+        0
+      ],
+      "max_x": [
+        18
+      ]
+    }
+  ],
+  "simulator_common": [
+    {
+      "env": [
+        "Chain"
+      ]
+    }
+  ],
+  "experiments": [
+    {
+      "simulator": [
+        {
+          "num_states": [
+            19
+          ]
+        }
+      ],
+      "learner": [
+        {
+          "representations": [
+            {
+              "representations": [
+                "fourier"
+              ],
+              "order": [
+                5
+              ],
+              "num_dims": [
+                6
+              ]
+            },
+            {
+              "representations": [
+                "fourier"
+              ],
+              "order": [
+                10
+              ],
+              "num_dims": [
+                11
+              ]
+            },
+            {
+              "representations": [
+                "fourier"
+              ],
+              "order": [
+                15
+              ],
+              "num_dims": [
+                16
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
 }

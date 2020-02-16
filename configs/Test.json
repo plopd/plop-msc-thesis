@@ -1,121 +1,226 @@
 {
-	"experiment": [
-				{
-					"n_episodes": [3],
-					"max_episode_steps": [0],
-					"episode_eval_freq": [1],
-					"output_dir": ["~/scratch/Chain/Test"]
-				}
-			],
-	"learners_common": [
-		{
-			"algorithm": ["TD", "ETD"],
-			"step_size": [0.005],
-			"discount_rate": [1.0],
-			"trace_decay": [0.0],
-			"interest": ["UI"],
-			"policy": ["random-chain"]
-		}
-	],
-	"simulator_common": [
-		{
-			"env": ["Chain"]
-		}
-	],
-	"experiments":
-	[
-	    {
-
-	        "simulator": [
-				{
-					"num_states": [5]
-				}
-			],
-	        "learner": [
-	            {
-					"representations": [
-						{
-							"representations": ["tabular"],
-							"num_dims": [5]
-						},
-						{
-							"representations": ["DF"],
-							"num_dims": [3]
-						},
-						{
-							"representations": ["fourier"],
-							"order": [3],
-							"num_dims": [4],
-							"min_x": [0],
-							"max_x": [4]
-						},
-						{
-							"representations": ["poly"],
-							"order": [3],
-							"num_dims": [4],
-							"min_x": [0],
-							"max_x": [4]
-						},
-						{
-							"representations": ["random-binary"],
-							"num_dims": [4],
-							"num_ones": [2]
-						},
-						{
-							"representations": ["random-nonbinary"],
-							"num_dims": [4]
-						},
-						{
-							"representations": ["state-aggregation"],
-							"num_dims": [4]
-						}
-					]
-	            }
-	        ]
-	    },
-		{
-	        "simulator": [
-				{
-					"num_states": [19]
-				}
-			],
-	        "learner": [
-	            {
-					"representations": [
-						{
-							"representations": ["tabular"],
-							"num_dims": [19]
-						},
-						{
-							"representations": ["DF"],
-							"num_dims": [10]
-						},
-						{
-							"representations": ["fourier"],
-							"order": [10],
-							"num_dims": [11],
-							"min_x": [0],
-							"max_x": [18]
-						},
-						{
-							"representations": ["poly"],
-							"order": [5],
-							"num_dims": [6],
-							"min_x": [0],
-							"max_x": [18]
-						},
-						{
-							"representations": ["random-binary"],
-							"num_dims": [17],
-							"num_ones": [10]
-						},
-						{
-							"representations": ["random-nonbinary"],
-							"num_dims": [10]
-						}
-					]
-	            }
-	        ]
-	    }
-	]
+  "experiment": [
+    {
+      "n_episodes": [
+        3
+      ],
+      "max_episode_steps": [
+        0
+      ],
+      "episode_eval_freq": [
+        1
+      ],
+      "output_dir": [
+        "~/scratch/Chain/Test"
+      ]
+    }
+  ],
+  "learners_common": [
+    {
+      "algorithm": [
+        "TD",
+        "ETD"
+      ],
+      "step_size": [
+        0.005
+      ],
+      "discount_rate": [
+        1.0
+      ],
+      "trace_decay": [
+        0.0
+      ],
+      "interest": [
+        "UI"
+      ],
+      "policy": [
+        "random-chain"
+      ]
+    }
+  ],
+  "simulator_common": [
+    {
+      "env": [
+        "Chain"
+      ]
+    }
+  ],
+  "experiments": [
+    {
+      "simulator": [
+        {
+          "num_states": [
+            5
+          ]
+        }
+      ],
+      "learner": [
+        {
+          "representations": [
+            {
+              "representations": [
+                "tabular"
+              ],
+              "num_dims": [
+                5
+              ]
+            },
+            {
+              "representations": [
+                "DF"
+              ],
+              "num_dims": [
+                3
+              ]
+            },
+            {
+              "representations": [
+                "fourier"
+              ],
+              "order": [
+                3
+              ],
+              "num_dims": [
+                4
+              ],
+              "min_x": [
+                0
+              ],
+              "max_x": [
+                4
+              ]
+            },
+            {
+              "representations": [
+                "poly"
+              ],
+              "order": [
+                3
+              ],
+              "num_dims": [
+                4
+              ],
+              "min_x": [
+                0
+              ],
+              "max_x": [
+                4
+              ]
+            },
+            {
+              "representations": [
+                "random-binary"
+              ],
+              "num_dims": [
+                4
+              ],
+              "num_ones": [
+                2
+              ]
+            },
+            {
+              "representations": [
+                "random-nonbinary"
+              ],
+              "num_dims": [
+                4
+              ]
+            },
+            {
+              "representations": [
+                "state-aggregation"
+              ],
+              "num_dims": [
+                4
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "simulator": [
+        {
+          "num_states": [
+            19
+          ]
+        }
+      ],
+      "learner": [
+        {
+          "representations": [
+            {
+              "representations": [
+                "tabular"
+              ],
+              "num_dims": [
+                19
+              ]
+            },
+            {
+              "representations": [
+                "DF"
+              ],
+              "num_dims": [
+                10
+              ]
+            },
+            {
+              "representations": [
+                "fourier"
+              ],
+              "order": [
+                10
+              ],
+              "num_dims": [
+                11
+              ],
+              "min_x": [
+                0
+              ],
+              "max_x": [
+                18
+              ]
+            },
+            {
+              "representations": [
+                "poly"
+              ],
+              "order": [
+                5
+              ],
+              "num_dims": [
+                6
+              ],
+              "min_x": [
+                0
+              ],
+              "max_x": [
+                18
+              ]
+            },
+            {
+              "representations": [
+                "random-binary"
+              ],
+              "num_dims": [
+                17
+              ],
+              "num_ones": [
+                10
+              ]
+            },
+            {
+              "representations": [
+                "random-nonbinary"
+              ],
+              "num_dims": [
+                10
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
 }

@@ -6,13 +6,27 @@ repos:
     language: python
     language_version: python
 - repo: https://github.com/ambv/black
-  rev: 18.9b0
+  rev: 19.10b0
   hooks:
   - id: black
     language: python
     language_version: python
 - repo: https://github.com/pre-commit/pre-commit-hooks
-  rev: v2.0.0
+  rev: v2.5.0
+  hooks:
+  - id: check-json
+  - id: trailing-whitespace
+  - id: end-of-file-fixer
+  - id: check-docstring-first
+  - id: check-json
+  - id: check-yaml
+  - id: debug-statements
+  - id: name-tests-test
+  - id: pretty-format-json
+    args: ['--no-sort-keys', '--autofix']
+  - id: requirements-txt-fixer
+- repo: https://gitlab.com/pycqa/flake8
+  rev: 3.7.9
   hooks:
   - id: flake8
     args: ['--ignore=E203,E266,E501,W503', '--max-line-length=88', '--max-complexity=15', '--select=B,C,E,F,W,T4,B9']

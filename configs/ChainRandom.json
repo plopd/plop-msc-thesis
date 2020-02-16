@@ -1,49 +1,88 @@
 {
-	"experiment": [
-				{
-					"problem": ["Chain"],
-					"n_episodes": [1000],
-					"max_episode_steps": [0],
-					"episode_eval_freq": [1],
-					"output_dir": ["~/scratch/Chain/ChainRandom"],
-					"log_every_nth_episode": [10]
-				}
-			],
-	"learners_common": [
-		{
-			"algorithm": ["TD", "ETD"],
-			"step_size": [9.765625e-05, 0.000390625, 0.0015625, 0.00625, 0.025, 0.1, 0.4],
-			"discount_rate": [0.99],
-			"trace_decay": [0.0],
-			"interest": ["UI"],
-			"policy": ["random-chain"]
-		}
-	],
-	"simulator_common": [
-		{
-			"env": ["Chain"]
-		}
-	],
-	"experiments":
-	[
-	    {
-
-	        "simulator": [
-				{
-					"num_states": [5]
-				}
-			],
-	        "learner": [
-	            {
-					"representations": [
-						{
-							"representations": ["RB"],
-							"num_features": [4],
-							"num_ones": [3]
-						}
-					]
-	            }
-	        ]
-	    }
-	]
+  "experiment": [
+    {
+      "problem": [
+        "Chain"
+      ],
+      "n_episodes": [
+        1000
+      ],
+      "max_episode_steps": [
+        0
+      ],
+      "episode_eval_freq": [
+        1
+      ],
+      "output_dir": [
+        "~/scratch/Chain/ChainRandom"
+      ],
+      "log_every_nth_episode": [
+        10
+      ]
+    }
+  ],
+  "learners_common": [
+    {
+      "algorithm": [
+        "TD",
+        "ETD"
+      ],
+      "step_size": [
+        9.765625e-05,
+        0.000390625,
+        0.0015625,
+        0.00625,
+        0.025,
+        0.1,
+        0.4
+      ],
+      "discount_rate": [
+        0.99
+      ],
+      "trace_decay": [
+        0.0
+      ],
+      "interest": [
+        "UI"
+      ],
+      "policy": [
+        "random-chain"
+      ]
+    }
+  ],
+  "simulator_common": [
+    {
+      "env": [
+        "Chain"
+      ]
+    }
+  ],
+  "experiments": [
+    {
+      "simulator": [
+        {
+          "num_states": [
+            5
+          ]
+        }
+      ],
+      "learner": [
+        {
+          "representations": [
+            {
+              "representations": [
+                "RB"
+              ],
+              "num_features": [
+                4
+              ],
+              "num_ones": [
+                3
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
 }

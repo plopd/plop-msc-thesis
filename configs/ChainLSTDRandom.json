@@ -1,72 +1,115 @@
 {
-	"experiment": [
-				{
-					"n_episodes": [50000],
-					"max_episode_steps": [0],
-					"episode_eval_freq": [50000],
-					"output_dir": ["~/scratch/Chain/ChainLSTDRandom"]
-				}
-			],
-	"learners_common": [
-		{
-			"algorithm": ["lstd", "elstd"],
-			"discount_rate": [1.0],
-			"trace_decay": [0.0],
-			"interest": ["UI"],
-			"policy": ["random-chain"]
-		}
-	],
-	"simulator_common": [
-		{
-			"env": ["Chain"]
-		}
-	],
-	"experiments":
-	[
-	    {
-
-	        "simulator": [
-				{
-					"num_states": [5]
-				}
-			],
-	        "learner": [
-	            {
-					"representations": [
-						{
-							"representations": ["RB"],
-							"num_ones": [3],
-							"num_dims": [4]
-						},
-						{
-							"representations": ["RNB"],
-							"num_dims": [4]
-						}
-					]
-	            }
-	        ]
-	    },
-		{
-	        "simulator": [
-				{
-					"num_states": [19]
-				}
-			],
-	        "learner": [
-	            {
-					"representations": [
-						{
-							"representations": ["RB"],
-							"num_dims": [17],
-							"num_ones": [9]
-						},
-						{
-							"representations": ["RNB"],
-							"num_dims": [17]
-						}
-					]
-	            }
-	        ]
-	    }
-	]
+  "experiment": [
+    {
+      "n_episodes": [
+        50000
+      ],
+      "max_episode_steps": [
+        0
+      ],
+      "episode_eval_freq": [
+        50000
+      ],
+      "output_dir": [
+        "~/scratch/Chain/ChainLSTDRandom"
+      ]
+    }
+  ],
+  "learners_common": [
+    {
+      "algorithm": [
+        "lstd",
+        "elstd"
+      ],
+      "discount_rate": [
+        1.0
+      ],
+      "trace_decay": [
+        0.0
+      ],
+      "interest": [
+        "UI"
+      ],
+      "policy": [
+        "random-chain"
+      ]
+    }
+  ],
+  "simulator_common": [
+    {
+      "env": [
+        "Chain"
+      ]
+    }
+  ],
+  "experiments": [
+    {
+      "simulator": [
+        {
+          "num_states": [
+            5
+          ]
+        }
+      ],
+      "learner": [
+        {
+          "representations": [
+            {
+              "representations": [
+                "RB"
+              ],
+              "num_ones": [
+                3
+              ],
+              "num_dims": [
+                4
+              ]
+            },
+            {
+              "representations": [
+                "RNB"
+              ],
+              "num_dims": [
+                4
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "simulator": [
+        {
+          "num_states": [
+            19
+          ]
+        }
+      ],
+      "learner": [
+        {
+          "representations": [
+            {
+              "representations": [
+                "RB"
+              ],
+              "num_dims": [
+                17
+              ],
+              "num_ones": [
+                9
+              ]
+            },
+            {
+              "representations": [
+                "RNB"
+              ],
+              "num_dims": [
+                17
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
 }

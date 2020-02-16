@@ -1,77 +1,141 @@
 {
-	"experiment": [
-				{
-					"problem": ["Chain"],
-					"n_episodes": [1000],
-					"max_episode_steps": [0],
-					"episode_eval_freq": [1],
-					"output_dir": ["~/scratch/Chain/ChainTestFeatures"],
-					"log_every_nth_episode": [100]
-				}
-			],
-	"learners_common": [
-		{
-			"discount_rate": [0.99],
-			"trace_decay": [0.0],
-			"interest": ["UI"],
-			"policy": ["random-chain"],
-			"representations": [
-						{
-							"representations": ["TA"]
-						},
-						{
-							"representations": ["D"]
-						},
-						{
-							"representations": ["P"],
-							"order": [9],
-							"num_dims": [1],
-							"min_x": [0],
-							"max_x": [18]
-						},
-						{
-							"representations": ["F"],
-							"order": [9],
-							"num_dims": [1],
-							"min_x": [0],
-							"max_x": [18]
-						},
-						{
-							"representations": ["RB"],
-							"num_features": [10],
-							"num_ones": [5]
-						},
-						{
-							"representations": ["RNB"],
-							"num_features": [10]
-						}
-					]
-		}
-	],
-	"simulator_common": [
-		{
-			"env": ["Chain"]
-		}
-	],
-	"experiments":
-	[
-	    {
-
-	        "simulator": [
-				{
-					"num_states": [19]
-				}
-			],
-	        "learner": [
-	            {
-					"algorithm": ["TD"],
-					"step_size": [0.2]
-	            },
-				{
-					"algorithm": ["ETD"],
-					"step_size": [0.0125]
-	            }
-	        ]
-	    }
-	]
+  "experiment": [
+    {
+      "problem": [
+        "Chain"
+      ],
+      "n_episodes": [
+        1000
+      ],
+      "max_episode_steps": [
+        0
+      ],
+      "episode_eval_freq": [
+        1
+      ],
+      "output_dir": [
+        "~/scratch/Chain/ChainTestFeatures"
+      ],
+      "log_every_nth_episode": [
+        100
+      ]
+    }
+  ],
+  "learners_common": [
+    {
+      "discount_rate": [
+        0.99
+      ],
+      "trace_decay": [
+        0.0
+      ],
+      "interest": [
+        "UI"
+      ],
+      "policy": [
+        "random-chain"
+      ],
+      "representations": [
+        {
+          "representations": [
+            "TA"
+          ]
+        },
+        {
+          "representations": [
+            "D"
+          ]
+        },
+        {
+          "representations": [
+            "P"
+          ],
+          "order": [
+            9
+          ],
+          "num_dims": [
+            1
+          ],
+          "min_x": [
+            0
+          ],
+          "max_x": [
+            18
+          ]
+        },
+        {
+          "representations": [
+            "F"
+          ],
+          "order": [
+            9
+          ],
+          "num_dims": [
+            1
+          ],
+          "min_x": [
+            0
+          ],
+          "max_x": [
+            18
+          ]
+        },
+        {
+          "representations": [
+            "RB"
+          ],
+          "num_features": [
+            10
+          ],
+          "num_ones": [
+            5
+          ]
+        },
+        {
+          "representations": [
+            "RNB"
+          ],
+          "num_features": [
+            10
+          ]
+        }
+      ]
+    }
+  ],
+  "simulator_common": [
+    {
+      "env": [
+        "Chain"
+      ]
+    }
+  ],
+  "experiments": [
+    {
+      "simulator": [
+        {
+          "num_states": [
+            19
+          ]
+        }
+      ],
+      "learner": [
+        {
+          "algorithm": [
+            "TD"
+          ],
+          "step_size": [
+            0.2
+          ]
+        },
+        {
+          "algorithm": [
+            "ETD"
+          ],
+          "step_size": [
+            0.0125
+          ]
+        }
+      ]
+    }
+  ]
 }

@@ -1,10 +1,11 @@
-import argparse
 import json
+import sys
 from pathlib import Path
 
 import matplotlib
 import matplotlib.pyplot as plt
 import numpy as np
+from alphaex.sweeper import Sweeper
 from tqdm import tqdm
 
 from analysis.colormap import colors
@@ -21,46 +22,58 @@ matplotlib.rcParams.update({"font.size": 18})
 
 
 def main():
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--num_states", dest="num_states", type=int)
-    parser.add_argument("--num_runs", dest="num_runs", type=int)
-    parser.add_argument("--order", dest="order", type=int)
-    parser.add_argument("--metric", dest="metric", type=str)
-    parser.add_argument("--experiment", dest="experiment", type=str)
-    parser.add_argument("--env", dest="env", type=str)
-    parser.add_argument("--representations", dest="representations", type=str)
-    parser.add_argument("--num_ones", dest="num_ones", type=int)
-    parser.add_argument("--num_features", dest="num_features", type=int)
-    parser.add_argument("--num_dims", dest="num_dims", type=int)
-    parser.add_argument("--interest", dest="interest", type=str, default="UI")
-    parser.add_argument("--discount_rate", dest="discount_rate", type=float)
-    parser.add_argument("--trace_decay", dest="trace_decay", type=float)
-    parser.add_argument("--baseline", type=int, default=1)
+    sweep_id = int(sys.argv[1].strip(","))
+    config_filename = sys.argv[2]
 
-    parser.add_argument("--algos", dest="algos", nargs="+", default=["TD", "ETD"])
-    args = parser.parse_args()
+    sweeper = Sweeper(Path(__file__).parents[1] / "configs" / f"{config_filename}.json")
 
-    datapath = Path(f"~/scratch/{args.env}").expanduser()
-    save_path = path_exists(Path(__file__).parents[0])
+    param_cfg = sweeper.parse(sweep_id)
+
+    exp_info = {
+        "num_states": param_cfg.get("num_states"),
+        "num_runs": param_cfg.get("num_runs"),
+        "order": param_cfg.get("order"),
+        "metric": param_cfg.get("metric"),
+        "experiment": param_cfg.get("experiment"),
+        "env": param_cfg.get("env"),
+        "representations": param_cfg.get("representations"),
+        "num_ones": param_cfg.get("num_ones"),
+        "num_features": param_cfg.get("num_features"),
+        "num_dims": param_cfg.get("num_dims"),
+        "interest": param_cfg.get("interest"),
+        "discount_rate": param_cfg.get("discount_rate"),
+        "trace_decay": param_cfg.get("trace_decay"),
+        "baseline": param_cfg.get("baseline"),
+        "algos": ["TD", "ETD"],
+    }
+
+    datapath = Path(f"~/scratch/{exp_info.get('env')}").expanduser()
+    save_path = path_exists(Path(__file__).parents[0] / exp_info.get("experiment"))
 
     fig, axes = plt.subplots(1, 2, figsize=(12, 5), sharey="all")
 
-    results = Result(f"{args.experiment}.json", datapath, args.experiment)
+    results = Result(
+        f"{exp_info.get('experiment')}.json", datapath, exp_info.get("experiment")
+    )
 
-    config = args.__dict__.copy()
+    config = exp_info.copy()
     config.pop("experiment", None)
     config.pop("algos", None)
     config.pop("metric", None)
     config.pop("num_runs", None)
     config.pop("baseline", None)
+    config.pop("run", None)
     remove_keys_with_none_value(config)
+
     print(json.dumps(config, indent=4))
 
     # ax2 = axes[1].twiny()
-    for algo in args.algos:
+    for algo in exp_info.get("algos"):
         config["algorithm"] = algo
         config.pop("step_size", None)
-        step_sizes = results.get_param_val("step_size", config, args.num_runs)
+        step_sizes = results.get_param_val(
+            "step_size", config, exp_info.get("num_runs")
+        )
         step_sizes = sorted(step_sizes)
         means = []
         std_errors = []
@@ -70,9 +83,9 @@ def main():
 
         for step_size in tqdm(step_sizes):
             config["step_size"] = step_size
-            ids = results.find_experiment_by(config, args.num_runs)
+            ids = results.find_experiment_by(config, exp_info.get("num_runs"))
             data = results.load(ids)
-            mean, se = get_data_by(data, name=args.metric)
+            mean, se = get_data_by(data, name=exp_info.get("metric"))
             cutoff = data[:, 0].mean()
             # print(algo, step_size, mean, cutoff)
             # Find best instance of algorithm
@@ -118,12 +131,12 @@ def main():
         # axes[1].spines["top"].set_visible(False)
 
         config["step_size"] = optim_step_size
-        ids = results.find_experiment_by(config, args.num_runs)
+        ids = results.find_experiment_by(config, exp_info.get("num_runs"))
         data = results.load(ids)
 
         mean = data.mean(axis=0)
 
-        if args.metric == "interim":
+        if exp_info.get("metric") == "interim":
             steps = int(len(mean) * 0.1)
             mean = mean[:steps]
         axes[0].plot(
@@ -137,10 +150,10 @@ def main():
         axes[0].spines["right"].set_visible(False)
         axes[0].spines["top"].set_visible(False)
 
-        if args.baseline == 1:
+        if exp_info.get("baseline") == 1:
             config["algorithm"] = "LSTD" if algo == "TD" else "ELSTD"
             config.pop("step_size", None)
-            ids = results.find_experiment_by(config, args.num_runs)
+            ids = results.find_experiment_by(config, exp_info.get("num_runs"))
             data = results.load(ids)
             data = data[:, -1]
             mean = data.mean()
@@ -160,7 +173,7 @@ def main():
                     "".__ne__,
                     [
                         f"{kw}_{val}" if val is not None else ""
-                        for (kw, val) in args.__dict__.items()
+                        for (kw, val) in exp_info.items()
                     ],
                 )
             )
