@@ -1,109 +1,111 @@
 {
-  "experiment": [
-    {
-      "problem": [
-        "Chain"
-      ],
-      "n_episodes": [
-        1000
-      ],
-      "max_episode_steps": [
-        0
-      ],
-      "episode_eval_freq": [
-        1
-      ],
-      "output_dir": [
-        "~/scratch/Chain/ChainPoly"
-      ],
-      "log_every_nth_episode": [
-        1000
-      ]
-    }
-  ],
-  "learners_common": [
-    {
-      "discount_rate": [
-        0.99
-      ],
-      "trace_decay": [
-        0.0
-      ],
-      "interest": [
-        "UI"
-      ],
-      "policy": [
-        "random-chain"
-      ],
-      "representations": [
+    "experiment_common": [
         {
-          "representations": [
-            "P"
-          ],
-          "num_dims": [
-            1
-          ],
-          "order": [
-            9
-          ],
-          "min_x": [
-            0
-          ],
-          "max_x": [
-            18
-          ],
-          "a": [
-            -1
-          ],
-          "b": [
-            1
-          ]
+            "episode_eval_freq": [
+                1
+            ],
+            "log_every_nth_episode": [
+                1000
+            ],
+            "max_episode_steps": [
+                0
+            ],
+            "n_episodes": [
+                100
+            ],
+            "output_dir": [
+                "~/scratch/Chain/ChainPoly"
+            ],
+            "problem": [
+                "Chain"
+            ]
         }
-      ]
-    }
-  ],
-  "simulator_common": [
-    {
-      "env": [
-        "Chain"
-      ]
-    }
-  ],
-  "experiments": [
-    {
-      "simulator": [
+    ],
+    "learners": [
         {
-          "num_states": [
-            19
-          ]
-        }
-      ],
-      "learner": [
-        {
-          "algorithm": [
-            "TD"
-          ],
-          "step_size": [
-            0.00078125,
-            0.003125,
-            0.0125,
-            0.05,
-            0.2
-          ]
+            "algorithm": [
+                "LSTD",
+                "ELSTD"
+            ]
         },
         {
-          "algorithm": [
-            "ETD"
-          ],
-          "step_size": [
-            0.00078125,
-            0.003125,
-            0.0125,
-            0.05,
-            0.2
-          ]
+            "algorithm": [
+                "TD",
+                "ETD"
+            ],
+            "step_size": [
+                0.1,
+                0.2,
+                0.4,
+                0.8,
+                1.6
+            ]
         }
-      ]
-    }
-  ]
+    ],
+    "learners_common": [
+        {
+            "discount_rate": [
+                0.99
+            ],
+            "interest": [
+                "UI"
+            ],
+            "policy": [
+                "random-chain"
+            ],
+            "trace_decay": [
+                0.0
+            ]
+        }
+    ],
+    "representations": [
+        {
+            "max_x": [
+                4
+            ],
+            "num_states": [
+                5
+            ],
+            "order": [
+                2
+            ]
+        },
+        {
+            "max_x": [
+                18
+            ],
+            "num_states": [
+                19
+            ],
+            "order": [
+                9
+            ]
+        }
+    ],
+    "representations_common": [
+        {
+            "a": [
+                -1
+            ],
+            "b": [
+                1
+            ],
+            "min_x": [
+                0
+            ],
+            "num_dims": [
+                1
+            ],
+            "representations": [
+                "P"
+            ]
+        }
+    ],
+    "simulator_common": [
+        {
+            "env": [
+                "Chain"
+            ]
+        }
+    ]
 }

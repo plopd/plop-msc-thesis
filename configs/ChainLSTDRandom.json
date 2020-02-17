@@ -1,115 +1,115 @@
 {
-  "experiment": [
-    {
-      "n_episodes": [
-        50000
-      ],
-      "max_episode_steps": [
-        0
-      ],
-      "episode_eval_freq": [
-        50000
-      ],
-      "output_dir": [
-        "~/scratch/Chain/ChainLSTDRandom"
-      ]
-    }
-  ],
-  "learners_common": [
-    {
-      "algorithm": [
-        "lstd",
-        "elstd"
-      ],
-      "discount_rate": [
-        1.0
-      ],
-      "trace_decay": [
-        0.0
-      ],
-      "interest": [
-        "UI"
-      ],
-      "policy": [
-        "random-chain"
-      ]
-    }
-  ],
-  "simulator_common": [
-    {
-      "env": [
-        "Chain"
-      ]
-    }
-  ],
-  "experiments": [
-    {
-      "simulator": [
+    "experiment": [
         {
-          "num_states": [
-            5
-          ]
+            "episode_eval_freq": [
+                50000
+            ],
+            "max_episode_steps": [
+                0
+            ],
+            "n_episodes": [
+                50000
+            ],
+            "output_dir": [
+                "~/scratch/Chain/ChainLSTDRandom"
+            ]
         }
-      ],
-      "learner": [
+    ],
+    "experiments": [
         {
-          "representations": [
-            {
-              "representations": [
-                "RB"
-              ],
-              "num_ones": [
-                3
-              ],
-              "num_dims": [
-                4
-              ]
-            },
-            {
-              "representations": [
-                "RNB"
-              ],
-              "num_dims": [
-                4
-              ]
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "simulator": [
+            "learner": [
+                {
+                    "representations": [
+                        {
+                            "num_dims": [
+                                4
+                            ],
+                            "num_ones": [
+                                3
+                            ],
+                            "representations": [
+                                "RB"
+                            ]
+                        },
+                        {
+                            "num_dims": [
+                                4
+                            ],
+                            "representations": [
+                                "RNB"
+                            ]
+                        }
+                    ]
+                }
+            ],
+            "simulator": [
+                {
+                    "num_states": [
+                        5
+                    ]
+                }
+            ]
+        },
         {
-          "num_states": [
-            19
-          ]
+            "learner": [
+                {
+                    "representations": [
+                        {
+                            "num_dims": [
+                                17
+                            ],
+                            "num_ones": [
+                                9
+                            ],
+                            "representations": [
+                                "RB"
+                            ]
+                        },
+                        {
+                            "num_dims": [
+                                17
+                            ],
+                            "representations": [
+                                "RNB"
+                            ]
+                        }
+                    ]
+                }
+            ],
+            "simulator": [
+                {
+                    "num_states": [
+                        19
+                    ]
+                }
+            ]
         }
-      ],
-      "learner": [
+    ],
+    "learners_common": [
         {
-          "representations": [
-            {
-              "representations": [
-                "RB"
-              ],
-              "num_dims": [
-                17
-              ],
-              "num_ones": [
-                9
-              ]
-            },
-            {
-              "representations": [
-                "RNB"
-              ],
-              "num_dims": [
-                17
-              ]
-            }
-          ]
+            "algorithm": [
+                "lstd",
+                "elstd"
+            ],
+            "discount_rate": [
+                1.0
+            ],
+            "interest": [
+                "UI"
+            ],
+            "policy": [
+                "random-chain"
+            ],
+            "trace_decay": [
+                0.0
+            ]
         }
-      ]
-    }
-  ]
+    ],
+    "simulator_common": [
+        {
+            "env": [
+                "Chain"
+            ]
+        }
+    ]
 }

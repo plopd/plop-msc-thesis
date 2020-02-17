@@ -1,5 +1,7 @@
 import argparse
 
+import numpy as np
+
 
 def main():
     """
@@ -16,7 +18,7 @@ def main():
 
     args = parser.parse_args()
 
-    step_sizes_td = [0.1 * 2 ** i for i in range(*args.range)]
+    step_sizes_td = [np.float32(0.1 * 2 ** i) for i in range(*args.range)]
 
     return step_sizes_td
 

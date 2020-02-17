@@ -9,7 +9,7 @@ agent_info = {
     "num_states": 19,
     "representations": "TC",
     "num_dims": 1,
-    "tiles_per_dim": 19,
+    "tiles_per_dim": 18,
     "tilings": 1,
     "min_x": 0,
     "max_x": 18,
@@ -99,26 +99,3 @@ def test_emphasis_reset_at_start_of_episode(algorithm):
     rl_glue.rl_init(agent_init_info=agent_info, env_init_info=env_info)
     rl_glue.rl_start()
     assert rl_glue.rl_agent_message("get emphasis trace") == 0.0
-
-
-@pytest.mark.parametrize(
-    "env, algorithm",
-    [("ChainDeterministic", "TDTileCoding"), ("ChainDeterministic", "ETDTileCoding")],
-)
-def test_td_update_one_timestep(env, algorithm):
-    agent_info["algorithm"] = algorithm
-    agent_info["trace_decay"] = 1.0
-    agent_info["discount_rate"] = 0.0
-    env_info["env"] = env
-    agent = get_agent(agent_info["algorithm"])
-
-    rl_glue = RLGlue(environment, agent)
-
-    for episode in range(1, 2):
-        rl_glue.rl_init(agent_init_info=agent_info, env_init_info=env_info)
-        rl_glue.rl_episode(0)
-        weight_vector = rl_glue.rl_agent_message("get weight vector")
-
-        assert np.allclose(
-            weight_vector[:-episode], np.zeros(weight_vector.shape[0] - episode)
-        )

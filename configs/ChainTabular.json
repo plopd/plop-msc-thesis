@@ -1,91 +1,92 @@
 {
-  "experiment": [
-    {
-      "problem": [
-        "Chain"
-      ],
-      "n_episodes": [
-        50000
-      ],
-      "max_episode_steps": [
-        0
-      ],
-      "episode_eval_freq": [
-        1
-      ],
-      "output_dir": [
-        "~/scratch/Chain/ChainTabular"
-      ],
-      "log_every_nth_episode": [
-        1000
-      ]
-    }
-  ],
-  "learners_common": [
-    {
-      "discount_rate": [
-        0.99
-      ],
-      "trace_decay": [
-        0.0
-      ],
-      "interest": [
-        "UI"
-      ],
-      "step_size": [
-        1.52587890625e-06,
-        6.103515625e-06,
-        2.44140625e-05,
-        9.765625e-05,
-        0.000390625,
-        0.0015625,
-        0.00625,
-        0.025,
-        0.1,
-        0.4,
-        1.6
-      ],
-      "policy": [
-        "random-chain"
-      ],
-      "representations": [
+    "experiment": [
         {
-          "representations": [
-            "TA"
-          ]
+            "episode_eval_freq": [
+                1
+            ],
+            "log_every_nth_episode": [
+                1000
+            ],
+            "max_episode_steps": [
+                0
+            ],
+            "n_episodes": [
+                50000
+            ],
+            "output_dir": [
+                "~/scratch/Chain/ChainTabular"
+            ],
+            "problem": [
+                "Chain"
+            ]
         }
-      ]
-    }
-  ],
-  "simulator_common": [
-    {
-      "env": [
-        "Chain"
-      ]
-    }
-  ],
-  "experiments": [
-    {
-      "simulator": [
+    ],
+    "experiments": [
         {
-          "num_states": [
-            5,
-            19
-          ]
+            "learner": [
+                {
+                    "algorithm": [
+                        "TD"
+                    ]
+                },
+                {
+                    "algorithm": [
+                        "ETD"
+                    ]
+                }
+            ],
+            "simulator": [
+                {
+                    "num_states": [
+                        5,
+                        19
+                    ]
+                }
+            ]
         }
-      ],
-      "learner": [
+    ],
+    "learners_common": [
         {
-          "algorithm": [
-            "TD"
-          ]
-        },
-        {
-          "algorithm": [
-            "ETD"
-          ]
+            "discount_rate": [
+                0.99
+            ],
+            "interest": [
+                "UI"
+            ],
+            "policy": [
+                "random-chain"
+            ],
+            "representations": [
+                {
+                    "representations": [
+                        "TA"
+                    ]
+                }
+            ],
+            "step_size": [
+                3.814697265625e-07,
+                1.52587890625e-06,
+                6.103515625e-06,
+                2.44140625e-05,
+                9.765625e-05,
+                0.000390625,
+                0.0015625,
+                0.00625,
+                0.025,
+                0.1,
+                0.4,
+                1.6
+            ],
+            "trace_decay": [
+                0.0
+            ]
         }
-      ]
-    }
-  ]
+    ],
+    "simulator_common": [
+        {
+            "env": [
+                "Chain"
+            ]
+        }
+    ]
 }

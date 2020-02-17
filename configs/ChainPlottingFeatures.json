@@ -1,59 +1,57 @@
 {
-  "experiments_common": [
-    {
-      "num_runs": [
-        100
-      ],
-      "metric": [
-        "end",
-        "interim",
-        "auc"
-      ],
-      "experiment": [
-        "ChainDependent"
-      ]
-    }
-  ],
-  "learners_common": [
-    {
-      "baseline": [
-        1
-      ],
-      "discount_rate": [
-        0.99
-      ],
-      "trace_decay": [
-        0.0
-      ],
-      "interest": [
-        "UI"
-      ]
-    }
-  ],
-  "simulator_common": [
-    {
-      "env": [
-        "Chain"
-      ]
-    }
-  ],
-  "experiments": [
-    {
-      "simulator": [
+    "experiments": [
         {
-          "num_states": [
-            5,
-            19
-          ]
+            "representations": [
+                {
+                    "experiment": [
+                        "ChainPoly"
+                    ],
+                    "representations": [
+                        "P"
+                    ]
+                }
+            ],
+            "simulator": [
+                {
+                    "num_states": [
+                        5,
+                        19
+                    ]
+                }
+            ]
         }
-      ],
-      "representations": [
+    ],
+    "experiments_common": [
         {
-          "representations": [
-            "D"
-          ]
+            "metric": [
+                "interim"
+            ],
+            "num_runs": [
+                3
+            ]
         }
-      ]
-    }
-  ]
+    ],
+    "learners_common": [
+        {
+            "baseline": [
+                1
+            ],
+            "discount_rate": [
+                0.99
+            ],
+            "interest": [
+                "UI"
+            ],
+            "trace_decay": [
+                0.0
+            ]
+        }
+    ],
+    "simulator_common": [
+        {
+            "env": [
+                "Chain"
+            ]
+        }
+    ]
 }

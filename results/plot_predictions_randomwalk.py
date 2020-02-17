@@ -6,7 +6,6 @@ import matplotlib
 import matplotlib.pyplot as plt
 import numpy as np
 from alphaex.sweeper import Sweeper
-from tqdm import tqdm
 
 from analysis.colormap import colors
 from analysis.colormap import linestyles
@@ -67,8 +66,8 @@ def main():
 
     print(json.dumps(config, indent=4))
 
-    # ax2 = axes[1].twiny()
     for algo in exp_info.get("algos"):
+        print(f"\n##### {algo}")
         config["algorithm"] = algo
         config.pop("step_size", None)
         step_sizes = results.get_param_val(
@@ -81,13 +80,12 @@ def main():
         optim_step_size = None
         current_optim_err = np.inf
 
-        for step_size in tqdm(step_sizes):
+        for step_size in step_sizes:
             config["step_size"] = step_size
             ids = results.find_experiment_by(config, exp_info.get("num_runs"))
             data = results.load(ids)
             mean, se = get_data_by(data, name=exp_info.get("metric"))
             cutoff = data[:, 0].mean()
-            # print(algo, step_size, mean, cutoff)
             # Find best instance of algorithm
             if mean < current_optim_err:
                 current_optim_err = mean
@@ -106,49 +104,56 @@ def main():
         means = np.array(means)
         std_errors = np.array(std_errors)
 
-        # ax = ax2 if algo == "ETD" else axes[1]
-
-        ax = axes[1]
-
-        ax.scatter(xs, means, c=colors.get(config.get("algorithm")), marker="o")
-        ax.errorbar(
+        axes[1].scatter(xs, means, c=colors.get(config.get("algorithm")), marker="o")
+        axes[1].errorbar(
             xs,
             means,
             yerr=2.5 * std_errors,
             color=colors.get(config.get("algorithm")),
             capsize=5,
         )
-
-        ax.tick_params(axis="x", colors=colors.get(config.get("algorithm")))
-
-        # axes[1].set_xticks(
-        #     [3.0517578125e-06, 2.44140625e-05, 0.0001953125, 0.0015625, 0.0125, 0.1])
-        # axes[1].set_xticklabels(
-        #     [3.0517578125e-06, 2.44140625e-05, 0.0001953125, 0.0015625, 0.0125, 0.1])
-
-        ax.set_xscale("log", basex=2)
-        # axes[1].spines["right"].set_visible(False)
-        # axes[1].spines["top"].set_visible(False)
+        axes[1].tick_params(axis="x", colors=colors.get(config.get("algorithm")))
+        axes[1].set_xscale("log", basex=2)
+        axes[1].spines["right"].set_visible(False)
+        axes[1].spines["top"].set_visible(False)
+        axes[1].tick_params(labelbottom=False, labelleft=False)
+        axes[1].set_yticks([0.0, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4])
+        print(
+            f"----------- SSA:\ny-axis: "
+            f"{[np.float32(label) for label in axes[1].get_yticks()]},\nx-axis: "
+            f"{[np.log2(label) for label in axes[1].get_xticks()]}"
+        )
 
         config["step_size"] = optim_step_size
         ids = results.find_experiment_by(config, exp_info.get("num_runs"))
         data = results.load(ids)
 
         mean = data.mean(axis=0)
+        se = data.std(axis=0) / np.sqrt(exp_info.get("num_runs"))
 
         if exp_info.get("metric") == "interim":
             steps = int(len(mean) * 0.1)
             mean = mean[:steps]
-        axes[0].plot(
-            mean,
-            c=colors.get(config.get("algorithm")),
-            label=f"{algo}, {int(np.log10(optim_step_size))}",
+            se = se[:steps]
+        axes[0].plot(mean, c=colors.get(config.get("algorithm")))
+        axes[0].fill_between(
+            np.arange(len(mean)),
+            mean + 2.5 * se,
+            mean - 2.5 * se,
+            color=colors.get(config.get("algorithm")),
+            alpha=0.15,
         )
-
-        axes[0].legend()
-
         axes[0].spines["right"].set_visible(False)
         axes[0].spines["top"].set_visible(False)
+        # Hide ticklabeles
+        axes[0].tick_params(labelbottom=False, labelleft=False)
+        axes[0].set_yticks([0.0, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4])
+
+        print(
+            f"----------- LCA:\ny-axis: {[np.float32(label) for label in axes[0].get_yticks()]},"
+            f"\nx-axis: {[label for label in axes[0].get_xticks()]}"
+        )
+        print(f"optim_step_size: 2^{np.float32((np.log2(optim_step_size)))}")
 
         if exp_info.get("baseline") == 1:
             config["algorithm"] = "LSTD" if algo == "TD" else "ELSTD"

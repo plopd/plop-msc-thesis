@@ -8,6 +8,7 @@ from utils.utils import remove_keys_with_none_value
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--num_runs", type=int, default=1)
+parser.add_argument("--num_states", type=int)
 parser.add_argument("--representations", type=str)
 parser.add_argument("--env", type=str)
 parser.add_argument("--num_dims", type=int)
@@ -30,6 +31,7 @@ sweeper = Sweeper(
 
 search_dct = {
     "env": args.env,
+    "num_states": args.num_states,
     "representations": args.representations,
     "num_dims": args.num_dims,
     "num_features": args.num_features,
