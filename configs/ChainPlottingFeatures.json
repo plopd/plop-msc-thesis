@@ -3,6 +3,9 @@
         {
             "representations": [
                 {
+                    "baseline": [
+                        1
+                    ],
                     "experiment": [
                         "ChainPoly"
                     ],
@@ -11,6 +14,9 @@
                     ]
                 },
                 {
+                    "baseline": [
+                        1
+                    ],
                     "experiment": [
                         "ChainDependent"
                     ],
@@ -19,6 +25,9 @@
                     ]
                 },
                 {
+                    "baseline": [
+                        0
+                    ],
                     "experiment": [
                         "ChainTabular"
                     ],
@@ -51,9 +60,6 @@
     ],
     "learners_common": [
         {
-            "baseline": [
-                1
-            ],
             "discount_rate": [
                 0.99
             ],
