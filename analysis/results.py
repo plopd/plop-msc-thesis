@@ -72,7 +72,7 @@ def get_data_auc(data):
     return auc_runs.mean(), auc_runs.std() / np.sqrt(n_runs)
 
 
-def get_data_end(data, percent=0.0025):
+def get_data_end(data, percent):
     n_runs, n_episodes = data.shape
     steps = int(n_episodes * percent)
     end_data = data[:, -steps:]
@@ -82,7 +82,7 @@ def get_data_end(data, percent=0.0025):
     return end_data.mean(), end_data.std() / np.sqrt(n_runs)
 
 
-def get_data_interim(data, percent=0.0025):
+def get_data_interim(data, percent):
     n_runs, n_episodes = data.shape
     steps = int(n_episodes * percent)
     interim_data = data[:, :steps]
@@ -92,11 +92,11 @@ def get_data_interim(data, percent=0.0025):
     return interim_data.mean(), interim_data.std() / np.sqrt(n_runs)
 
 
-def get_data_by(data, name):
+def get_data_by(data, name, percent=None):
     if name == "end":
-        return get_data_end(data)
+        return get_data_end(data, percent)
     elif name == "interim":
-        return get_data_interim(data)
+        return get_data_interim(data, percent)
     elif name == "auc":
         return get_data_auc(data)
     raise Exception("Unknown name given.")
