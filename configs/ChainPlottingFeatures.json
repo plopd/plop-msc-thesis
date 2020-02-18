@@ -9,6 +9,22 @@
                     "representations": [
                         "P"
                     ]
+                },
+                {
+                    "experiment": [
+                        "ChainDependent"
+                    ],
+                    "representations": [
+                        "D"
+                    ]
+                },
+                {
+                    "experiment": [
+                        "ChainTabular"
+                    ],
+                    "representations": [
+                        "TA"
+                    ]
                 }
             ],
             "simulator": [
@@ -24,10 +40,12 @@
     "experiments_common": [
         {
             "metric": [
-                "interim"
+                "interim",
+                "end",
+                "auc"
             ],
             "num_runs": [
-                3
+                100
             ]
         }
     ],

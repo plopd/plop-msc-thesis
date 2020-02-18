@@ -55,13 +55,18 @@ def main():
         f"{exp_info.get('experiment')}.json", datapath, exp_info.get("experiment")
     )
 
-    config = exp_info.copy()
-    config.pop("experiment", None)
-    config.pop("algos", None)
-    config.pop("metric", None)
-    config.pop("num_runs", None)
-    config.pop("baseline", None)
-    config.pop("run", None)
+    config = {
+        "num_states": param_cfg.get("num_states"),
+        "order": param_cfg.get("order"),
+        "env": param_cfg.get("env"),
+        "representations": param_cfg.get("representations"),
+        "num_ones": param_cfg.get("num_ones"),
+        "num_features": param_cfg.get("num_features"),
+        "num_dims": param_cfg.get("num_dims"),
+        "interest": param_cfg.get("interest"),
+        "discount_rate": param_cfg.get("discount_rate"),
+        "trace_decay": param_cfg.get("trace_decay"),
+    }
     remove_keys_with_none_value(config)
 
     print(json.dumps(config, indent=4))
