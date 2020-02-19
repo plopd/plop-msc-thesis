@@ -49,12 +49,46 @@
     "experiments_common": [
         {
             "metric": [
-                "interim",
-                "end",
-                "auc"
+                {
+                    "metric": [
+                        "interim"
+                    ],
+                    "percent": [
+                        0.0025
+                    ]
+                },
+                {
+                    "metric": [
+                        "end"
+                    ],
+                    "percent": [
+                        0.0025
+                    ]
+                },
+                {
+                    "metric": [
+                        "auc"
+                    ],
+                    "percent": [
+                        1
+                    ]
+                }
             ],
             "num_runs": [
                 100
+            ],
+            "plotting": [
+                {
+                    "step": [
+                        0.05
+                    ],
+                    "y_max": [
+                        0.4
+                    ],
+                    "y_min": [
+                        0.0
+                    ]
+                }
             ]
         }
     ],

@@ -27,6 +27,7 @@ def get_fig():
         }
 
         FR = get_representation(name="P", **kwargs_representation, unit_norm=True)
+        print(FR.C.shape, FR.C)
 
         features = np.array([FR[states[i]] for i in range(num_states)])
 

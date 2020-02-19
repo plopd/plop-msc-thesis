@@ -1,0 +1,118 @@
+{
+    "experiment_common": [
+        {
+            "episode_eval_freq": [
+                1
+            ],
+            "log_every_nth_episode": [
+                1000
+            ],
+            "max_episode_steps": [
+                0
+            ],
+            "n_episodes": [
+                50000
+            ],
+            "output_dir": [
+                "~/scratch/Chain/ChainRandom"
+            ],
+            "problem": [
+                "Chain"
+            ]
+        }
+    ],
+    "learners": [
+        {
+            "algorithm": [
+                "LSTD",
+                "ELSTD"
+            ]
+        },
+        {
+            "algorithm": [
+                "TD",
+                "ETD"
+            ],
+            "step_size": [
+                1.1920929e-08,
+                4.7683717e-08,
+                1.9073487e-07,
+                7.6293946e-07,
+                1.5258789e-06,
+                6.1035157e-06,
+                1.2207031e-05,
+                2.4414063e-05,
+                4.8828126e-05,
+                9.765625e-05,
+                0.0001953125,
+                0.000390625,
+                0.00078125,
+                0.0015625,
+                0.003125,
+                0.00625,
+                0.0125,
+                0.025,
+                0.05,
+                0.1,
+                0.2,
+                0.4,
+                0.8,
+                1.6
+            ]
+        }
+    ],
+    "learners_common": [
+        {
+            "discount_rate": [
+                0.99
+            ],
+            "interest": [
+                "UI"
+            ],
+            "policy": [
+                "random-chain"
+            ],
+            "trace_decay": [
+                0.0
+            ]
+        }
+    ],
+    "representations": [
+        {
+            "num_features": [
+                3
+            ],
+            "num_ones": [
+                2
+            ],
+            "num_states": [
+                5
+            ]
+        },
+        {
+            "num_features": [
+                10
+            ],
+            "num_ones": [
+                5
+            ],
+            "num_states": [
+                19
+            ]
+        }
+    ],
+    "representations_common": [
+        {
+            "representations": [
+                "RB"
+            ]
+        }
+    ],
+    "simulator_common": [
+        {
+            "env": [
+                "Chain"
+            ]
+        }
+    ]
+}

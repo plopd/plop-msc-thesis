@@ -18,6 +18,13 @@ def emphasis_lim(interest, discount_rate, trace_decay):
     return emphasis_lim
 
 
+def per_feature_step_size_fourier_KOT(step_size, num_features, C):
+    step_size = step_size * np.ones(num_features)
+    step_size[1:] /= np.sqrt(np.sum(np.square(C[1:, :]), axis=1))
+
+    return step_size
+
+
 def remove_keys_with_none_value(dct):
     """
     Remove any keys with value None

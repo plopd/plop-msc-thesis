@@ -42,6 +42,7 @@ class Chain(BaseExperiment):
         self.state_distribution = np.ones_like(self.true_values) * 1 / len(self.states)
         self.msve_error = np.zeros(self.n_episodes // self.episode_eval_freq + 1)
         FR = get_representation(name=agent_info.get("representations"), **agent_info)
+        self.logger.info(f"Run: {self.id}," f"{FR.features}")
 
         self.representations = np.array(
             [FR[self.states[i]] for i in range(self.states.shape[0])]

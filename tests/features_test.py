@@ -2,6 +2,7 @@ import numpy as np
 import pytest
 
 from representations.representations import get_representation
+from utils.utils import per_feature_step_size_fourier_KOT
 
 
 @pytest.mark.parametrize("num_states", [5, 19])
@@ -11,24 +12,6 @@ def test_tabular_features(num_states):
 
     tabular_features = np.vstack([TF[states[i]] for i in range(num_states)])
     assert np.allclose(np.sum(tabular_features, axis=1), np.ones(num_states))
-
-
-# @pytest.mark.parametrize("num_states", [5, 19])
-# def test_inverted_features_all_columns_sum_up_to_in_features_minus_one(num_states):
-#     states = np.arange(num_states).reshape(-1, 1)
-#     dependent_features = np.vstack(
-#         [
-#             get_feature(
-#                 states[i],
-#                 **{"representations": "inverted", "num_dims": num_states},
-#                 unit_norm=False
-#             )
-#             for i in range(num_states)
-#         ]
-#     )
-#     assert np.allclose(
-#         np.sum(dependent_features, axis=0), np.ones(num_states) * (num_states - 1)
-#     )
 
 
 @pytest.mark.parametrize("num_states", [5, 19])
@@ -102,3 +85,56 @@ def test_same_random_feature_for_state_in_an_episode():
     assert np.allclose(random_features[3], random_features[4])
 
     assert np.allclose(random_features[5], random_features[6])
+
+
+@pytest.mark.parametrize("num_states", [5])
+def test_step_size_fourier_cosine_features(num_states):
+    step_size = 0.5
+
+    F = get_representation(
+        "F",
+        **{
+            "min_x": 0,
+            "max_x": num_states - 1,
+            "a": 0,
+            "b": 1,
+            "num_dims": 1,
+            "order": 3,
+        }
+    )
+
+    new_step_size = per_feature_step_size_fourier_KOT(step_size, F.num_features, F.C)
+
+    assert np.array_equal(
+        new_step_size, np.array([step_size, step_size, step_size / 2, step_size / 3])
+    )
+
+    F = get_representation(
+        "F",
+        **{
+            "min_x": 0,
+            "max_x": num_states - 1,
+            "a": 0,
+            "b": 1,
+            "num_dims": 2,
+            "order": 2,
+        }
+    )
+    new_step_size = per_feature_step_size_fourier_KOT(step_size, F.num_features, F.C)
+
+    assert np.array_equal(
+        new_step_size,
+        np.array(
+            [
+                step_size,
+                step_size,
+                step_size / 2,
+                step_size,
+                step_size / np.sqrt(2),
+                step_size / np.sqrt(5),
+                step_size / 2,
+                step_size / np.sqrt(5),
+                step_size / np.sqrt(8),
+            ]
+        ),
+    )

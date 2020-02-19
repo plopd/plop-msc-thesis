@@ -3,6 +3,7 @@ import numpy as np
 from agents.Base import BaseAgent
 from agents.policies import get_action_from_policy
 from representations.representations import get_representation
+from utils.utils import per_feature_step_size_fourier_KOT
 
 
 class TD(BaseAgent):
@@ -30,6 +31,11 @@ class TD(BaseAgent):
         )
         self.weights = np.zeros(self.FR.num_features)
         self.eligibility = np.zeros(self.FR.num_features)
+
+        if agent_info.get("representations") == "F" and self.step_size is not None:
+            self.step_size = per_feature_step_size_fourier_KOT(
+                self.step_size, self.FR.num_features, self.FR.C
+            )
 
     def agent_start(self, observation):
         self.agent_cleanup()
