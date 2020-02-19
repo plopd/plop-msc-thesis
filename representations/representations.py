@@ -1,5 +1,6 @@
 from representations.dependent import DependentRepresentations
-from representations.polynomial import BasisRepresentation
+from representations.fourier import FourierRepresentation
+from representations.polynomial import PolynomialRepresentation
 from representations.random import RandomRepresentations
 from representations.random_cluster import RandomClusterRepresentation
 from representations.tabular import TabularRepresentations
@@ -30,16 +31,28 @@ def get_representation(name, unit_norm=True, **kwargs):
         )
 
         return RF
-    elif name == "P" or name == "F":
+    elif name == "P":
         order = kwargs.get("order")
         num_dims = kwargs.get("num_dims")
         min_x = kwargs.get("min_x")
         max_x = kwargs.get("max_x")
         a = kwargs.get("a")
         b = kwargs.get("b")
-        BR = BasisRepresentation(name, num_dims, order, min_x, max_x, a, b, unit_norm)
+        P = PolynomialRepresentation(
+            name, num_dims, order, min_x, max_x, a, b, unit_norm
+        )
 
-        return BR
+        return P
+    elif name == "F":
+        order = kwargs.get("order")
+        num_dims = kwargs.get("num_dims")
+        min_x = kwargs.get("min_x")
+        max_x = kwargs.get("max_x")
+        a = kwargs.get("a")
+        b = kwargs.get("b")
+        F = FourierRepresentation(name, num_dims, order, min_x, max_x, a, b, unit_norm)
+
+        return F
     elif name == "TA":
         num_states = kwargs.get("num_states")
         TR = TabularRepresentations(num_states)

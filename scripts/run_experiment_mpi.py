@@ -5,8 +5,10 @@ from alphaex.sweeper import Sweeper
 from mpi4py import MPI
 
 from experiments.experiments import get_experiment
+from utils.decorators import timer
 
 
+@timer
 def main():
     comm = MPI.COMM_WORLD
     sweep_id = comm.Get_rank()
@@ -51,7 +53,7 @@ def main():
         "episode_eval_freq": param_cfg.get("episode_eval_freq"),
         "n_episodes": param_cfg.get("n_episodes"),
         "output_dir": param_cfg.get("output_dir"),
-        "log_every_nth_episode": param_cfg.get("log_every_nth_episode", 1000),
+        "log_every_nth_episode": param_cfg.get("log_every_nth_episode"),
     }
 
     exp = get_experiment(exp_info.get("problem"), agent_info, env_info, exp_info)

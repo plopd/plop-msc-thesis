@@ -18,6 +18,14 @@ def emphasis_lim(interest, discount_rate, trace_decay):
     return emphasis_lim
 
 
+def minmax_normalization_ab(x, min_x, max_x, a, b):
+    # https://stats.stackexchange.com/questions/178626/how-to-normalize-data-between
+    # -1-and-1
+    x_norm = a + ((x - min_x) * (b - a)) / (max_x - min_x)
+
+    return x_norm
+
+
 def per_feature_step_size_fourier_KOT(step_size, num_features, C):
     step_size = step_size * np.ones(num_features)
     step_size[1:] /= np.sqrt(np.sum(np.square(C[1:, :]), axis=1))

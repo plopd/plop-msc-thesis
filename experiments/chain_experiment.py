@@ -42,11 +42,10 @@ class Chain(BaseExperiment):
         self.state_distribution = np.ones_like(self.true_values) * 1 / len(self.states)
         self.msve_error = np.zeros(self.n_episodes // self.episode_eval_freq + 1)
         FR = get_representation(name=agent_info.get("representations"), **agent_info)
-        self.logger.info(f"Run: {self.id}," f"{FR.features}")
 
         self.representations = np.array(
-            [FR[self.states[i]] for i in range(self.states.shape[0])]
-        ).reshape(self.states.shape[0], -1)
+            [FR[self.states[i]] for i in range(len(self.states))]
+        ).reshape(len(self.states), FR.num_features)
 
         self.error = get_objective(
             "MSVE",
@@ -71,8 +70,6 @@ class Chain(BaseExperiment):
 
         for episode in range(1, self.n_episodes + 1):
             self._learn(episode)
-            # self.timesteps.append(self.rl_glue.rl_env_message("get timesteps"))
-        # print(np.array(self.timesteps).mean(), np.array(self.timesteps).std())
 
     def _learn(self, episode):
         self.rl_glue.rl_episode(self.max_episode_steps)

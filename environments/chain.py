@@ -14,7 +14,6 @@ class Chain(BaseEnvironment):
     def __init__(self):
         super().__init__()
         self.num_states = None
-        # self.num_timesteps = 0
 
     def env_init(self, env_info={}):
         self.rand_generator = np.random.RandomState(env_info.get("seed"))
@@ -58,8 +57,6 @@ class Chain(BaseEnvironment):
 
         self.reward_obs_term = (reward, current_state, is_terminal)
 
-        # self.num_timesteps += 1
-
         return self.reward_obs_term
 
     def env_cleanup(self):
@@ -68,6 +65,4 @@ class Chain(BaseEnvironment):
     def env_message(self, message):
         if message == "get episode" and self.log_episodes:
             return self.experience_episode
-        # if message == "get timesteps":
-        #     return self.num_timesteps
         raise Exception("Unexpected message given.")

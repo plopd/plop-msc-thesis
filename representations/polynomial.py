@@ -3,8 +3,10 @@ import itertools
 
 import numpy as np
 
+from utils.utils import minmax_normalization_ab
 
-class BasisRepresentation:
+
+class PolynomialRepresentation:
     def __init__(self, name, num_dims, order, min_x, max_x, a, b, unit_norm=True):
         self.name = name
         self.unit_norm = unit_norm
@@ -13,15 +15,12 @@ class BasisRepresentation:
         self.a = a
         self.b = b
 
-        if name != "P" and name != "F":
-            raise Exception("Unknown name given.")
-
         self.num_features = (order + 1) ** num_dims
 
         c = [i for i in range(order + 1)]
-        self.C = np.array(
-            list(itertools.product(*[c for _ in range(num_dims)]))
-        ).reshape((-1, num_dims))
+        self.C = np.array(list(itertools.product(c, repeat=num_dims))).reshape(
+            (self.num_features, num_dims)
+        )
 
     def __getitem__(self, x):
 
@@ -31,17 +30,9 @@ class BasisRepresentation:
             and self.a is not None
             and self.b is not None
         ):
-            # https://stats.stackexchange.com/questions/178626/how-to-normalize-data-between-1-and-1
-            x = (self.b - self.a) * (x - self.min_x) / (
-                self.max_x - self.min_x
-            ) + self.a
+            x = minmax_normalization_ab(x, self.min_x, self.max_x, self.a, self.b)
 
-        features = np.zeros(self.num_features)
-
-        if self.name == "P":
-            features = np.prod(np.power(x, self.C), axis=1)
-        elif self.name == "F":
-            features = np.cos(np.pi * np.dot(self.C, x))
+        features = np.prod(np.power(x, self.C), axis=1)
 
         if self.unit_norm:
             features = features / np.linalg.norm(features)

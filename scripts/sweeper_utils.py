@@ -7,7 +7,7 @@ from alphaex.sweeper import Sweeper
 from utils.utils import remove_keys_with_none_value
 
 parser = argparse.ArgumentParser()
-parser.add_argument("--num_runs", type=int, default=1)
+parser.add_argument("--num_runs", type=int)
 parser.add_argument("--num_states", type=int)
 parser.add_argument("--representations", type=str)
 parser.add_argument("--env", type=str)
@@ -17,7 +17,8 @@ parser.add_argument("--interest", type=str)
 parser.add_argument("--tilings", type=int)
 parser.add_argument("--num_ones", type=int)
 parser.add_argument("--step_size", type=float)
-parser.add_argument("--lmbda", type=float)
+parser.add_argument("--trace_decay", type=float)
+parser.add_argument("--discount_rate", type=float)
 parser.add_argument("--algorithm", type=str)
 parser.add_argument("--order", type=float)
 parser.add_argument("--config_filename", type=str, required=True)
@@ -39,7 +40,8 @@ search_dct = {
     "tilings": args.tilings,
     "num_ones": args.num_ones,
     "step_size": args.step_size,
-    "trace_decay": args.lmbda,
+    "trace_decay": args.trace_decay,
+    "discount_rate": args.discount_rate,
     "algorithm": args.algorithm,
     "order": args.order,
 }
@@ -49,11 +51,11 @@ remove_keys_with_none_value(search_dct)
 search_lst = sweeper.search(search_dct, args.num_runs)
 
 for exp in search_lst:
-    print(json.dumps(exp, indent=4))
+    print(json.dumps(exp, indent=2))
 
 print(
-    f"Runs: {args.num_runs}, "
-    f"Unique instances: {sweeper.total_combinations}, "
-    f"Total instances: {sweeper.total_combinations*args.num_runs}, "
-    f"Instances/Total: {len(search_lst)}/{sweeper.total_combinations}"
+    f"Number of runs: {args.num_runs},\n"
+    f"Total number of combinations (per run): {sweeper.total_combinations},\n"
+    f"Total number of combinations (over all runs): {sweeper.total_combinations*args.num_runs},\n"
+    f"Found combinations / Total number of combinations (per run): {len(search_lst)}/{sweeper.total_combinations}"
 )
