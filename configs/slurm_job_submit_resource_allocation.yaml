@@ -1,0 +1,9 @@
+cluster: mp2
+ problem1: Plotting Random Walk
+  type: job-array
+  time: 00:30:00 (HH:MM:SS)
+  mem_per_cpu: 256 (MB or G)
+ problem2: Random Walk
+   type: job-array
+   time: 00:35:00 (HH:MM:SS)
+   mem_per_cpu: 128 (MB or G)

@@ -27,7 +27,7 @@ class Chain(BaseExperiment):
         self.id = experiment_info.get("id")
         self.max_episode_steps = experiment_info.get("max_episode_steps")
         self.output_dir = Path(experiment_info.get("output_dir")).expanduser()
-        self.log_every_nth_episode = experiment_info.get("log_every_nth_episode", 1000)
+        self.log_every_nth_episode = experiment_info.get("log_every_nth_episode")
         path_exists(self.output_dir)
         path_exists(self.output_dir / "logs")
         self.logger = get_simple_logger(

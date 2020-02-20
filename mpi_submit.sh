@@ -2,5 +2,6 @@
 
 NTASKS=$1
 CONFIG_FILENAME=$2
+PYTHON_MODULE=$3
 
-mpiexec -n $NTASKS python -m scripts.run_experiment_mpi $CONFIG_FILENAME
+mpiexec -n $NTASKS python -m $PYTHON_MODULE $CONFIG_FILENAME

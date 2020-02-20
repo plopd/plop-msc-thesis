@@ -59,7 +59,12 @@ class Result:
     def load(self, ids):
         data = []
         for idx in ids:
-            data.append(np.load(self.datapath / f"{self.experiment}" / f"{idx}.npy"))
+            try:
+                data.append(
+                    np.load(self.datapath / f"{self.experiment}" / f"{idx}.npy")
+                )
+            except FileNotFoundError:
+                pass
         data = np.vstack(data)
         return data
 

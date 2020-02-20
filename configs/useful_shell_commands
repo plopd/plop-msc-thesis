@@ -1,0 +1,5 @@
+find ./ChainPoly/ | grep -Eo '[0-9]{1,4}' > pred_temp.txt
+
+\ls ChainTabular | wc -l
+
+sacct -j 4609945 --format=JobID,JobName,ReqMem,MaxRSS,Elapsed

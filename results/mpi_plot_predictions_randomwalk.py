@@ -6,6 +6,7 @@ import matplotlib
 import matplotlib.pyplot as plt
 import numpy as np
 from alphaex.sweeper import Sweeper
+from mpi4py import MPI
 
 from analysis.colormap import colors
 from analysis.colormap import linestyles
@@ -19,8 +20,9 @@ matplotlib.rcParams.update({"font.size": 18})
 
 
 def main():
-    sweep_id = int(sys.argv[1].strip(","))
-    config_filename = sys.argv[2]
+    comm = MPI.COMM_WORLD
+    sweep_id = comm.Get_rank()
+    config_filename = sys.argv[1]
 
     sweeper = Sweeper(Path(__file__).parents[1] / "configs" / f"{config_filename}.json")
 
@@ -139,10 +141,8 @@ def main():
             config.pop("step_size", None)
             ids = results.find_experiment_by(config, exp_info.get("num_runs"))
             data = results.load(ids)
-            mean = data[
-                :, -1
-            ].mean()  # During early learning the inverse of A may be unstable
-
+            mean = data.mean()
+            print(algo, exp_info.get("num_states"), mean, exp_info.get("metric"))
             axes[0].axhline(
                 mean,
                 xmin=0,
@@ -151,7 +151,7 @@ def main():
                 label=config["algorithm"],
                 linestyle=linestyles.get(algo),
             )
-        axes[0].legend()
+            axes[0].legend()
 
         ################ PLOT SSA ####################
         axes[1].scatter(xs, means, c=color, marker="o")
@@ -161,7 +161,7 @@ def main():
         axes[1].set_xscale("log")
         axes[1].set_xlabel("Step size")
 
-        ################ HOUSEKEEPING ####################
+        ############### HOUSEKEEPING ####################
         print(
             f"----------- SSA:\ny-axis: "
             f"{[np.float32(label) for label in axes[1].get_yticks()]},\nx-axis: "
