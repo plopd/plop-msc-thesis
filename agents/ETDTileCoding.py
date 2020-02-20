@@ -5,6 +5,12 @@ from agents.TDTileCoding import TDTileCoding
 
 
 class ETDTileCoding(ETD, TDTileCoding):
+    def __init__(self):
+        super().__init__()
+
+    def agent_init(self, agent_info):
+        super().agent_init(agent_info)
+
     def agent_end(self, reward):
         return super(TDTileCoding, self).agent_end(reward)
 
@@ -25,4 +31,4 @@ class ETDTileCoding(ETD, TDTileCoding):
         self.eligibility = self.discount_rate * self.trace_decay * self.eligibility
         self.eligibility[last_state_feature] += self.emphasis
 
-        self.weights += (self.step_size / self.FR.tilings) * delta * self.eligibility
+        self.weights += self.step_size * delta * self.eligibility

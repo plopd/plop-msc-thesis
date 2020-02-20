@@ -12,6 +12,23 @@ def test_td_step_size():
     assert td.step_size == agent_info.get("step_size")
 
 
+def test_td_step_size_tile_coding():
+    agent_info = {
+        "step_size": 0.5,
+        "representations": "TC",
+        "num_dims": 2,
+        "tiles_per_dim": 10,
+        "min_x": 0,
+        "max_x": 1,
+        "tilings": 5,
+    }
+
+    td = get_agent("TDTileCoding")()
+    td.agent_init(agent_info)
+
+    assert td.step_size == agent_info.get("step_size") / agent_info.get("tilings")
+
+
 def test_etd_step_size():
     agent_info = {
         "step_size": 0.5,
@@ -34,6 +51,33 @@ def test_etd_step_size():
         )
         / (1 - agent_info.get("discount_rate"))
     )
+
+
+def test_etd_step_size_tile_coding():
+    agent_info = {
+        "step_size": 0.5,
+        "representations": "TC",
+        "num_dims": 2,
+        "tiles_per_dim": 10,
+        "min_x": 0,
+        "max_x": 1,
+        "tilings": 5,
+        "discount_rate": 0.25,
+        "trace_decay": 0.95,
+        "interest": 1,
+    }
+
+    etd = get_agent("ETDTileCoding")()
+    etd.agent_init(agent_info)
+
+    M = (
+        agent_info.get("interest")
+        - agent_info.get("interest")
+        * agent_info.get("trace_decay")
+        * agent_info.get("discount_rate")
+    ) / (1 - agent_info.get("discount_rate"))
+
+    assert etd.step_size == agent_info.get("step_size") / agent_info.get("tilings") / M
 
 
 def test_td_step_size_fourier():
@@ -82,7 +126,5 @@ def test_etd_step_size_fourier():
         step_sizes[i] /= np.sqrt(np.sum(np.square(C[i])))
 
     step_sizes /= M
-
-    print("\n", etd.step_size, "\n", step_sizes)
 
     assert np.array_equal(etd.step_size, step_sizes)
