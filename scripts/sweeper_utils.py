@@ -56,6 +56,6 @@ for exp in search_lst:
 print(
     f"Number of runs: {args.num_runs},\n"
     f"Total number of combinations (per run): {sweeper.total_combinations},\n"
+    f"Found combinations / Total number of combinations (per run): {len(search_lst)}/{sweeper.total_combinations},\n"
     f"Total number of combinations (over all runs): {sweeper.total_combinations*args.num_runs},\n"
-    f"Found combinations / Total number of combinations (per run): {len(search_lst)}/{sweeper.total_combinations}"
 )

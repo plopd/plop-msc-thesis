@@ -18,6 +18,17 @@
                         1
                     ],
                     "experiment": [
+                        "ChainFourier"
+                    ],
+                    "representations": [
+                        "F"
+                    ]
+                },
+                {
+                    "baseline": [
+                        1
+                    ],
+                    "experiment": [
                         "ChainDependent"
                     ],
                     "representations": [
@@ -53,29 +64,38 @@
                     "metric": [
                         "interim"
                     ],
-                    "percent": [
-                        0.0025
+                    "percent_metric": [
+                        0.1
+                    ],
+                    "percent_plot": [
+                        0.1
                     ]
                 },
                 {
                     "metric": [
                         "end"
                     ],
-                    "percent": [
-                        0.0025
+                    "percent_metric": [
+                        0.1
+                    ],
+                    "percent_plot": [
+                        1.0
                     ]
                 },
                 {
                     "metric": [
                         "auc"
                     ],
-                    "percent": [
-                        1
+                    "percent_metric": [
+                        1.0
+                    ],
+                    "percent_plot": [
+                        1.0
                     ]
                 }
             ],
             "num_runs": [
-                100
+                1
             ],
             "plotting": [
                 {

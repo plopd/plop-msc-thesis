@@ -42,7 +42,8 @@ def main():
         "trace_decay": param_cfg.get("trace_decay"),
         "baseline": param_cfg.get("baseline"),
         "algos": ["TD", "ETD"],
-        "percent": param_cfg.get("percent"),
+        "percent_metric": param_cfg.get("percent_metric"),
+        "percent_plot": param_cfg.get("percent_plot"),
         "y_min": param_cfg.get("y_min"),
         "y_max": param_cfg.get("y_max"),
         "step": param_cfg.get("step"),
@@ -97,7 +98,9 @@ def main():
             ids = results.find_experiment_by(config, exp_info.get("num_runs"))
             data = results.load(ids)
             mean, se = get_data_by(
-                data, name=exp_info.get("metric"), percent=exp_info.get("percent")
+                data,
+                name=exp_info.get("metric"),
+                percent=exp_info.get("percent_metric"),
             )
             cutoff = data[:, 0].mean()
             # Find best instance of algorithm
@@ -117,10 +120,10 @@ def main():
 
         mean = data.mean(axis=0)
         se = data.std(axis=0) / np.sqrt(exp_info.get("num_runs"))
-        steps = int(len(mean) * exp_info.get("percent"))
+        steps = int(len(mean) * exp_info.get("percent_plot"))
         mean = mean[:steps]
         se = se[:steps]
-        axes[0].plot(mean, c=color)
+        axes[0].plot(mean, c=color, label=algo)
         axes[0].fill_between(
             np.arange(len(mean)),
             mean + 2.5 * se,
@@ -128,6 +131,9 @@ def main():
             color=color,
             alpha=0.15,
         )
+        axes[0].set_xlabel("Walks/Episodes")
+        axes[0].set_ylabel(f"RMSE {exp_info.get('num_runs')}({exp_info.get('metric')})")
+        axes[0].legend()
 
         if exp_info.get("baseline") == 1:
             config["algorithm"] = "LSTD" if algo == "TD" else "ELSTD"
@@ -141,6 +147,7 @@ def main():
                 xmin=0,
                 xmax=len(data),
                 color=color,
+                label=config["algorithm"],
                 linestyle=linestyles.get(algo),
             )
 
@@ -150,6 +157,7 @@ def main():
             xs, means, yerr=2.5 * std_errors, color=color, capsize=5,
         )
         axes[1].set_xscale("log")
+        axes[1].set_xlabel("Step size")
 
         ################ HOUSEKEEPING ####################
         print(
@@ -179,6 +187,9 @@ def main():
         axes[i].set_yticklabels(y_tick_values)
         axes[i].set_ylim(exp_info.get("y_min"), exp_info.get("y_max"))
 
+    plt.suptitle(
+        f"{exp_info.get('num_states')} Random Walk with {exp_info.get('representations')} features"
+    )
     plt.tight_layout()
     filename = "-".join(
         list(
