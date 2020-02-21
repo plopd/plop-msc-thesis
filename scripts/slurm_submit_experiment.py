@@ -1,4 +1,5 @@
 import argparse
+import importlib
 
 from alphaex.submitter import Submitter
 
@@ -23,7 +24,10 @@ def main():
     parser.add_argument("--account", type=str, default="def-sutton")
 
     parser.add_argument(
-        "--mem_per_cpu", type=str, help="mem-per-cpu (e.g. G or MB)", default="1G"
+        "--mem_per_cpu",
+        type=str,
+        help="mem-per-cpu (in [M]egabytes or [G]ygabytes)",
+        default="128M",
     )
 
     args = parser.parse_args()
@@ -57,6 +61,9 @@ def main():
         #     ],
         # },
     ]
+    script = importlib.util.find_spec(args.python_module)
+    if not script:
+        raise Exception("Unexpected python_module given.")
     submitter = Submitter(
         clusters,
         args.num_jobs,

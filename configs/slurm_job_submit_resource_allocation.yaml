@@ -6,4 +6,4 @@ cluster: mp2
  problem2: Random Walk
    type: job-array
    time: 00:35:00 (HH:MM:SS)
-   mem_per_cpu: 128 (MB or G)
+   mem_per_cpu: 128 (M or G)
