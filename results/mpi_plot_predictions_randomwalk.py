@@ -134,7 +134,9 @@ def main():
             alpha=0.15,
         )
         axes[0].set_xlabel("Walks/Episodes")
-        axes[0].set_ylabel(f"RMSE {exp_info.get('num_runs')}({exp_info.get('metric')})")
+        axes[0].set_ylabel(
+            f"RMSVE averaged over {exp_info.get('num_runs')}(measuring {exp_info.get('metric')} performance)"
+        )
 
         if exp_info.get("baseline") == 1:
             config["algorithm"] = "LSTD" if algo == "TD" else "ELSTD"

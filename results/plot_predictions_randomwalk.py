@@ -11,6 +11,7 @@ from analysis.colormap import colors
 from analysis.colormap import linestyles
 from analysis.results import get_data_by
 from analysis.results import Result
+from representations.configs import to_name
 from utils.utils import path_exists
 from utils.utils import remove_keys_with_none_value
 
@@ -90,8 +91,8 @@ def main():
         means = np.zeros(num_step_sizes)
         std_errors = np.zeros(num_step_sizes)
         xs = np.zeros(num_step_sizes)
-        optim_step_size = None
-        current_optim_err = np.inf
+        optimum_step_size = None
+        optimum_error = np.inf
 
         for i, step_size in enumerate(step_sizes):
             config["step_size"] = step_size
@@ -104,9 +105,9 @@ def main():
             )
             cutoff = data[:, 0].mean()
             # Find best instance of algorithm
-            if mean <= current_optim_err:
-                current_optim_err = mean
-                optim_step_size = step_size
+            if mean <= optimum_error:
+                optimum_error = mean
+                optimum_step_size = step_size
             # Record step-size sensitivity
             means[i] = mean
             std_errors[i] = se
@@ -114,7 +115,7 @@ def main():
             means.clip(0, cutoff)
 
         ################ PLOT LCA ####################
-        config["step_size"] = optim_step_size
+        config["step_size"] = optimum_step_size
         ids = results.find_experiment_by(config, exp_info.get("num_runs"))
         data = results.load(ids)
 
@@ -132,7 +133,9 @@ def main():
             alpha=0.15,
         )
         axes[0].set_xlabel("Walks/Episodes")
-        axes[0].set_ylabel(f"RMSE {exp_info.get('num_runs')}({exp_info.get('metric')})")
+        axes[0].set_ylabel(
+            f"RMSVE averaged over {to_name.get(exp_info.get('num_runs'))}(measuring {exp_info.get('metric')} performance)"
+        )
 
         if exp_info.get("baseline") == 1:
             config["algorithm"] = "LSTD" if algo == "TD" else "ELSTD"
@@ -173,8 +176,8 @@ def main():
             f"\nx-axis: {[label for label in axes[0].get_xticks()]}"
         )
         print(
-            f"optim_step_size: 2^{np.float32((np.log2(optim_step_size)))}, "
-            f"{exp_info.get('metric')} error: {np.float32(current_optim_err)}"
+            f"optimum_step_size: 2^{np.float32((np.log2(optimum_step_size)))}, "
+            f"{exp_info.get('metric')} error: {np.float32(optimum_error)}"
         )
 
     y_tick_values = np.arange(
