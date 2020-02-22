@@ -21,7 +21,7 @@ def main():
         "num_dims": param_cfg.get("num_dims"),
         "num_features": param_cfg.get("num_features"),
         "order": param_cfg.get("order"),
-        "num_ones": param_cfg.get("num_ones", 0),
+        "num_ones": param_cfg.get("num_ones"),
         "min_x": param_cfg.get("min_x"),
         "max_x": param_cfg.get("max_x"),
         "a": param_cfg.get("a"),
@@ -49,7 +49,8 @@ def main():
         "episode_eval_freq": param_cfg.get("episode_eval_freq"),
         "n_episodes": param_cfg.get("n_episodes"),
         "output_dir": param_cfg.get("output_dir"),
-        "log_every_nth_episode": param_cfg.get("log_every_nth_episode", 1000),
+        "log_every_nth_episode": param_cfg.get("log_every_nth_episode"),
+        "save_representations": param_cfg.get("save_representations"),
     }
 
     experiment = get_experiment(exp_info.get("problem"), agent_info, env_info, exp_info)

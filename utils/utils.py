@@ -11,6 +11,10 @@ def path_exists(path):
     return path
 
 
+def normalize_to_unit(x):
+    return x / np.linalg.norm(x, axis=1).reshape((-1, 1))
+
+
 def emphasis_lim(interest, discount_rate, trace_decay):
     emphasis_lim = (interest - discount_rate * trace_decay * interest) / (
         1 - discount_rate
@@ -44,20 +48,6 @@ def remove_keys_with_none_value(dct):
     dct.update(filtered)
 
     return dct
-
-
-def get_interest(name, **kwargs):
-
-    N, seed = kwargs.get("num_states"), kwargs.get("seed")
-
-    if name == "UI":
-        return np.ones(N)
-    elif name == "random-binary":
-        np.random.seed(seed)
-        random_array = np.random.choice([0, 1], N)
-        return random_array
-
-    raise Exception("Unexpected interest given.")
 
 
 def get_simple_logger(module_name, output_filepath):

@@ -134,7 +134,8 @@ def main():
         )
         axes[0].set_xlabel("Walks/Episodes")
         axes[0].set_ylabel(
-            f"RMSVE averaged over {to_name.get(exp_info.get('num_runs'))}(measuring {exp_info.get('metric')} performance)"
+            f"RMSVE over {exp_info.get('num_runs')}\n"
+            f"({exp_info.get('metric')} performance)"
         )
 
         if exp_info.get("baseline") == 1:
@@ -193,7 +194,7 @@ def main():
         axes[i].set_ylim(exp_info.get("y_min"), exp_info.get("y_max"))
 
     plt.suptitle(
-        f"{exp_info.get('num_states')} Random Walk with {exp_info.get('representations')} features"
+        f"{exp_info.get('num_states')} Random Walk with {to_name.get(exp_info.get('representations'))} features"
     )
     plt.tight_layout()
     filename = "-".join(

@@ -47,6 +47,10 @@ class Chain(BaseExperiment):
             [FR[self.states[i]] for i in range(len(self.states))]
         ).reshape(len(self.states), FR.num_features)
 
+        if experiment_info.get("save_representations"):
+            path = path_exists(self.output_dir / "representations")
+            self.save(path / f"repr_{self.id}", self.representations)
+
         self.error = get_objective(
             "MSVE",
             self.true_values,
@@ -62,7 +66,7 @@ class Chain(BaseExperiment):
     def start(self):
         self.init()
         self.learn()
-        self.save()
+        self.save(self.output_dir / f"{self.id}", self.msve_error)
 
     def learn(self):
         estimated_state_values = self.message("get state value")
@@ -87,8 +91,8 @@ class Chain(BaseExperiment):
                 f"MSVE: {self.msve_error[episode // self.episode_eval_freq]:.4f}"
             )
 
-    def save(self):
-        np.save(self.output_dir / f"{self.id}", self.msve_error)
+    def save(self, path, data):
+        np.save(path, data)
 
     def cleanup(self):
         pass

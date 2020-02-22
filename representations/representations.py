@@ -2,6 +2,7 @@ from representations.dependent import DependentRepresentations
 from representations.fourier import FourierRepresentation
 from representations.polynomial import PolynomialRepresentation
 from representations.random import RandomRepresentations
+from representations.random_binary import RandomBinaryRepresentations
 from representations.random_cluster import RandomClusterRepresentation
 from representations.tabular import TabularRepresentations
 from representations.tile_coding import TileCoder
@@ -13,24 +14,23 @@ def get_representation(name, unit_norm=True, **kwargs):
         tiles_per_dim = [kwargs.get("tiles_per_dim")] * num_dims
         lims = [(kwargs.get("min_x"), (kwargs.get("max_x")))] * num_dims
         tilings = kwargs.get("tilings")
-        T = TileCoder(tiles_per_dim, lims, tilings)
-
-        return T
+        return TileCoder(tiles_per_dim, lims, tilings)
     elif name == "D":
         num_states = kwargs.get("num_states")
-        DR = DependentRepresentations(num_states, unit_norm)
-
-        return DR
-    elif name == "RB" or name == "RNB":
+        return DependentRepresentations(num_states, unit_norm)
+    elif name == "RB":
         num_states = kwargs.get("num_states")
         num_features = kwargs.get("num_features")
-        num_ones = kwargs.get("num_ones", 0)
+        num_ones = kwargs.get("num_ones")
         seed = kwargs.get("seed")
-        RF = RandomRepresentations(
-            name, num_states, num_features, num_ones, seed, unit_norm
+        return RandomBinaryRepresentations(
+            name, num_states, num_features, num_ones, seed
         )
-
-        return RF
+    elif name == "R":
+        num_states = kwargs.get("num_states")
+        num_features = kwargs.get("num_features")
+        seed = kwargs.get("seed")
+        return RandomRepresentations(name, num_states, num_features, seed, unit_norm)
     elif name == "P":
         order = kwargs.get("order")
         num_dims = kwargs.get("num_dims")
@@ -38,11 +38,9 @@ def get_representation(name, unit_norm=True, **kwargs):
         max_x = kwargs.get("max_x")
         a = kwargs.get("a")
         b = kwargs.get("b")
-        P = PolynomialRepresentation(
+        return PolynomialRepresentation(
             name, num_dims, order, min_x, max_x, a, b, unit_norm
         )
-
-        return P
     elif name == "F":
         order = kwargs.get("order")
         num_dims = kwargs.get("num_dims")
@@ -50,18 +48,15 @@ def get_representation(name, unit_norm=True, **kwargs):
         max_x = kwargs.get("max_x")
         a = kwargs.get("a")
         b = kwargs.get("b")
-        F = FourierRepresentation(name, num_dims, order, min_x, max_x, a, b, unit_norm)
-
-        return F
+        return FourierRepresentation(
+            name, num_dims, order, min_x, max_x, a, b, unit_norm
+        )
     elif name == "TA":
         num_states = kwargs.get("num_states")
-        TR = TabularRepresentations(num_states)
-        return TR
+        return TabularRepresentations(num_states)
     elif name == "RC":
         num_dims = kwargs.get("num_dims")
         seed = kwargs.get("seed")
-        RCR = RandomClusterRepresentation(num_dims, seed, unit_norm)
-
-        return RCR
+        return RandomClusterRepresentation(num_dims, seed, unit_norm)
 
     raise Exception("Unexpected representations given.")

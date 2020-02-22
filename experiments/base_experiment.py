@@ -20,7 +20,7 @@ class BaseExperiment:
         """
 
     @abstractmethod
-    def save(self):
+    def save(self, path, data):
         """
 
         Returns:

@@ -11,7 +11,7 @@
                 0
             ],
             "n_episodes": [
-                50000
+                100000
             ],
             "output_dir": [
                 "~/scratch/Chain/ChainTabular"

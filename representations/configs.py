@@ -3,7 +3,7 @@ to_name = {
     "D": "dependent",
     "TC": "tile coding",
     "RB": "random binary",
-    "RNB": "random real-valued",
+    "R": "random real-valued",
     "P": "polynomial",
     "F": "fourier",
     "RC": "state aggregation",

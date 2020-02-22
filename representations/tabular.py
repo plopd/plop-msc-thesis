@@ -3,7 +3,7 @@ import numpy as np
 
 
 class TabularRepresentations:
-    def __init__(self, num_states, unit_norm=True):
+    def __init__(self, num_states, unit_norm=False):
 
         self.num_features = num_states
 
