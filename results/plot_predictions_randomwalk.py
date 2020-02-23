@@ -16,16 +16,12 @@ from utils.utils import path_exists
 from utils.utils import remove_keys_with_none_value
 
 matplotlib.use("agg")
-matplotlib.rcParams.update({"font.size": 18})
+matplotlib.rcParams.update({"font.size": 22})
 
 
-def main():
-    sweep_id = int(sys.argv[1].strip(","))
-    config_filename = sys.argv[2]
-
-    sweeper = Sweeper(Path(__file__).parents[1] / "configs" / f"{config_filename}.json")
-
-    param_cfg = sweeper.parse(sweep_id)
+def plot(id, config):
+    sweeper = Sweeper(Path(__file__).parents[1] / "configs" / f"{config}.json")
+    param_cfg = sweeper.parse(id)
 
     exp_info = {
         "num_states": param_cfg.get("num_states"),
@@ -75,7 +71,7 @@ def main():
         "discount_rate": param_cfg.get("discount_rate"),
         "trace_decay": param_cfg.get("trace_decay"),
     }
-    remove_keys_with_none_value(config)
+    config = remove_keys_with_none_value(config)
 
     print(json.dumps(config, indent=4))
 
@@ -90,7 +86,6 @@ def main():
         num_step_sizes = len(step_sizes)
         means = np.zeros(num_step_sizes)
         std_errors = np.zeros(num_step_sizes)
-        xs = np.zeros(num_step_sizes)
         optimum_step_size = None
         optimum_error = np.inf
 
@@ -111,7 +106,6 @@ def main():
             # Record step-size sensitivity
             means[i] = mean
             std_errors[i] = se
-            xs[i] = step_size
             means.clip(0, cutoff)
 
         ################ PLOT LCA ####################
@@ -138,7 +132,7 @@ def main():
             f"({exp_info.get('metric')} performance)"
         )
 
-        if exp_info.get("baseline") == 1:
+        if exp_info.get("baseline"):
             config["algorithm"] = "LSTD" if algo == "TD" else "ELSTD"
             config.pop("step_size", None)
             ids = results.find_experiment_by(config, exp_info.get("num_runs"))
@@ -150,7 +144,7 @@ def main():
             axes[0].axhline(
                 mean,
                 xmin=0,
-                xmax=len(data),
+                xmax=data.shape[1],
                 color=color,
                 label=config["algorithm"],
                 linestyle=linestyles.get(algo),
@@ -158,11 +152,9 @@ def main():
         axes[0].legend()
 
         ################ PLOT SSA ####################
-        axes[1].scatter(xs, means, c=color, marker="o")
-        axes[1].errorbar(
-            xs, means, yerr=2.5 * std_errors, color=color, capsize=5,
-        )
-        axes[1].set_xscale("log")
+        axes[1].scatter(step_sizes, means, c=color, marker="o")
+        axes[1].errorbar(step_sizes, means, yerr=2.5 * std_errors, color=color)
+        axes[1].set_xscale("log", basex=2)
         axes[1].set_xlabel("Step size")
 
         ################ HOUSEKEEPING ####################
@@ -194,7 +186,8 @@ def main():
         axes[i].set_ylim(exp_info.get("y_min"), exp_info.get("y_max"))
 
     plt.suptitle(
-        f"{exp_info.get('num_states')} Random Walk with {to_name.get(exp_info.get('representations'))} features"
+        f"{exp_info.get('num_states')} Random Walk with "
+        f"{to_name.get(exp_info.get('representations'))} features"
     )
     plt.tight_layout()
     filename = "-".join(
@@ -213,4 +206,6 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    id = int(sys.argv[1])
+    config = sys.argv[2]
+    plot(id, config)

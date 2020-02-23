@@ -1,7 +1,7 @@
 import numpy as np
 
 from agents.TD import TD
-from utils.utils import emphasis_lim
+from utils.utils import emphasis_limit
 
 
 class ETD(TD):
@@ -19,7 +19,7 @@ class ETD(TD):
 
         self.step_size = (
             self.step_size
-            / emphasis_lim(self.interest, self.discount_rate, self.trace_decay)
+            / emphasis_limit(self.interest, self.discount_rate, self.trace_decay)
             if self.discount_rate < 1.0 and self.step_size is not None
             else self.step_size
         )
@@ -52,6 +52,5 @@ class ETD(TD):
 
     def agent_cleanup(self):
         super().agent_cleanup()
-        self.interest = 1.0
         self.followon_trace = 0.0
         self.emphasis = 0.0

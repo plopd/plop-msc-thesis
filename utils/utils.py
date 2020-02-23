@@ -15,11 +15,8 @@ def normalize_to_unit(x):
     return x / np.linalg.norm(x, axis=1).reshape((-1, 1))
 
 
-def emphasis_lim(interest, discount_rate, trace_decay):
-    emphasis_lim = (interest - discount_rate * trace_decay * interest) / (
-        1 - discount_rate
-    )
-    return emphasis_lim
+def emphasis_limit(interest, discount_rate, trace_decay):
+    return (interest - discount_rate * trace_decay * interest) / (1 - discount_rate)
 
 
 def minmax_normalization_ab(x, min_x, max_x, a, b):

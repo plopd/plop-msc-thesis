@@ -20,6 +20,7 @@ parser.add_argument("--step_size", type=float)
 parser.add_argument("--trace_decay", type=float)
 parser.add_argument("--discount_rate", type=float)
 parser.add_argument("--algorithm", type=str)
+parser.add_argument("--metric", type=str)
 parser.add_argument("--order", type=float)
 parser.add_argument("--config_filename", type=str, required=True)
 
@@ -44,18 +45,22 @@ search_dct = {
     "discount_rate": args.discount_rate,
     "algorithm": args.algorithm,
     "order": args.order,
+    "metric": args.metric,
 }
 
 remove_keys_with_none_value(search_dct)
 
 search_lst = sweeper.search(search_dct, args.num_runs)
 
+lst_indices = []
+
 for exp in search_lst:
+    lst_indices.extend(exp.get("ids"))
     print(json.dumps(exp, indent=2))
 
 print(
     f"Number of runs: {args.num_runs},\n"
     f"Total number of combinations (per run): {sweeper.total_combinations},\n"
-    f"Found combinations / Total number of combinations (per run): {len(search_lst)}/{sweeper.total_combinations},\n"
+    f"Found combinations / Total number of combinations (per run): {len(search_lst)}/{sweeper.total_combinations}, {lst_indices}\n"
     f"Total number of combinations (over all runs): {sweeper.total_combinations*args.num_runs},\n"
 )

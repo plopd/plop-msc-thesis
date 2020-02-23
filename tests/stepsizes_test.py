@@ -29,6 +29,22 @@ def test_td_step_size_tile_coding():
     assert td.step_size == agent_info.get("step_size") / agent_info.get("tilings")
 
 
+def test_etd_step_size_undiscounted():
+    agent_info = {
+        "step_size": 0.5,
+        "representations": "TA",
+        "num_states": 5,
+        "discount_rate": 1.0,
+        "trace_decay": 0.95,
+        "interest": 1,
+    }
+
+    etd = get_agent("ETD")()
+    etd.agent_init(agent_info)
+
+    assert etd.step_size == agent_info.get("step_size")
+
+
 def test_etd_step_size():
     agent_info = {
         "step_size": 0.5,

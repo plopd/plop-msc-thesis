@@ -11,7 +11,9 @@ def test_tabular_features(num_states):
     TF = get_representation("TA", **{"num_states": num_states})
 
     tabular_features = np.vstack([TF[states[i]] for i in range(num_states)])
-    assert np.array_equiv(np.sum(tabular_features, axis=1), np.ones(num_states))
+    assert np.array_equiv(
+        tabular_features - np.eye(num_states), np.zeros((num_states, num_states))
+    )
 
 
 @pytest.mark.parametrize("num_states", [5, 19])

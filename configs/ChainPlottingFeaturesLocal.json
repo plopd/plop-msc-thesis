@@ -7,10 +7,21 @@
                         1
                     ],
                     "experiment": [
-                        "ChainRandom"
+                        "ChainDependent"
                     ],
                     "representations": [
-                        "RB"
+                        "D"
+                    ]
+                },
+                {
+                    "baseline": [
+                        0
+                    ],
+                    "experiment": [
+                        "ChainTabular"
+                    ],
+                    "representations": [
+                        "TA"
                     ]
                 }
             ],
@@ -61,15 +72,15 @@
                 }
             ],
             "num_runs": [
-                12
+                1
             ],
             "plotting": [
                 {
                     "step": [
-                        0.05
+                        0.1
                     ],
                     "y_max": [
-                        0.55
+                        0.45
                     ],
                     "y_min": [
                         0.0
@@ -80,6 +91,9 @@
     ],
     "learners_common": [
         {
+            "algorithms": [
+                "TD,ETD"
+            ],
             "discount_rate": [
                 0.99
             ],
