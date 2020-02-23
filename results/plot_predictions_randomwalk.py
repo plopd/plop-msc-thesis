@@ -53,7 +53,9 @@ def plot(sweep_id, config_fn):
     datapath = Path(f"~/scratch/{exp_info.get('env')}").expanduser()
     save_path = path_exists(Path(__file__).parents[0] / exp_info.get("experiment"))
 
-    fig, axes = plt.subplots(1, 2, figsize=(12, 5), sharey="all")
+    fig, axes = plt.subplots(1, 2, figsize=(15, 5), sharey="all")
+
+    plt.subplots_adjust(wspace=25)
 
     results = Result(
         f"{exp_info.get('experiment')}.json", datapath, exp_info.get("experiment")
@@ -131,10 +133,7 @@ def plot(sweep_id, config_fn):
             alpha=0.15,
         )
         axes[0].set_xlabel("Walks/Episodes")
-        axes[0].set_ylabel(
-            f"RMSVE over {exp_info.get('num_runs')} runs\n"
-            f"({exp_info.get('metric')} performance)"
-        )
+        axes[0].set_ylabel(f"RMSVE over {exp_info.get('num_runs')} runs")
 
         if exp_info.get("baseline"):
             config["algorithm"] = "LSTD" if algo == "TD" else "ELSTD"
@@ -160,6 +159,9 @@ def plot(sweep_id, config_fn):
         axes[1].errorbar(step_sizes, means, yerr=2.5 * std_errors, color=color)
         axes[1].set_xscale("log", basex=10)
         axes[1].set_xlabel("Step size")
+        axes[1].set_ylabel(
+            f"{exp_info.get('metric')} over {exp_info.get('num_runs')} runs"
+        )
 
         ################ HOUSEKEEPING ####################
         print(
