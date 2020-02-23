@@ -132,7 +132,7 @@ def plot(sweep_id, config_fn):
         )
         axes[0].set_xlabel("Walks/Episodes")
         axes[0].set_ylabel(
-            f"RMSVE over {exp_info.get('num_runs')}\n"
+            f"RMSVE over {exp_info.get('num_runs')} runs\n"
             f"({exp_info.get('metric')} performance)"
         )
 
@@ -158,7 +158,7 @@ def plot(sweep_id, config_fn):
         ################ PLOT SSA ####################
         axes[1].scatter(step_sizes, means, c=color, marker="o")
         axes[1].errorbar(step_sizes, means, yerr=2.5 * std_errors, color=color)
-        axes[1].set_xscale("log", basex=2)
+        axes[1].set_xscale("log", basex=10)
         axes[1].set_xlabel("Step size")
 
         ################ HOUSEKEEPING ####################
