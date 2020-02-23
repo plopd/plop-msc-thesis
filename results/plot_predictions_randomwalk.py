@@ -42,7 +42,7 @@ def main():
         "discount_rate": param_cfg.get("discount_rate"),
         "trace_decay": param_cfg.get("trace_decay"),
         "baseline": param_cfg.get("baseline"),
-        "algos": ["TD", "ETD"],
+        "algos": param_cfg.get("algorithms"),
         "percent_metric": param_cfg.get("percent_metric"),
         "percent_plot": param_cfg.get("percent_plot"),
         "y_min": param_cfg.get("y_min"),
@@ -79,7 +79,7 @@ def main():
 
     print(json.dumps(config, indent=4))
 
-    for algo in exp_info.get("algos"):
+    for algo in exp_info.get("algos").split(","):
         color = colors.get(algo)
         config["algorithm"] = algo
         config.pop("step_size", None)

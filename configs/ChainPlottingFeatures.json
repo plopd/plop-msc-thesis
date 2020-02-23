@@ -95,7 +95,7 @@
                 }
             ],
             "num_runs": [
-                1
+                100
             ],
             "plotting": [
                 {
@@ -114,6 +114,9 @@
     ],
     "learners_common": [
         {
+            "algorithms": [
+                "TD,ETD"
+            ],
             "discount_rate": [
                 0.99
             ],
