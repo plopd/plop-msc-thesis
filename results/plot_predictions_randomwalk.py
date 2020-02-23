@@ -153,7 +153,7 @@ def plot(sweep_id, config_fn):
                 label=config["algorithm"],
                 linestyle=linestyles.get(algo),
             )
-        axes[0].legend()
+        axes[0].legend(loc="upper right")
 
         ################ PLOT SSA ####################
         axes[1].scatter(step_sizes, means, c=color, marker="o")
