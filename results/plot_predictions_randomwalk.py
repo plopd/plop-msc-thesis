@@ -19,9 +19,13 @@ matplotlib.use("agg")
 matplotlib.rcParams.update({"font.size": 22})
 
 
-def plot(id, config):
-    sweeper = Sweeper(Path(__file__).parents[1] / "configs" / f"{config}.json")
-    param_cfg = sweeper.parse(id)
+def main():
+    plot(sweep_id=int(sys.argv[1]), config_fn=sys.argv[2])
+
+
+def plot(sweep_id, config_fn):
+    sweeper = Sweeper(Path(__file__).parents[1] / "configs" / f"{config_fn}.json")
+    param_cfg = sweeper.parse(sweep_id)
 
     exp_info = {
         "num_states": param_cfg.get("num_states"),
@@ -115,7 +119,7 @@ def plot(id, config):
 
         mean = data.mean(axis=0)
         se = data.std(axis=0) / np.sqrt(exp_info.get("num_runs"))
-        steps = int(len(mean) * exp_info.get("percent_plot"))
+        steps = int(np.ceil(len(mean) * exp_info.get("percent_plot")))
         mean = mean[:steps]
         se = se[:steps]
         axes[0].plot(mean, c=color, label=algo)
@@ -206,6 +210,4 @@ def plot(id, config):
 
 
 if __name__ == "__main__":
-    id = int(sys.argv[1])
-    config = sys.argv[2]
-    plot(id, config)
+    main()

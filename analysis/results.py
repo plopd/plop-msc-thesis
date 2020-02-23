@@ -79,7 +79,7 @@ def get_data_auc(data):
 
 def get_data_end(data, percent):
     n_runs, n_episodes = data.shape
-    steps = int(n_episodes * percent)
+    steps = int(np.ceil(n_episodes * percent))
     end_data = data[:, -steps:]
 
     end_data = end_data.mean(axis=1)
@@ -89,7 +89,7 @@ def get_data_end(data, percent):
 
 def get_data_interim(data, percent):
     n_runs, n_episodes = data.shape
-    steps = int(n_episodes * percent)
+    steps = int(np.ceil(n_episodes * percent))
     interim_data = data[:, :steps]
 
     interim_data = interim_data.mean(axis=1)

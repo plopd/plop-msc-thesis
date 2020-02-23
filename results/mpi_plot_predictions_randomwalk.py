@@ -4,8 +4,11 @@ from mpi4py import MPI
 
 from results.plot_predictions_randomwalk import plot
 
-if __name__ == "__main__":
+
+def main():
     COMM = MPI.COMM_WORLD
-    id = COMM.Get_rank()
-    config = sys.argv[1]
-    plot(id, config)
+    plot(sweep_id=COMM.Get_rank(), config_fn=sys.argv[1])
+
+
+if __name__ == "__main__":
+    main()

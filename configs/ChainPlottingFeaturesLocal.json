@@ -42,7 +42,7 @@
                         "interim"
                     ],
                     "percent_metric": [
-                        0.0025
+                        0.01
                     ],
                     "percent_plot": [
                         0.01
@@ -53,7 +53,7 @@
                         "end"
                     ],
                     "percent_metric": [
-                        0.0025
+                        0.01
                     ],
                     "percent_plot": [
                         1.0

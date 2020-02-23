@@ -7,10 +7,12 @@ from experiments.experiments import get_experiment
 
 
 def main():
-    sweep_id = int(sys.argv[1].strip(","))
-    config_filename = sys.argv[2]
+    run(sweep_id=int(sys.argv[1]), config_fn=sys.argv[2])
 
-    sweeper = Sweeper(Path(__file__).parents[1] / "configs" / f"{config_filename}.json")
+
+def run(sweep_id, config_fn):
+
+    sweeper = Sweeper(Path(__file__).parents[1] / "configs" / f"{config_fn}.json")
 
     param_cfg = sweeper.parse(sweep_id)
 
