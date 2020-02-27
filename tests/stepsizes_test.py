@@ -112,6 +112,51 @@ def test_td_step_size_fourier():
     assert np.array_equal(td.step_size, step_sizes)
 
 
+def test_td_step_size_random_binary():
+    agent_info = {
+        "step_size": 0.5,
+        "representations": "RB",
+        "num_states": 5,
+        "num_features": 3,
+        "num_ones": 2,
+        "seed": 0,
+    }
+
+    td = get_agent("TD")()
+    td.agent_init(agent_info)
+
+    num_ones = td.FR.num_ones
+
+    td.step_size = agent_info.get("step_size") / num_ones
+
+
+def test_etd_step_size_random_binary():
+    agent_info = {
+        "step_size": 0.5,
+        "representations": "RB",
+        "num_states": 5,
+        "num_features": 3,
+        "num_ones": 2,
+        "seed": 0,
+        "discount_rate": 0.25,
+        "trace_decay": 0.95,
+        "interest": 1,
+    }
+
+    etd = get_agent("ETD")()
+    M = (
+        agent_info.get("interest")
+        - agent_info.get("interest")
+        * agent_info.get("trace_decay")
+        * agent_info.get("discount_rate")
+    ) / (1 - agent_info.get("discount_rate"))
+    etd.agent_init(agent_info)
+
+    num_ones = etd.FR.num_ones
+
+    etd.step_size = agent_info.get("step_size") / num_ones / M
+
+
 def test_etd_step_size_fourier():
     agent_info = {
         "step_size": 0.5,

@@ -11,6 +11,7 @@ class RandomBinaryRepresentations:
             raise Exception("Unknown name given.")
 
         self.num_features = num_features
+        self.num_ones = num_ones
         rand_generator = np.random.RandomState(seed)
         num_zeros = num_features - num_ones
         self.features = np.zeros((num_states, num_features))

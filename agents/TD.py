@@ -36,6 +36,8 @@ class TD(BaseAgent):
             self.step_size = per_feature_step_size_fourier_KOT(
                 self.step_size, self.FR.num_features, self.FR.C
             )
+        elif agent_info.get("representations") == "RB" and self.step_size is not None:
+            self.step_size /= self.FR.num_ones
 
     def agent_start(self, observation):
         self.agent_cleanup()
