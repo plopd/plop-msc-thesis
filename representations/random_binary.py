@@ -5,10 +5,7 @@ from utils.utils import normalize_to_unit
 
 
 class RandomBinaryRepresentations:
-    def __init__(self, name, num_states, num_features, num_ones, seed, unit_norm=False):
-
-        if name != "RB":
-            raise Exception("Unknown name given.")
+    def __init__(self, num_states, num_features, num_ones, seed, unit_norm=False):
 
         self.num_features = num_features
         self.num_ones = num_ones

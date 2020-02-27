@@ -23,14 +23,12 @@ def get_representation(name, unit_norm=True, **kwargs):
         num_features = kwargs.get("num_features")
         num_ones = kwargs.get("num_ones")
         seed = kwargs.get("seed")
-        return RandomBinaryRepresentations(
-            name, num_states, num_features, num_ones, seed
-        )
+        return RandomBinaryRepresentations(num_states, num_features, num_ones, seed)
     elif name == "R":
         num_states = kwargs.get("num_states")
         num_features = kwargs.get("num_features")
         seed = kwargs.get("seed")
-        return RandomRepresentations(name, num_states, num_features, seed, unit_norm)
+        return RandomRepresentations(num_states, num_features, seed, unit_norm)
     elif name == "P":
         order = kwargs.get("order")
         num_dims = kwargs.get("num_dims")
@@ -38,9 +36,7 @@ def get_representation(name, unit_norm=True, **kwargs):
         max_x = kwargs.get("max_x")
         a = kwargs.get("a")
         b = kwargs.get("b")
-        return PolynomialRepresentation(
-            name, num_dims, order, min_x, max_x, a, b, unit_norm
-        )
+        return PolynomialRepresentation(num_dims, order, min_x, max_x, a, b, unit_norm)
     elif name == "F":
         order = kwargs.get("order")
         num_dims = kwargs.get("num_dims")
@@ -48,9 +44,7 @@ def get_representation(name, unit_norm=True, **kwargs):
         max_x = kwargs.get("max_x")
         a = kwargs.get("a")
         b = kwargs.get("b")
-        return FourierRepresentation(
-            name, num_dims, order, min_x, max_x, a, b, unit_norm
-        )
+        return FourierRepresentation(num_dims, order, min_x, max_x, a, b, unit_norm)
     elif name == "TA":
         num_states = kwargs.get("num_states")
         return TabularRepresentations(num_states)

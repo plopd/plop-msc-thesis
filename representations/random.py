@@ -5,10 +5,8 @@ from utils.utils import normalize_to_unit
 
 
 class RandomRepresentations:
-    def __init__(self, name, num_states, num_features, seed, unit_norm=True):
+    def __init__(self, num_states, num_features, seed, unit_norm=True):
 
-        if name != "R":
-            raise Exception("Unknown name given.")
         self.num_features = num_features
         rand_generator = np.random.RandomState(seed)
         self.features = rand_generator.randn(num_states, num_features)

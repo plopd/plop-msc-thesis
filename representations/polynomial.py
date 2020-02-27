@@ -7,8 +7,7 @@ from utils.utils import minmax_normalization_ab
 
 
 class PolynomialRepresentation:
-    def __init__(self, name, num_dims, order, min_x, max_x, a, b, unit_norm=True):
-        self.name = name
+    def __init__(self, num_dims, order, min_x, max_x, a, b, unit_norm=True):
         self.unit_norm = unit_norm
         self.min_x = min_x
         self.max_x = max_x
