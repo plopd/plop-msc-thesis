@@ -10,12 +10,10 @@ agent_info = {
     "algorithm": "ETD",
     "representations": "TA",
     "num_dims": 5,
-    "order": None,
-    "num_ones": None,
     "discount_rate": 1.0,
     "trace_decay": 0.0,
-    "step_size": 2 ** -7,
-    "seed": None,
+    "step_size": 0.001,
+    "seed": 42,
     "interest": "UI",
     "policy": "random-chain",
 }
@@ -38,8 +36,8 @@ def test_chain_init(num_states):
     assert last_state == num_states // 2
 
 
-@pytest.mark.parametrize("method", ["TD", "ETD"])
-def test_same_episodes_for_each_run_for_different_methods(method):
+@pytest.mark.parametrize("algorithm", ["TD", "ETD"])
+def test_same_walks_per_run_for_each_algorithm(algorithm):
     runs_with_episodes = {
         0: [[2, 1, 2, 3, 2, 3, 4], [2, 3, 4], [2, 3, 2, 1, 2, 1, 0]],
         1: [
@@ -54,7 +52,7 @@ def test_same_episodes_for_each_run_for_different_methods(method):
     agent_info["num_states"] = 5
     agent_info["num_dims"] = 5
     for i in range(len(runs_with_episodes)):
-        agent_info["algorithm"] = method
+        agent_info["algorithm"] = algorithm
         agent_info["seed"] = i
         rl_glue = RLGlue(
             get_environment(env_info["env"]), get_agent(agent_info["algorithm"])
@@ -62,5 +60,7 @@ def test_same_episodes_for_each_run_for_different_methods(method):
         rl_glue.rl_init(agent_info, env_info)
         for j in range(len(runs_with_episodes[i])):
             rl_glue.rl_episode(0)
-            arr = np.array(rl_glue.rl_env_message("get episode")).squeeze().tolist()
-            assert runs_with_episodes[i][j] == arr
+            assert np.array_equiv(
+                runs_with_episodes[i][j],
+                np.array(rl_glue.rl_env_message("get episode")).squeeze(),
+            )
