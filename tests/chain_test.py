@@ -49,7 +49,7 @@ def test_same_walks_per_run_for_each_algorithm(algorithm):
     }
 
     env_info["log_episodes"] = 1
-    env_info["num_states"] = 53
+    env_info["num_states"] = 5
     agent_info["num_states"] = 5
     agent_info["num_dims"] = 5
     num_runs = len(runs_with_episodes)
