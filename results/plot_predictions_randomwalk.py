@@ -78,13 +78,11 @@ def plot(sweep_id, config_fn):
         "trace_decay": param_cfg.get("trace_decay"),
     }
     config = remove_keys_with_none_value(config)
-
-    print(json.dumps(config, indent=4))
-
     for algo in exp_info.get("algorithms").split(","):
         color = colors.get(algo)
         config["algorithm"] = algo
         config.pop("step_size", None)
+        print(json.dumps(config, indent=4))
         step_sizes = results.get_param_val(
             "step_size", config, exp_info.get("num_runs")
         )
@@ -118,9 +116,9 @@ def plot(sweep_id, config_fn):
         config["step_size"] = optimum_step_size
         ids = results.find_experiment_by(config, exp_info.get("num_runs"))
         data = results.load(ids)
-
+        num_runs, num_episodes = data.shape
         mean = data.mean(axis=0)
-        se = data.std(axis=0) / np.sqrt(exp_info.get("num_runs"))
+        se = data.std(axis=0) / np.sqrt(num_runs)
         steps = int(np.ceil(len(mean) * exp_info.get("percent_plot")))
         mean = mean[:steps]
         se = se[:steps]
@@ -133,7 +131,7 @@ def plot(sweep_id, config_fn):
             alpha=0.15,
         )
         axes[0].set_xlabel("Walks/Episodes")
-        axes[0].set_ylabel(f"RMSVE over {exp_info.get('num_runs')} runs")
+        axes[0].set_ylabel(f"RMSVE over {num_runs} runs")
 
         if exp_info.get("baseline"):
             config["algorithm"] = "LSTD" if algo == "TD" else "ELSTD"
@@ -159,9 +157,7 @@ def plot(sweep_id, config_fn):
         axes[1].errorbar(step_sizes, means, yerr=2.5 * std_errors, color=color)
         axes[1].set_xscale("log", basex=10)
         axes[1].set_xlabel("Step size")
-        axes[1].set_ylabel(
-            f"{exp_info.get('metric')} over {exp_info.get('num_runs')} runs"
-        )
+        axes[1].set_ylabel(f"{exp_info.get('metric')} over {num_runs} runs")
 
         ################ HOUSEKEEPING ####################
         print(
