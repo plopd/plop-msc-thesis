@@ -40,7 +40,12 @@ class Chain(BaseExperiment):
         self.true_values = np.load(path)
         self.states = np.arange(self.N).reshape((-1, 1))
         self.state_distribution = np.ones_like(self.true_values) * 1 / len(self.states)
-        self.msve_error = np.zeros(self.n_episodes // self.episode_eval_freq + 1)
+        self.msve_error = np.zeros(
+            (
+                self.experiment_info.get("num_runs"),
+                self.n_episodes // self.episode_eval_freq + 1,
+            )
+        )
         FR = get_representation(name=agent_info.get("representations"), **agent_info)
 
         self.representations = np.array(
@@ -70,7 +75,7 @@ class Chain(BaseExperiment):
 
     def learn(self):
         estimated_state_values = self.message("get state value")
-        self.msve_error[0] = self.error.value(estimated_state_values)
+        self.msve_error[0, 0] = self.error.value(estimated_state_values)
 
         for episode in range(1, self.n_episodes + 1):
             self._learn(episode)
@@ -80,7 +85,7 @@ class Chain(BaseExperiment):
 
         if episode % self.episode_eval_freq == 0:
             estimated_state_values = self.message("get state value")
-            self.msve_error[episode // self.episode_eval_freq] = self.error.value(
+            self.msve_error[0, episode // self.episode_eval_freq] = self.error.value(
                 estimated_state_values
             )
 
@@ -88,7 +93,7 @@ class Chain(BaseExperiment):
             self.logger.info(
                 f"Episodes: "
                 f"{episode}/{self.n_episodes}, "
-                f"MSVE: {self.msve_error[episode // self.episode_eval_freq]:.4f}"
+                f"MSVE: {self.msve_error[0, episode // self.episode_eval_freq]:.4f}"
             )
 
     def save(self, path, data):
