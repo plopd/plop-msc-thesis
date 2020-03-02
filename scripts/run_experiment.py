@@ -45,6 +45,7 @@ def run(sweep_id, config_fn):
     }
 
     exp_info = {
+        "seed": param_cfg.get("run"),
         "problem": param_cfg.get("problem"),
         "id": sweep_id,
         "max_episode_steps": param_cfg.get("max_episode_steps"),

@@ -28,6 +28,7 @@ class Chain(BaseExperiment):
         self.max_episode_steps = experiment_info.get("max_episode_steps")
         self.output_dir = Path(experiment_info.get("output_dir")).expanduser()
         self.log_every_nth_episode = experiment_info.get("log_every_nth_episode")
+        self.initial_seed = experiment_info.get("seed")
         path_exists(self.output_dir)
         path_exists(self.output_dir / "logs")
         self.logger = get_simple_logger(
@@ -46,15 +47,6 @@ class Chain(BaseExperiment):
                 self.n_episodes // self.episode_eval_freq + 1,
             )
         )
-        FR = get_representation(name=agent_info.get("representations"), **agent_info)
-
-        self.representations = np.array(
-            [FR[self.states[i]] for i in range(len(self.states))]
-        ).reshape(len(self.states), FR.num_features)
-
-        if experiment_info.get("save_representations"):
-            path = path_exists(self.output_dir / "representations")
-            self.save(path / f"repr_{self.id}", self.representations)
 
         self.error = get_objective(
             "MSVE",
@@ -65,35 +57,48 @@ class Chain(BaseExperiment):
         self.timesteps = []
 
     def init(self):
+        FR = get_representation(
+            name=self.agent_info.get("representations"), **self.agent_info
+        )
+        self.representations = np.array(
+            [FR[self.states[i]] for i in range(len(self.states))]
+        ).reshape(len(self.states), FR.num_features)
+        if self.experiment_info.get("save_representations"):
+            path = path_exists(self.output_dir / "representations")
+            self.save(path / f"repr_{self.id}", self.representations)
+
         self.rl_glue = RLGlue(self.env, self.agent)
         self.rl_glue.rl_init(self.agent_info, self.env_info)
 
     def run(self):
-        self.init()
-        self.learn()
+        for i in range(self.experiment_info.get("num_runs")):
+            self.agent_info["seed"] = i + self.initial_seed
+            self.env_info["seed"] = i + self.initial_seed
+            self.init()
+            self.learn(i)
         self.save(self.output_dir / f"{self.id}", self.msve_error)
 
-    def learn(self):
+    def learn(self, trial):
         estimated_state_values = self.message("get state value")
-        self.msve_error[0, 0] = self.error.value(estimated_state_values)
+        self.msve_error[trial, 0] = self.error.value(estimated_state_values)
 
         for episode in range(1, self.n_episodes + 1):
-            self._learn(episode)
+            self._learn(episode, trial)
 
-    def _learn(self, episode):
+    def _learn(self, episode, trial):
         self.rl_glue.rl_episode(self.max_episode_steps)
 
         if episode % self.episode_eval_freq == 0:
             estimated_state_values = self.message("get state value")
-            self.msve_error[0, episode // self.episode_eval_freq] = self.error.value(
-                estimated_state_values
-            )
+            self.msve_error[
+                trial, episode // self.episode_eval_freq
+            ] = self.error.value(estimated_state_values)
 
         if episode % self.experiment_info.get("log_every_nth_episode") == 0:
             self.logger.info(
                 f"Episodes: "
                 f"{episode}/{self.n_episodes}, "
-                f"MSVE: {self.msve_error[0, episode // self.episode_eval_freq]:.4f}"
+                f"MSVE: {self.msve_error[trial, episode // self.episode_eval_freq]:.4f}"
             )
 
     def save(self, path, data):
