@@ -28,7 +28,7 @@ class BaseExperiment:
         """
 
     @abstractmethod
-    def start(self):
+    def run(self):
         """
 
         Returns:

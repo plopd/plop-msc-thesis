@@ -78,7 +78,7 @@ class GridWorldExperiment(BaseExperiment):
     from utils.decorators import timer
 
     @timer
-    def start(self):
+    def run(self):
         self.init()
         self.learn()
         self.save()

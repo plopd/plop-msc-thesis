@@ -56,7 +56,7 @@ def run(sweep_id, config_fn):
     }
 
     experiment = get_experiment(exp_info.get("problem"), agent_info, env_info, exp_info)
-    experiment.start()
+    experiment.run()
 
 
 if __name__ == "__main__":

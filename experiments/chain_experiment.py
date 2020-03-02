@@ -63,7 +63,7 @@ class Chain(BaseExperiment):
         self.rl_glue = RLGlue(self.env, self.agent)
         self.rl_glue.rl_init(self.agent_info, self.env_info)
 
-    def start(self):
+    def run(self):
         self.init()
         self.learn()
         self.save(self.output_dir / f"{self.id}", self.msve_error)
