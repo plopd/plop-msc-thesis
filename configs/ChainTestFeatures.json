@@ -7,9 +7,6 @@
             "log_every_nth_episode": [
                 100
             ],
-            "max_episode_steps": [
-                0
-            ],
             "n_episodes": [
                 1000
             ],

@@ -4,9 +4,6 @@
             "episode_eval_freq": [
                 1
             ],
-            "max_episode_steps": [
-                0
-            ],
             "n_episodes": [
                 100000
             ],

@@ -51,7 +51,7 @@ def run(sweep_id, config_fn):
         "seed": param_cfg.get("run"),
         "problem": param_cfg.get("problem"),
         "id": sweep_id,
-        "max_episode_steps": param_cfg.get("max_episode_steps"),
+        "max_episode_steps": param_cfg.get("max_episode_steps", 0),
         "episode_eval_freq": param_cfg.get("episode_eval_freq"),
         "n_episodes": param_cfg.get("n_episodes"),
         "output_dir": str(output_dir),
