@@ -17,7 +17,7 @@ def main():
         "--script_path",
         type=str,
         help="script path for submitter",
-        default="slurm_submit_jobs.sh",
+        default="job_sbatch.sh",
     )
 
     parser.add_argument("--time", type=str, help="time [HH:MM:SS]", required=True)
@@ -65,6 +65,8 @@ def main():
     script = importlib.util.find_spec(args.python_module)
     if not script:
         raise Exception("Unexpected python_module given.")
+    if not (Path(__file__).parents[1] / f"{args.script_path}").is_file():
+        raise Exception("Unexpected script_path given.")
     if not (
         Path(__file__).parents[1] / "configs" / f"{args.config_filename}.json"
     ).is_file():
