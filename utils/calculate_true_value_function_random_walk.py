@@ -4,9 +4,8 @@ from pathlib import Path
 import numpy as np
 
 
-def calculate_v_chain(N):
+def calculate_true_value_function_random_walk(N, gamma):
     state_prob = 0.5
-    gamma = 1
     theta = 0.000_001
 
     V = np.zeros(N + 1)
@@ -43,7 +42,8 @@ def calculate_v_chain(N):
 
 if __name__ == "__main__":
     N = int(sys.argv[1])
-    V = calculate_v_chain(N)
+    gamma = float(sys.argv[2])
+    V = calculate_true_value_function_random_walk(N, gamma)
     path = Path(f"~/scratch/Chain/true_v_{N}").expanduser()
     np.save(path, V, allow_pickle=True)
     print(V)
