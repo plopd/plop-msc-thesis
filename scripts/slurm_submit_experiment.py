@@ -1,5 +1,6 @@
 import argparse
 import importlib
+from pathlib import Path
 
 from alphaex.submitter import Submitter
 
@@ -64,6 +65,10 @@ def main():
     script = importlib.util.find_spec(args.python_module)
     if not script:
         raise Exception("Unexpected python_module given.")
+    if not (
+        Path(__file__).parents[1] / "configs" / f"{args.config_filename}.json"
+    ).is_file():
+        raise Exception("Unexpected config_filename given.")
     submitter = Submitter(
         clusters,
         args.num_jobs,
