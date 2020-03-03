@@ -8,10 +8,10 @@
                 0
             ],
             "n_episodes": [
-                50000
+                100
             ],
             "output_dir": [
-                "~/scratch/Chain/ChainRandom5"
+                "~/scratch"
             ],
             "problem": [
                 "Chain"
@@ -30,15 +30,6 @@
                         "ETD"
                     ],
                     "step_size": [
-                        1.1920929e-08,
-                        1.9073487e-07,
-                        1.5258789e-06,
-                        1.2207031e-05,
-                        0.000390625,
-                        0.00078125,
-                        0.00625,
-                        0.0125,
-                        0.4,
                         0.8,
                         1.6
                     ]
@@ -47,7 +38,7 @@
         },
         {
             "episode_eval_freq": [
-                50000
+                100
             ],
             "learners_baselines": [
                 {

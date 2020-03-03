@@ -44,6 +44,9 @@ def run(sweep_id, config_fn):
         "seed": param_cfg.get("run"),
     }
 
+    output_dir = (
+        Path(param_cfg.get("output_dir")) / param_cfg.get("problem") / config_fn
+    )
     exp_info = {
         "seed": param_cfg.get("run"),
         "problem": param_cfg.get("problem"),
@@ -51,7 +54,7 @@ def run(sweep_id, config_fn):
         "max_episode_steps": param_cfg.get("max_episode_steps"),
         "episode_eval_freq": param_cfg.get("episode_eval_freq"),
         "n_episodes": param_cfg.get("n_episodes"),
-        "output_dir": param_cfg.get("output_dir"),
+        "output_dir": str(output_dir),
         "log_every_nth_episode": param_cfg.get("log_every_nth_episode"),
         "save_representations": param_cfg.get("save_representations"),
         "num_runs": param_cfg.get("num_runs", 1),

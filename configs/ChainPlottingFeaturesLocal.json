@@ -7,28 +7,35 @@
                         1
                     ],
                     "experiment": [
-                        "ChainDependent"
+                        "ChainRandom"
                     ],
                     "representations": [
-                        "D"
+                        "RB"
+                    ],
+                    "num_runs": [
+                        1
                     ]
                 },
                 {
                     "baseline": [
-                        0
+                        1
                     ],
                     "experiment": [
-                        "ChainTabular"
+                        "ChainRandom"
                     ],
                     "representations": [
-                        "TA"
+                        "R"
+                    ],
+                    "num_runs": [
+                        1
                     ]
                 }
             ],
             "simulator": [
                 {
                     "num_states": [
-                        5
+                        5,
+                        19
                     ]
                 }
             ]
@@ -70,9 +77,6 @@
                         1.0
                     ]
                 }
-            ],
-            "num_runs": [
-                1
             ],
             "plotting": [
                 {

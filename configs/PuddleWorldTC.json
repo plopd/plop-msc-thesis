@@ -11,7 +11,7 @@
                 100000
             ],
             "output_dir": [
-                "~/scratch/PuddleWorld/PuddleWorldTC"
+                "~/scratch"
             ],
             "problem": [
                 "GridWorld"

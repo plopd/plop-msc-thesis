@@ -11,7 +11,7 @@
                 50000
             ],
             "output_dir": [
-                "~/scratch/Chain/ChainRandom5Binary"
+                "~/scratch"
             ],
             "problem": [
                 "Chain"
