@@ -1,9 +1,5 @@
 #!/bin/bash
 
-#SBATCH --job-name submit.sh
-#SBATCH --output=/home/plopd/scratch/output/slurm-%A_%5a.txt
-#SBATCH --error=/home/plopd/scratch/error/slurm-%A_%5a.txt
-
 export OMP_NUM_THREADS=1
 
 source /home/plopd/projects/def-sutton/plopd/plop-msc-thesis-venv/bin/activate
@@ -14,8 +10,8 @@ echo "Running on hostname $(hostname)."
 start=$(date +%s)
 echo "Starting run at: $(date)."
 
-echo "SLURM_ARRAY_TASK_ID: ${SLURM_ARRAY_TASK_ID}" "config_file:" "${config_file}" "${python_module}"
-python -m "${python_module}" "${SLURM_ARRAY_TASK_ID}" "${config_file}"
+echo "SLURM_ARRAY_TASK_ID: ${SLURM_ARRAY_TASK_ID}" "config_filename:" "${config_filename}"
+python -m "${python_module}" "${SLURM_ARRAY_TASK_ID}" "${config_filename}"
 end=$(date +%s)
 runtime=$((end-start))
 
