@@ -44,6 +44,6 @@ if __name__ == "__main__":
     N = int(sys.argv[1])
     gamma = float(sys.argv[2])
     V = calculate_true_value_function_random_walk(N, gamma)
-    path = Path(f"~/scratch/Chain/true_v_{N}").expanduser()
+    path = Path(f"~/scratch/Chain/true_v_{N}_{gamma}".replace(".", "_")).expanduser()
     np.save(path, V, allow_pickle=True)
     print(V)

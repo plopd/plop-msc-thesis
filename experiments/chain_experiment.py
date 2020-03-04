@@ -37,8 +37,10 @@ class Chain(BaseExperiment):
         self.logger.info(
             json.dumps([self.agent_info, self.env_info, self.experiment_info], indent=4)
         )
-        path = self.output_dir.parents[0] / f"true_v_{self.N}.npy"
-        self.true_values = np.load(path)
+        path = self.output_dir.parents[
+            0
+        ] / f"true_v_{self.N}_{self.agent_info.get('discount_rate')}".replace(".", "_")
+        self.true_values = np.load(f"{path}.npy")
         self.states = np.arange(self.N).reshape((-1, 1))
         self.state_distribution = np.ones_like(self.true_values) * 1 / len(self.states)
         self.msve_error = np.zeros(
