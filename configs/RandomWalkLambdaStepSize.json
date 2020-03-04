@@ -1,0 +1,204 @@
+{
+    "experiment_common": [
+        {
+            "log_every_nth_episode": [
+                100
+            ],
+            "n_episodes": [
+                1000
+            ],
+            "output_dir": [
+                "~/scratch"
+            ],
+            "problem": [
+                "Chain"
+            ],
+            "num_runs": [
+                100
+            ]
+        }
+    ],
+    "learners": [
+        {
+            "episode_eval_freq": [
+                1
+            ],
+            "learners_baselines": [
+                {
+                    "algorithm": [
+                        "TD",
+                        "ETD"
+                    ]
+                }
+            ]
+        }
+    ],
+    "learners_common": [
+        {
+            "discount_rate": [
+                0.99
+            ],
+            "interest": [
+                "UI"
+            ],
+            "policy": [
+                "random-chain"
+            ]
+        }
+    ],
+    "step_size_and_trace_decay": [
+        {
+            "trace_decay": [
+                0.0,
+                0.4
+            ],
+            "step_size": [
+                0.0,
+                0.1,
+                0.2,
+                0.3,
+                0.4,
+                0.5,
+                0.6,
+                0.7,
+                0.8,
+                0.9,
+                1.0
+            ]
+        },
+        {
+            "trace_decay": [
+                0.8
+            ],
+            "step_size": [
+                0.0,
+                0.09,
+                0.18,
+                0.27,
+                0.36,
+                0.449,
+                0.54,
+                0.63,
+                0.72,
+                0.8,
+                0.89
+            ]
+        },
+        {
+            "trace_decay": [
+                0.9
+            ],
+            "step_size": [
+                0.0,
+                0.05,
+                0.1,
+                0.15,
+                0.2,
+                0.25,
+                0.3,
+                0.35,
+                0.4,
+                0.45,
+                0.5
+            ]
+        },
+        {
+            "trace_decay": [
+                0.95
+            ],
+            "step_size": [
+                0.0,
+                0.03,
+                0.06,
+                0.09,
+                0.12,
+                0.15,
+                0.18,
+                0.21,
+                0.24,
+                0.27,
+                0.3,
+                0.329
+            ]
+        },
+        {
+            "trace_decay": [
+                0.975
+            ],
+            "step_size": [
+                0.0,
+                0.02,
+                0.04,
+                0.06,
+                0.08,
+                0.1,
+                0.12,
+                0.14,
+                0.16,
+                0.18,
+                0.2
+            ]
+        },
+        {
+            "trace_decay": [
+                0.99
+            ],
+            "step_size": [
+                0.0,
+                0.01,
+                0.02,
+                0.03,
+                0.04,
+                0.05,
+                0.06,
+                0.07,
+                0.08,
+                0.09,
+                0.1
+            ]
+        },
+        {
+            "trace_decay": [
+                1
+            ],
+            "step_size": [
+                0.0,
+                0.004,
+                0.008,
+                0.012,
+                0.016,
+                0.02,
+                0.024,
+                0.028,
+                0.032,
+                0.036,
+                0.04
+            ]
+        }
+    ],
+    "representations": [
+        {
+            "num_states": [
+                19
+            ],
+            "representations": [
+                "TA"
+            ]
+        },
+        {
+            "num_states": [
+                19
+            ],
+            "representations": [
+                "IN"
+            ]
+        }
+    ],
+    "simulator_common": [
+        {
+            "env": [
+                "Chain"
+            ]
+        }
+    ]
+}
