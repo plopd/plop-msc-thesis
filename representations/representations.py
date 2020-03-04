@@ -1,5 +1,6 @@
 from representations.dependent import DependentRepresentations
 from representations.fourier import FourierRepresentation
+from representations.inverted import InvertedRepresentations
 from representations.polynomial import PolynomialRepresentation
 from representations.random import RandomRepresentations
 from representations.random_binary import RandomBinaryRepresentations
@@ -18,6 +19,9 @@ def get_representation(name, unit_norm=True, **kwargs):
     elif name == "D":
         num_states = kwargs.get("num_states")
         return DependentRepresentations(num_states, unit_norm)
+    elif name == "IN":
+        num_states = kwargs.get("num_states")
+        return InvertedRepresentations(num_states, unit_norm)
     elif name == "RB":
         num_states = kwargs.get("num_states")
         num_features = kwargs.get("num_features")
