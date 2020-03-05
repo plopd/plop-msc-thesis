@@ -2,7 +2,7 @@ import sys
 
 from mpi4py import MPI
 
-from results.plot_predictions_randomwalk import plot
+from results.randomwalk_lambda_stepsize import plot
 
 
 def main():
