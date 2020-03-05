@@ -20,18 +20,22 @@ def main():
 
 
 def plot(sweep_id, config_fn):
-    sweeper = Sweeper(Path(__file__).parents[1] / "configs" / f"{config_fn}.json")
+    config_root_path = Path(__file__).parents[1] / "configs"
+    sweeper = Sweeper(config_root_path / f"{config_fn}.json")
     config = sweeper.parse(sweep_id)
+    n_episodes = config.get("n_episodes")
+    _config_fn = config.get("experiment")
+    sweeper = Sweeper(config_root_path / f"{_config_fn}.json")
+    config = sweeper.parse(0)
     data_path = Path(f"~/scratch/{config.get('env')}").expanduser()
-    save_path = path_exists(Path(__file__).parents[0] / config_fn)
-    results = Result(f"{config_fn}.json", data_path, config_fn)
+    save_path = path_exists(Path(__file__).parents[0] / _config_fn)
+    results = Result(f"{_config_fn}.json", data_path, _config_fn)
 
     algorithms = sorted(list(results.get_param_val("algorithm", {}, 1)), reverse=True)
     representations = sorted(
         list(results.get_param_val("representations", {}, 1)), reverse=True
     )
     trace_decays = list(results.get_param_val("trace_decay", {}, 1))
-    num_episodes = list(results.get_param_val("n_episodes", {}, 1))[0]
 
     fig, axes = plt.subplots(
         len(representations),
@@ -59,16 +63,15 @@ def plot(sweep_id, config_fn):
                     config["step_size"] = step_size
                     ids = results.find_experiment_by(config, 1)
                     data = results.load(ids)
-                    mean, se = get_data_by(data, name="auc", percent=1.0,)
+                    data = data[:, :n_episodes]
+                    mean, se = get_data_by(data, name="auc", percent=1.0)
                     cutoff = data[:, 0].mean()
                     means[i] = mean
                     se_errors[i] = se
                     means.clip(0, cutoff)
 
                 # axes[row, col].set_title(f"{algorithm},{representation}")
-                axes[row, col].scatter(
-                    step_sizes, means, c=color, marker="o", label=f"{trace_decay}"
-                )
+                axes[row, col].plot(step_sizes, means, c=color, label=f"{trace_decay}")
                 axes[row, col].errorbar(
                     step_sizes, means, yerr=2.5 * se_errors, color=color
                 )
@@ -76,18 +79,21 @@ def plot(sweep_id, config_fn):
                 # axes[row, 0].set_ylabel(f"RMSVE over {num_runs} 19 states \n and first {num_episodes} episodes")
 
             y_ticks = np.arange(0, 0.55, 0.1).astype(np.float32)
+            x_ticks = np.arange(0, 1.2, 0.2).astype(np.float32)
             for i in range(len(axes)):
                 axes[row, i].spines["right"].set_visible(False)
                 axes[row, i].spines["top"].set_visible(False)
+                axes[row, i].set_xticks(x_ticks)
+                axes[row, i].set_xticklabels(x_ticks)
                 axes[row, i].set_yticks(y_ticks)
                 axes[row, i].set_yticklabels(y_ticks)
                 axes[row, i].set_ylim(0.0, 0.5)
                 # axes[row, i].legend(loc='upper right')
 
-            plt.tight_layout()
-            filename = f"RandomWalk-Ep-{num_episodes}"
-            filename = filename.replace(".", "_")
-            plt.savefig(save_path / filename)
+    plt.tight_layout()
+    filename = f"RandomWalk-Ep-{n_episodes}"
+    filename = filename.replace(".", "_")
+    plt.savefig(save_path / filename)
 
 
 if __name__ == "__main__":
