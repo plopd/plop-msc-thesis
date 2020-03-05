@@ -19,3 +19,8 @@ cluster: mp2
    time: 00:30:00 (HH:MM:SS)
    mem_per_cpu: 512M (M or G)
    episodes: 1000
+  Plot_RandomWalkLambdaStepSize:
+   type: job-array
+   time: 00:10:00 (HH:MM:SS)
+   mem_per_cpu: 128M (M or G)
+   episodes: 1000
