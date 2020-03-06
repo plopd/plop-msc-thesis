@@ -39,7 +39,7 @@ class Chain(BaseExperiment):
         )
         path = self.output_dir.parents[
             0
-        ] / f"true_v_{self.N}_{self.agent_info.get('discount_rate')}".replace(".", "_")
+        ] / f"true_v_{self.N}_{self.agent_info.get('discount_rate')}".replace(".", "-")
         self.true_values = np.load(f"{path}.npy")
         self.states = np.arange(self.N).reshape((-1, 1))
         self.state_distribution = np.ones_like(self.true_values) * 1 / len(self.states)
