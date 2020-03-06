@@ -37,10 +37,12 @@ def plot(sweep_id, config_fn):
     )
     trace_decays = list(results.get_param_val("trace_decay", {}, 1))
 
+    n_algorithms = len(algorithms)
+    n_representations = len(representations)
     fig, axes = plt.subplots(
-        len(representations),
-        len(algorithms),
-        figsize=(10, 9),
+        n_representations,
+        n_algorithms,
+        figsize=(5 * n_algorithms, 4 * n_representations),
         sharey="all",
         sharex="all",
     )
@@ -70,17 +72,14 @@ def plot(sweep_id, config_fn):
                     se_errors[i] = se
                     means.clip(0, cutoff)
 
-                # axes[row, col].set_title(f"{algorithm},{representation}")
                 axes[row, col].plot(step_sizes, means, c=color, label=f"{trace_decay}")
                 axes[row, col].errorbar(
                     step_sizes, means, yerr=2.5 * se_errors, color=color
                 )
-                # axes[-1, col].set_xlabel("Step size")
-                # axes[row, 0].set_ylabel(f"RMSVE over {num_runs} 19 states \n and first {num_episodes} episodes")
 
             y_ticks = np.arange(0, 0.55, 0.1).astype(np.float32)
             x_ticks = np.arange(0, 1.2, 0.2).astype(np.float32)
-            for i in range(len(axes)):
+            for i in range(n_algorithms):
                 axes[row, i].spines["right"].set_visible(False)
                 axes[row, i].spines["top"].set_visible(False)
                 axes[row, i].set_xticks(x_ticks)
@@ -88,7 +87,6 @@ def plot(sweep_id, config_fn):
                 axes[row, i].set_yticks(y_ticks)
                 axes[row, i].set_yticklabels(y_ticks)
                 axes[row, i].set_ylim(0.0, 0.5)
-                # axes[row, i].legend(loc='upper right')
 
     plt.tight_layout()
     filename = f"RandomWalk-Ep-{n_episodes}"
