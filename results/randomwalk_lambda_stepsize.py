@@ -24,6 +24,8 @@ def plot(sweep_id, config_fn):
     sweeper = Sweeper(config_root_path / f"{config_fn}.json")
     config = sweeper.parse(sweep_id)
     n_episodes = config.get("n_episodes")
+    representations = config.get("representations").split(",")
+    x_lim = [float(x) for x in config.get("x_lim").split(",")]
     _config_fn = config.get("experiment")
     sweeper = Sweeper(config_root_path / f"{_config_fn}.json")
     config = sweeper.parse(0)
@@ -32,9 +34,6 @@ def plot(sweep_id, config_fn):
     results = Result(f"{_config_fn}.json", data_path, _config_fn)
 
     algorithms = sorted(list(results.get_param_val("algorithm", {}, 1)), reverse=True)
-    representations = sorted(
-        list(results.get_param_val("representations", {}, 1)), reverse=True
-    )
     trace_decays = list(results.get_param_val("trace_decay", {}, 1))
 
     n_algorithms = len(algorithms)
@@ -58,6 +57,8 @@ def plot(sweep_id, config_fn):
                 config["trace_decay"] = trace_decay
                 step_sizes = list(results.get_param_val("step_size", config, 1))
                 step_sizes = sorted(step_sizes)
+                step_sizes = np.array(step_sizes)
+                step_sizes = step_sizes[np.where(step_sizes <= x_lim[1])[0]]
                 num_step_size = len(step_sizes)
                 means = np.zeros(num_step_size)
                 se_errors = np.zeros(num_step_size)
@@ -68,17 +69,21 @@ def plot(sweep_id, config_fn):
                     data = data[:, :n_episodes]
                     mean, se = get_data_by(data, name="auc", percent=1.0)
                     cutoff = data[:, 0].mean()
+                    cutoff += 0.1
                     means[i] = mean
+                    means = means.clip(0, cutoff)
                     se_errors[i] = se
-                    means.clip(0, cutoff)
+                    se_errors[np.where(means >= cutoff)[0]] = 0.0
 
                 axes[row, col].plot(step_sizes, means, c=color, label=f"{trace_decay}")
                 axes[row, col].errorbar(
                     step_sizes, means, yerr=2.5 * se_errors, color=color
                 )
 
-            y_ticks = np.arange(0, 0.55, 0.1).astype(np.float32)
-            x_ticks = np.arange(0, 1.2, 0.2).astype(np.float32)
+            y_ticks = np.arange(0, cutoff, 0.1).astype(np.float32)
+            x_ticks = np.arange(x_lim[0], x_lim[1], 2 * x_lim[1] / 10).astype(
+                np.float32
+            )
             for i in range(n_algorithms):
                 axes[row, i].spines["right"].set_visible(False)
                 axes[row, i].spines["top"].set_visible(False)
@@ -86,11 +91,13 @@ def plot(sweep_id, config_fn):
                 axes[row, i].set_xticklabels(x_ticks)
                 axes[row, i].set_yticks(y_ticks)
                 axes[row, i].set_yticklabels(y_ticks)
-                axes[row, i].set_ylim(0.0, 0.5)
+                axes[row, i].set_ylim(0.0, cutoff - 0.05)
+                axes[row, i].set_xlim(x_lim[0], x_lim[1])
 
     plt.tight_layout()
-    filename = f"RandomWalk-Ep-{n_episodes}"
-    filename = filename.replace(".", "_")
+    filename = f"RandomWalk-Ep-{n_episodes}-Stepsize-{x_lim[0]}_{x_lim[1]}".replace(
+        ".", "_"
+    )
     plt.savefig(save_path / filename)
 
 
