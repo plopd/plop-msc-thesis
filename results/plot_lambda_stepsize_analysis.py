@@ -25,6 +25,7 @@ def plot(sweep_id, config_fn):
     config = sweeper.parse(sweep_id)
     n_episodes = config.get("n_episodes")
     representations = config.get("representations").split(",")
+    discount_rate = config.get("discount_rate")
     x_lim = [float(x) for x in config.get("x_lim").split(",")]
     _config_fn = config.get("experiment")
     sweeper = Sweeper(config_root_path / f"{_config_fn}.json")
@@ -36,19 +37,22 @@ def plot(sweep_id, config_fn):
     algorithms = sorted(list(results.get_param_val("algorithm", {}, 1)), reverse=True)
     trace_decays = list(results.get_param_val("trace_decay", {}, 1))
 
-    n_algorithms = len(algorithms)
-    n_representations = len(representations)
+    n_cols = len(algorithms)
+    n_rows = len(representations)
+    # idx = np.arange(1, n_rows*n_cols+1).reshape((n_rows, n_cols))
+    # fig = plt.figure()
+    # for n_col in range(n_cols):
+    #     for n_row in range(n_rows):
+    #         fig.add_subplot(n_rows, n_cols, idx[n_row, n_col])
+
     fig, axes = plt.subplots(
-        n_representations,
-        n_algorithms,
-        figsize=(5 * n_algorithms, 4 * n_representations),
-        sharey="all",
-        sharex="all",
+        n_rows, n_cols, figsize=(5 * n_cols, 4 * n_rows), sharey="all", sharex="all",
     )
 
     for row, representation in enumerate(representations):
         config = {}
         config["representations"] = representation
+        config["discount_rate"] = discount_rate
         for col, algorithm in enumerate(algorithms):
             config["algorithm"] = algorithm
             for trace_decay in trace_decays:
@@ -84,7 +88,7 @@ def plot(sweep_id, config_fn):
             x_ticks = np.arange(x_lim[0], x_lim[1], 2 * x_lim[1] / 10).astype(
                 np.float32
             )
-            for i in range(n_algorithms):
+            for i in range(n_cols):
                 axes[row, i].spines["right"].set_visible(False)
                 axes[row, i].spines["top"].set_visible(False)
                 axes[row, i].set_xticks(x_ticks)
@@ -95,8 +99,8 @@ def plot(sweep_id, config_fn):
                 axes[row, i].set_xlim(x_lim[0], x_lim[1])
 
     plt.tight_layout()
-    filename = f"RandomWalk-Ep-{n_episodes}-Stepsize-{x_lim[0]}_{x_lim[1]}".replace(
-        ".", "_"
+    filename = f"RandomWalk_NumEp_{n_episodes}_StepSize_{x_lim[0]}-{x_lim[1]}_DiscountRate_{discount_rate}".replace(
+        ".", "-"
     )
     plt.savefig(save_path / filename)
 
