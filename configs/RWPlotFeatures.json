@@ -65,10 +65,10 @@
                         "interim"
                     ],
                     "percent_metric": [
-                        0.01
+                        0.0025
                     ],
                     "percent_plot": [
-                        0.1
+                        0.0025
                     ]
                 },
                 {
@@ -76,7 +76,7 @@
                         "end"
                     ],
                     "percent_metric": [
-                        0.01
+                        0.0025
                     ],
                     "percent_plot": [
                         1.0
@@ -95,7 +95,7 @@
                 }
             ],
             "num_runs": [
-                100
+                50
             ],
             "plotting": [
                 {
@@ -103,7 +103,7 @@
                         0.1
                     ],
                     "y_max": [
-                        0.45
+                        0.55
                     ],
                     "y_min": [
                         0.0

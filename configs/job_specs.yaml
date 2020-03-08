@@ -14,12 +14,12 @@ cluster: mp2
    time: 01:00:00 (HH:MM:SS)
    mem_per_cpu: 256 (M or G)
    episodes: 100000
- RandomWalkLambdaStepSize:
+ RW19LambdaSSGamma:
    type: job-array
    time: 00:30:00 (HH:MM:SS)
    mem_per_cpu: 512M (M or G)
    episodes: 1000
-  Plot_RandomWalkLambdaStepSize:
+  Plot_RW19LambdaSSGamma:
    type: job-array
    time: 00:10:00 (HH:MM:SS)
    mem_per_cpu: 128M (M or G)

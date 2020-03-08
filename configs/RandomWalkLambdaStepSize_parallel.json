@@ -1,13 +1,24 @@
 {
     "experiments": [
         {
+            "discount_rate": [
+                0.99,
+                0.9995
+            ],
+            "x_lim": [
+                "0.0,1.0",
+                "0.0,0.2"
+            ],
             "n_episodes": [
                 10,
                 100,
                 1000
             ],
             "experiment": [
-                "RandomWalkLambdaStepSize"
+                "RW19LambdaSSGamma"
+            ],
+            "representations": [
+                "TA,D"
             ]
         }
     ]
