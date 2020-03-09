@@ -7,43 +7,10 @@
                         0
                     ],
                     "experiment": [
-                        "ChainTabular"
+                        "RWTA"
                     ],
                     "representations": [
                         "TA"
-                    ]
-                },
-                {
-                    "baseline": [
-                        1
-                    ],
-                    "experiment": [
-                        "ChainDependent"
-                    ],
-                    "representations": [
-                        "D"
-                    ]
-                },
-                {
-                    "baseline": [
-                        1
-                    ],
-                    "experiment": [
-                        "ChainPoly"
-                    ],
-                    "representations": [
-                        "P"
-                    ]
-                },
-                {
-                    "baseline": [
-                        1
-                    ],
-                    "experiment": [
-                        "ChainFourier"
-                    ],
-                    "representations": [
-                        "F"
                     ]
                 }
             ],
@@ -95,7 +62,7 @@
                 }
             ],
             "num_runs": [
-                50
+                60
             ],
             "plotting": [
                 {
