@@ -1,0 +1,95 @@
+{
+    "experiments": [
+        {
+            "experiment": [
+                "RWTA"
+            ],
+            "simulator": [
+                {
+                    "num_states": [
+                        5,
+                        19
+                    ]
+                }
+            ]
+        }
+    ],
+    "experiments_common": [
+        {
+            "metric": [
+                {
+                    "metric": [
+                        "interim"
+                    ],
+                    "percent_metric": [
+                        0.0025
+                    ],
+                    "percent_plot": [
+                        0.0025
+                    ]
+                },
+                {
+                    "metric": [
+                        "end"
+                    ],
+                    "percent_metric": [
+                        0.0025
+                    ],
+                    "percent_plot": [
+                        1.0
+                    ]
+                },
+                {
+                    "metric": [
+                        "auc"
+                    ],
+                    "percent_metric": [
+                        1.0
+                    ],
+                    "percent_plot": [
+                        1.0
+                    ]
+                }
+            ],
+            "num_runs": [
+                60
+            ],
+            "plotting": [
+                {
+                    "step": [
+                        0.1
+                    ],
+                    "y_max": [
+                        0.55
+                    ],
+                    "y_min": [
+                        0.0
+                    ]
+                }
+            ]
+        }
+    ],
+    "learners_common": [
+        {
+            "algorithms": [
+                "TD,ETD"
+            ],
+            "discount_rate": [
+                0.99
+            ],
+            "interest": [
+                "UI"
+            ],
+            "trace_decay": [
+                0.0
+            ]
+        }
+    ],
+    "simulator_common": [
+        {
+            "env": [
+                "Chain"
+            ]
+        }
+    ]
+}
