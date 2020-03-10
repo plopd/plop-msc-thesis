@@ -31,7 +31,7 @@ def plot(sweep_id, config_fn):
     env = config.get("env")
     data_path = Path(f"~/scratch/{env}").expanduser()
     save_path = path_exists(Path(__file__).parents[0] / config_fn)
-    n_rows = len(experiments) + 1
+    n_rows = len(experiments)
     n_cols = len(algorithms)
     fig, axes = plt.subplots(
         n_rows, n_cols, figsize=(n_rows * 7, n_cols * 5), sharey="all", sharex="col"
@@ -48,6 +48,7 @@ def plot(sweep_id, config_fn):
         _config["representations"] = representations
         _config["num_states"] = config.get("num_states")
         for algorithm in algorithms:
+
             color = colors.get(algorithm)
             _config["algorithm"] = algorithm
             _config.pop("step_size", None)
