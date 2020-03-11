@@ -2,7 +2,7 @@
     "experiments": [
         {
             "experiment": [
-                "RWTA,RWD"
+                "RWTA,RWD,RWP,RWF"
             ],
             "simulator": [
                 {
