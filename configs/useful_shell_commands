@@ -6,3 +6,5 @@ sacct -j 4609945 --format=JobID,JobName,ReqMem,MaxRSS,Elapsed
 
 https://askubuntu.com/questions/420981/how-do-i-save-terminal-output-to-a-file
 SomeCommand 2>&1 | tee SomeFile.txt
+
+sshare -l -A def-sutton_cpu -u plopd
