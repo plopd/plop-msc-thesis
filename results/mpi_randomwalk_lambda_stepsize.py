@@ -2,7 +2,7 @@ import sys
 
 from mpi4py import MPI
 
-from results.plot_lambda_stepsize_analysis import plot
+from results.plot_RW19GammaLambdaAlpha import plot
 
 
 def main():
