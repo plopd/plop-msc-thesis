@@ -1,5 +1,6 @@
 import argparse
 import importlib
+import os
 from pathlib import Path
 
 from alphaex.submitter import Submitter
@@ -33,11 +34,12 @@ def main():
 
     args = parser.parse_args()
 
-    rootdir = "/home/plopd/scratch"
-    project_root_dir = "/home/plopd/projects/def-sutton/plopd/plop-msc-thesis"
+    HOME = os.environ.get("HOME")
+    SCRATCH = os.environ.get("SCRATCH")
+    project_root_dir = f"{HOME}/projects/def-sutton/plopd/plop-msc-thesis"
     script_path = args.script_path
-    output_path = f"{rootdir}/{args.experiment_rootdir}/{args.config_filename}/output"
-    error_path = f"{rootdir}/{args.experiment_rootdir}/{args.config_filename}/error"
+    output_path = f"{SCRATCH}/{args.experiment_rootdir}/{args.config_filename}/output"
+    error_path = f"{SCRATCH}/{args.experiment_rootdir}/{args.config_filename}/error"
 
     clusters = [
         {

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source /home/plopd/projects/def-sutton/plopd/plop-msc-thesis-venv/bin/activate
+source $HOME/projects/def-sutton/plopd/plop-msc-thesis-venv/bin/activate
 
 echo "Current working directory is $(pwd)."
 echo "Running on hostname $(hostname)."
