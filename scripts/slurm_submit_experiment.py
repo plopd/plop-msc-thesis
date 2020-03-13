@@ -47,19 +47,14 @@ def main():
             "project_root_dir": project_root_dir,
             "exp_results_from": [output_path, error_path],
             "exp_results_to": [output_path, error_path],
-        }
+        },
         # {
         #     "name": "cedar",
+        #     "account": args.account,
         #     "capacity": 1000,
         #     "project_root_dir": project_root_dir,
-        #     "exp_results_from": [
-        #         f"{experiment_root_dir}/output",
-        #         f"{experiment_root_dir}/error",
-        #     ],
-        #     "exp_results_to": [
-        #         f"{experiment_root_dir}/output",
-        #         f"{experiment_root_dir}/error",
-        #     ],
+        #     "exp_results_from": [output_path, error_path],
+        #     "exp_results_to": [output_path, error_path],
         # },
     ]
     script = importlib.util.find_spec(args.python_module)
