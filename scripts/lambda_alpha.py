@@ -32,7 +32,9 @@ lmbda2alpha = {}
 for g, gamma in enumerate(gammas):
     lmbda2alpha[gamma] = {"discount_rate": [gamma], "lambdas_step_sizes": []}
     for l, lmbda in enumerate(lambdas):
+        szs = alphas[g][l].tolist()
+        szs = [float(f"{sz:{4}.{3}f}") for sz in szs]
         lmbda2alpha[gamma]["lambdas_step_sizes"].append(
-            {"trace_decay": [lmbda], "step_size": alphas[g][l].tolist()}
+            {"trace_decay": [lmbda], "step_size": szs}
         )
 print(json.dumps(lmbda2alpha, indent=4))
