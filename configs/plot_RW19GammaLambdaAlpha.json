@@ -15,7 +15,7 @@
                 1000
             ],
             "experiment": [
-                "RW19LambdaSSGamma"
+                "RW19GammaLambdaAlpha"
             ],
             "representations": [
                 "TA,D,IN"
