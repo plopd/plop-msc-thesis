@@ -13,7 +13,7 @@
             "problem": [
                 "Chain"
             ],
-            "num_runs": [
+            "runs": [
                 100
             ]
         }

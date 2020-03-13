@@ -2,15 +2,10 @@
     "experiments": [
         {
             "experiment": [
-                "RWTA,RWD,RWP,RWF"
+                "RWTA,RWD"
             ],
-            "simulator": [
-                {
-                    "num_states": [
-                        5,
-                        19
-                    ]
-                }
+            "num_states": [
+                5
             ]
         }
     ],
@@ -50,9 +45,6 @@
                         1.0
                     ]
                 }
-            ],
-            "num_runs": [
-                60
             ],
             "plotting": [
                 {

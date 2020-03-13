@@ -27,16 +27,16 @@ def plot(sweep_id, config_fn):
     config = sweeper.parse(sweep_id)
     experiments = config.get("experiment").split(",")
     algorithms = config.get("algorithms").split(",")
-    num_runs = config.get("num_runs")
     env = config.get("env")
+    num_states = config.get("num_states")
     data_path = Path(f"~/scratch/{env}").expanduser()
     save_path = path_exists(Path(__file__).parents[0] / config_fn)
     n_rows = len(experiments)
     n_cols = len(algorithms)
     fig, axes = plt.subplots(
-        n_rows, n_cols, figsize=(n_rows * 7, n_cols * 5), sharey="all", sharex="col"
+        n_rows, n_cols, figsize=(n_cols * 5, n_rows * 4), sharey="all", sharex="col"
     )
-
+    fig.suptitle(f"{config.get('metric')} performance on {num_states} random walk")
     for row, experiment in enumerate(experiments):
         _config = {}
         results = Result(
@@ -45,6 +45,7 @@ def plot(sweep_id, config_fn):
             experiment=experiment,
         )
         representations = list(results.get_param_val("representations", {}, 1))[0]
+        num_runs = list(results.get_param_val("num_runs", {}, 1))[0]
         _config["representations"] = representations
         _config["num_states"] = config.get("num_states")
         for algorithm in algorithms:
@@ -101,9 +102,10 @@ def plot(sweep_id, config_fn):
                 alpha=0.15,
             )
             axes[-1, 0].set_xlabel("Walks/Episodes")
-            axes[0, 0].set_ylabel(
-                f"RMSVE over {num_runs} runs\n" f"({config.get('metric')} performance)"
-            )
+            if row == 0:
+                axes[0, 0].set_ylabel(f"RMSVE over {num_runs} runs")
+            elif experiment in ["RWR5", "RWR19", "RWRB5", "RWRB19"]:
+                axes[row, 0].set_ylabel(f"{num_runs} runs")
 
             if _config.get("baseline") == 1:
                 _config["algorithm"] = "LSTD" if algorithm == "TD" else "ELSTD"
@@ -136,14 +138,15 @@ def plot(sweep_id, config_fn):
         y_tick_values = np.arange(
             config.get("y_min"), cutoff + config.get("step"), config.get("step"),
         ).astype(np.float32)
-        for i in range(len(axes)):
+        for i in range(n_cols):
             axes[row, i].spines["right"].set_visible(False)
             axes[row, i].spines["top"].set_visible(False)
             axes[row, i].set_yticks(y_tick_values)
             axes[row, i].set_yticklabels(y_tick_values)
             axes[row, i].set_ylim(config.get("y_min"), cutoff - 0.05)
 
-        plt.tight_layout()
+        fig.tight_layout()
+        fig.subplots_adjust(top=0.88)
         filename = (
             f"plot_features_RW-{config.get('num_states')}-metric-{config.get('metric')}"
         )

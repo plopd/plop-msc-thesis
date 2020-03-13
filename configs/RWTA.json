@@ -15,6 +15,9 @@
             ],
             "problem": [
                 "Chain"
+            ],
+            "num_runs": [
+                60
             ]
         }
     ],

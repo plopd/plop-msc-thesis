@@ -45,7 +45,7 @@ class Chain(BaseExperiment):
         self.state_distribution = np.ones_like(self.true_values) * 1 / len(self.states)
         self.msve_error = np.zeros(
             (
-                self.experiment_info.get("num_runs"),
+                self.experiment_info.get("runs"),
                 self.n_episodes // self.episode_eval_freq + 1,
             )
         )
@@ -73,7 +73,7 @@ class Chain(BaseExperiment):
         self.rl_glue.rl_init(self.agent_info, self.env_info)
 
     def run(self):
-        for i in range(self.experiment_info.get("num_runs")):
+        for i in range(self.experiment_info.get("runs")):
             self.agent_info["seed"] = i + self.initial_seed
             self.env_info["seed"] = i + self.initial_seed
             self.init()

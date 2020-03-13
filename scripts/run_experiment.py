@@ -57,7 +57,7 @@ def run(sweep_id, config_fn):
         "output_dir": str(output_dir),
         "log_every_nth_episode": param_cfg.get("log_every_nth_episode"),
         "save_representations": param_cfg.get("save_representations"),
-        "num_runs": param_cfg.get("num_runs", 1),
+        "runs": param_cfg.get("runs", 1),
     }
 
     experiment = get_experiment(exp_info.get("problem"), agent_info, env_info, exp_info)
