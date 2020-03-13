@@ -1,7 +1,5 @@
 #!/bin/bash
 
-export OMP_NUM_THREADS=1
-
 source /home/plopd/projects/def-sutton/plopd/plop-msc-thesis-venv/bin/activate
 
 echo "Current working directory is $(pwd)."
