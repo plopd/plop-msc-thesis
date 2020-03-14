@@ -2,7 +2,7 @@ import sys
 
 from mpi4py import MPI
 
-from results.plot_RW19GammaLambdaAlpha import plot
+from results.plotRW19GammaLambdaAlpha import plot
 
 
 def main():
