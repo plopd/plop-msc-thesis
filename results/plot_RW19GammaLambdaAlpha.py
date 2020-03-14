@@ -75,9 +75,11 @@ def plot(sweep_id, config_fn):
                     cutoff = data[:, 0].mean()
                     cutoff += 0.1
                     means[i] = mean
+                    means = np.nan_to_num(means, nan=np.inf)
                     means = means.clip(0, cutoff)
                     se_errors[i] = se
-                    se_errors[np.where(means >= cutoff)[0]] = 0.0
+                    se_errors = np.nan_to_num(se_errors)
+                    se_errors[np.where(means >= cutoff)[0]] = 1e-8
 
                 axes[row, col].plot(step_sizes, means, c=color, label=f"{trace_decay}")
                 axes[row, col].errorbar(
@@ -85,14 +87,14 @@ def plot(sweep_id, config_fn):
                 )
 
             y_ticks = np.arange(0, cutoff, 0.1).astype(np.float32)
-            x_ticks = np.arange(x_lim[0], x_lim[1], 2 * x_lim[1] / 10).astype(
-                np.float32
-            )
+            # x_ticks = np.arange(x_lim[0], x_lim[1], 2 * x_lim[1] / 10).astype(
+            #     np.float32
+            # )
             for i in range(n_cols):
                 axes[row, i].spines["right"].set_visible(False)
                 axes[row, i].spines["top"].set_visible(False)
-                axes[row, i].set_xticks(x_ticks)
-                axes[row, i].set_xticklabels(x_ticks)
+                # axes[row, i].set_xticks(x_ticks)
+                # axes[row, i].set_xticklabels(x_ticks)
                 axes[row, i].set_yticks(y_ticks)
                 axes[row, i].set_yticklabels(y_ticks)
                 axes[row, i].set_ylim(0.0, cutoff - 0.05)
