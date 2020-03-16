@@ -3,12 +3,12 @@ import gym
 from environments.base import BaseEnvironment
 
 
-class MountainCarProblem(BaseEnvironment):
-    """Implements MountainCar from https://gym.openai.com/envs/MountainCar-v0/
+class MountainCarEnv(BaseEnvironment):
+    """Wrapper for RL-glue for MountainCar from https://gym.openai.com/envs/MountainCar-v0/
     """
 
     def __init__(self):
-        super(MountainCarProblem, self).__init__()
+        super(MountainCarEnv, self).__init__()
         self.env = None
 
     def env_init(self, env_info={}):
