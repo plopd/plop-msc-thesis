@@ -13,12 +13,12 @@ matplotlib.rcParams.update({"font.size": 24})
 sns.set()
 
 save_rootpath = Path(f"{os.environ.get('SCRATCH')}") / "MountainCar"
-num_obs = 500
+num_obs = 50
 env_id = "MountainCar-v0"
 discount_rate = 0.99
 policy_name = "MC-fixed-policy"
 
-observations = np.load(save_rootpath / f"S_{num_obs}")
+observations = np.load(save_rootpath / f"S_{num_obs}.npy")
 env = gym.make(env_id)
 
 # Plot states S
@@ -36,8 +36,10 @@ colors = minmax_normalization_ab(
 )
 plt.figure()
 sc = plt.scatter(observations[:, 0], observations[:, 1], c=colors, cmap="hot")
+plt.xlim((env.observation_space.low[0], env.observation_space.high[0]))
+plt.ylim((env.observation_space.low[1], env.observation_space.high[1]))
 plt.colorbar(sc)
-plt.title(f"MountainCar {policy_name} Prediction")
+plt.title(f"{env_id} {policy_name} Prediction")
 plt.xlabel("Position")
 plt.ylabel("Velocity")
 plt.tight_layout()
