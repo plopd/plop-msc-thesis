@@ -38,12 +38,16 @@ def simulate_on_policy(**kwargs):
     save_rootpath = kwargs.get("save_rootpath")
 
     env = gym.make(env_id)
-    env.seed(seed=0)
+    seed = 0
+    env.seed(seed=seed)
+    rand_generator = np.random.RandomState(seed)
     obs = env.reset()
     observations = []
     for t in tqdm(range(steps)):
         observations.append(obs)
-        action = get_action_from_policy(policy_name, **{"observation": obs})
+        action = get_action_from_policy(
+            policy_name, rand_generator, **{"observation": obs}
+        )
         obs, reward, done, info = env.step(action)
         # env.render("human")
         if done:
@@ -75,12 +79,15 @@ def compute_value_function(**kwargs):
         env = gym.make(env_id)
         Gs = np.zeros(num_episode)
         for n_e in range(num_episode):
+            rand_generator = np.random.RandomState(n_e)
             rewards = []
             done = False
             env.reset()
             env.state = obs
             while not done:
-                action = get_action_from_policy(policy_name, **{"observation": obs})
+                action = get_action_from_policy(
+                    policy_name, rand_generator, **{"observation": obs}
+                )
                 obs, reward, done, info = env.step(action)
                 rewards.append(reward)
                 if done:
