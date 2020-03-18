@@ -1,14 +1,17 @@
-from .chain import Chain
-from .deterministic_chain import DeterministicChain
+from .chain_env import ChainEnv
+from .mountain_car import MountainCarEnv
 from .puddle_world import PuddleWorld
+from .random_walk_env import RandomWalkEnv
 
 
 def get_environment(name):
-    if name == "Chain":
-        return Chain
-    elif name == "ChainDeterministic":
-        return DeterministicChain
+    if name == "RandomWalk":
+        return RandomWalkEnv
+    elif name == "Chain":
+        return ChainEnv
     elif name == "PuddleWorld":
         return PuddleWorld
+    elif name == "MountainCar":
+        return MountainCarEnv
 
     raise Exception("Unexpected environment given.")

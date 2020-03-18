@@ -1,7 +1,7 @@
-from environments.chain import Chain
+from environments.random_walk_env import RandomWalkEnv
 
 
-class DeterministicChain(Chain):
+class ChainEnv(RandomWalkEnv):
     def env_start(self):
         return super().env_start()
 

@@ -6,9 +6,9 @@ LEFT = 0
 RIGHT = 1
 
 
-class Chain(BaseEnvironment):
+class RandomWalkEnv(BaseEnvironment):
     """
-    Markov Chain from Sutton and Barto, 2018
+    Random Walk from Sutton and Barto, 2018
     """
 
     def __init__(self):
