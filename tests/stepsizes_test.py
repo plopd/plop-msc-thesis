@@ -16,10 +16,9 @@ def test_td_step_size_tile_coding():
     agent_info = {
         "step_size": 0.5,
         "representations": "TC",
-        "num_dims": 2,
-        "tiles_per_dim": 10,
-        "min_x": 0,
-        "max_x": 1,
+        "tiles_per_dim": "10,10",
+        "min_x": "0,0",
+        "max_x": "1,1",
         "tilings": 5,
     }
 
@@ -73,10 +72,9 @@ def test_etd_step_size_tile_coding():
     agent_info = {
         "step_size": 0.5,
         "representations": "TC",
-        "num_dims": 2,
-        "tiles_per_dim": 10,
-        "min_x": 0,
-        "max_x": 1,
+        "tiles_per_dim": "10,10",
+        "min_x": "0,0",
+        "max_x": "1,1",
         "tilings": 5,
         "discount_rate": 0.25,
         "trace_decay": 0.95,

@@ -48,7 +48,7 @@ if __name__ == "__main__":
     gamma = float(sys.argv[3])
     V = compute_value_function(num_states, action_range, gamma)
     path = Path(
-        f"~/scratch/Chain/true_v_{num_states}_{gamma}".replace(".", "-")
+        f"~/scratch/RandomWalkExp/true_v_{num_states}_{gamma}".replace(".", "-")
     ).expanduser()
     np.save(path, V)
     states = range(0, num_states)

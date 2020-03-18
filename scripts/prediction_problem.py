@@ -45,9 +45,7 @@ def simulate_on_policy(**kwargs):
     observations = []
     for t in tqdm(range(steps)):
         observations.append(obs)
-        action = get_action_from_policy(
-            policy_name, rand_generator, **{"observation": obs}
-        )
+        action = get_action_from_policy(policy_name, obs, rand_generator)
         obs, reward, done, info = env.step(action)
         # env.render("human")
         if done:
@@ -85,9 +83,7 @@ def compute_value_function(**kwargs):
             env.reset()
             env.state = obs
             while not done:
-                action = get_action_from_policy(
-                    policy_name, rand_generator, **{"observation": obs}
-                )
+                action = get_action_from_policy(policy_name, obs, rand_generator)
                 obs, reward, done, info = env.step(action)
                 rewards.append(reward)
                 if done:

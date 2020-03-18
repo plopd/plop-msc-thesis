@@ -12,7 +12,7 @@ def calculate_state_distribution(N):
     agent_info = {
         "num_states": N,
         "algorithm": "TD",
-        "representations": "tabular",
+        "representations": "TA",
         "discount_rate": 1,
         "trace_decay": 0,
         "step_size": 0.125,
@@ -20,7 +20,7 @@ def calculate_state_distribution(N):
         "interest": "UI",
     }
 
-    env_info = {"env": "Chain", "num_states": N}
+    env_info = {"env": "RandomWalk", "num_states": N}
 
     exp_info = {
         "max_timesteps_episode": 1000000,
@@ -97,4 +97,4 @@ if __name__ == "__main__":
     N = int(sys.argv[1])
     print(calculate_state_distribution(N))
     # true_value = compute_true_value()
-    # np.save("/Users/saipiens/scratch/Chain/true_v_1000", true_value, allow_pickle=True)
+    # np.save("/Users/saipiens/scratch/RandomWalkExp/true_v_1000", true_value, allow_pickle=True)

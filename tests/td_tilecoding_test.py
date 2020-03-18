@@ -8,11 +8,10 @@ from rl_glue.rl_glue import RLGlue
 agent_info = {
     "num_states": 19,
     "representations": "TC",
-    "num_dims": 1,
-    "tiles_per_dim": 18,
+    "tiles_per_dim": "18",
     "tilings": 1,
-    "min_x": 0,
-    "max_x": 18,
+    "min_x": "0",
+    "max_x": "18",
     "discount_rate": 0.99,
     "trace_decay": 0.5,
     "interest": "UI",
@@ -20,7 +19,7 @@ agent_info = {
     "policy": "random-chain",
 }
 
-env_info = {"env": "Chain", "num_states": 19}
+env_info = {"env": "RandomWalk", "num_states": 19}
 environment = get_environment(env_info["env"])
 
 

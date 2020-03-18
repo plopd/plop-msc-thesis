@@ -15,7 +15,7 @@ agent_info = {
     "policy": "random-chain",
 }
 
-env_info = {"env": "Chain", "num_states": 19}
+env_info = {"env": "RandomWalk", "num_states": 19}
 
 
 @pytest.mark.parametrize("algorithm", ["ELSTD"])

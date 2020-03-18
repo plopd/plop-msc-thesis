@@ -5,10 +5,10 @@ import numpy as np
 
 
 def get_fig(N):
-    path = Path("~/scratch/Chain").expanduser() / f"true_v_{N}.npy"
+    path = Path("~/scratch/RandomWalkExp").expanduser() / f"true_v_{N}.npy"
     true_v = np.load(path)
 
-    path = Path("~/scratch/Chain").expanduser() / f"state_distribution_{N}.npy"
+    path = Path("~/scratch/RandomWalkExp").expanduser() / f"state_distribution_{N}.npy"
     state_distribution = np.load(path)
 
     fig, ax = plt.subplots(figsize=(12, 9))

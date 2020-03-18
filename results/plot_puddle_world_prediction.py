@@ -14,7 +14,7 @@ matplotlib.rcParams.update({"font.size": 24})
 sns.set()
 
 save_rootpath = Path(f"{os.environ.get('SCRATCH')}") / "PuddleWorld"
-num_obs = 50
+num_obs = 500
 env_id = "PuddleWorld-v0"
 discount_rate = 0.99
 policy_name = "semi-random-policy"

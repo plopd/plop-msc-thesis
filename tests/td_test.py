@@ -16,7 +16,7 @@ agent_info = {
     "policy": "random-chain",
 }
 
-env_info = {"env": "Chain", "num_states": 19}
+env_info = {"env": "RandomWalk", "num_states": 19}
 
 
 @pytest.mark.parametrize("algorithm", ["ELSTD"])
@@ -101,9 +101,7 @@ def test_emphasis_reset_at_start_of_episode(algorithm):
     assert rl_glue.rl_agent_message("get emphasis trace") == 0.0
 
 
-@pytest.mark.parametrize(
-    "env, algorithm", [("ChainDeterministic", "TD"), ("ChainDeterministic", "ETD")]
-)
+@pytest.mark.parametrize("env, algorithm", [("Chain", "TD"), ("Chain", "ETD")])
 def test_one_step_td_update(env, algorithm):
     agent_info["algorithm"] = algorithm
     agent_info["trace_decay"] = 1.0

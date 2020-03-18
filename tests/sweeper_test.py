@@ -14,14 +14,15 @@ def test_sweeper_same_keys_for_all_experiments():
         "n_episodes": 50000,
         "max_episode_steps": 0,
         "episode_eval_freq": 1,
-        "output_dir": "~/scratch/Chain/ChainTabularDependent",
-        "env": "Chain",
+        "output_dir": "~/scratch",
+        "problem": "RandomWalk",
+        "env": "RandomWalk",
         "num_states": 19,
         "algorithm": "etd",
         "step_size": 1.192_092_895_507_812_5e-07,
         "discount_rate": 1.0,
         "trace_decay": 0.0,
-        "representations": "DF",
+        "representations": "D",
         "num_dims": 10,
         "interest": "UI",
         "policy": "random-chain",
@@ -33,8 +34,7 @@ def test_sweeper_same_keys_for_all_experiments():
 
 
 @pytest.mark.parametrize(
-    "name, representations",
-    [("TD", "tabular"), ("TD", "DF"), ("ETD", "tabular"), ("ETD", "DF")],
+    "name, representations", [("TD", "TA"), ("TD", "D"), ("ETD", "TA"), ("ETD", "D")],
 )
 def test_sweeper_number_of_stepsizes_for_method(name, representations):
     cfg_filename, num_runs = "Test_Sweeper", 100
@@ -44,7 +44,7 @@ def test_sweeper_number_of_stepsizes_for_method(name, representations):
         "step_size",
         {
             "algorithm": name,
-            "env": "Chain",
+            "env": "RandomWalk",
             "representations": representations,
             "interest": "UI",
             "num_states": 19,
@@ -56,8 +56,7 @@ def test_sweeper_number_of_stepsizes_for_method(name, representations):
 
 
 @pytest.mark.parametrize(
-    "name, representations",
-    [("TD", "tabular"), ("TD", "DF"), ("ETD", "tabular"), ("ETD", "DF")],
+    "name, representations", [("TD", "TA"), ("TD", "D"), ("ETD", "TA"), ("ETD", "D")],
 )
 def test_sweeper_number_of_experiments_for_learner_and_features(name, representations):
     cfg_filename, num_runs = "Test_Sweeper", 100
@@ -66,7 +65,7 @@ def test_sweeper_number_of_experiments_for_learner_and_features(name, representa
     search_lst = sweeper.search(
         {
             "algorithm": name,
-            "env": "Chain",
+            "env": "RandomWalk",
             "representations": representations,
             "interest": "UI",
             "num_states": 19,
@@ -86,7 +85,7 @@ def test_sweeper_number_of_experiments_for_learner(name):
     sweeper = Sweeper(f"{Path(__file__).parents[1]}/configs/{cfg_filename}.json")
 
     search_lst = sweeper.search(
-        {"algorithm": name, "env": "Chain", "interest": "UI", "num_states": 19},
+        {"algorithm": name, "env": "RandomWalk", "interest": "UI", "num_states": 19},
         num_runs,
     )
 

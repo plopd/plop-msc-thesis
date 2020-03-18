@@ -11,9 +11,13 @@ from representations.tile_coding import TileCoder
 
 def get_representation(name, unit_norm=True, **kwargs):
     if name == "TC":
-        num_dims = kwargs.get("num_dims")
-        tiles_per_dim = [kwargs.get("tiles_per_dim")] * num_dims
-        lims = [(kwargs.get("min_x"), (kwargs.get("max_x")))] * num_dims
+        tiles_per_dim = [int(x) for x in kwargs.get("tiles_per_dim").split(",")]
+        lims = [
+            (float(x), float(y))
+            for x, y in list(
+                zip(kwargs.get("min_x").split(","), kwargs.get("max_x").split(","))
+            )
+        ]
         tilings = kwargs.get("tilings")
         return TileCoder(tiles_per_dim, lims, tilings)
     elif name == "D":
@@ -58,3 +62,16 @@ def get_representation(name, unit_norm=True, **kwargs):
         return RandomClusterRepresentation(num_dims, seed, unit_norm)
 
     raise Exception("Unexpected representations given.")
+
+
+# if __name__ == '__main__':
+#     import numpy as np
+#     TC = get_representation("TC", **{
+#         "max_x": "0.6,0.07",
+#         "min_x": "-1.2,-0.07",
+#         "tiles_per_dim": "4,4",
+#         "tilings": 5
+#     })
+#
+#     print(TC.num_features)
+#     print(TC[np.array([0.5, 1.2])])

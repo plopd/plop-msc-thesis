@@ -19,7 +19,7 @@ agent_info = {
     "policy": "random-chain",
 }
 
-env_info = {"env": "Chain", "num_states": 5}
+env_info = {"env": "RandomWalk", "num_states": 5}
 
 
 @pytest.mark.parametrize("num_states", [5, 19])
@@ -83,7 +83,7 @@ def test_same_feature_representation_for_one_trial(representations):
         "interest": "UI",
         "policy": "random-chain",
     }
-    env_info = {"env": "Chain", "num_states": 19}
+    env_info = {"env": "RandomWalk", "num_states": 19}
     num_states = agent_info.get("num_states")
     for seed in np.arange(10):
         agent_info["seed"] = seed

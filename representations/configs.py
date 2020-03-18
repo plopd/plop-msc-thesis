@@ -1,5 +1,5 @@
 to_name = {
-    "TA": "tabular",
+    "TA": "TA",
     "D": "dependent",
     "TC": "tile coding",
     "RB": "random binary",
