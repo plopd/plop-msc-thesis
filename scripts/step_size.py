@@ -10,7 +10,7 @@ def main():
 
     """
     parser = argparse.ArgumentParser()
-    parser.add_argument("--range", nargs="+", type=int)
+    parser.add_argument("--range", nargs="+", type=int, help="left,right,step")
     # parser.add_argument("--interest", type=int)
     # parser.add_argument("--discount_rate", type=float)
     # parser.add_argument("--trace_decay", type=float)
