@@ -1,6 +1,9 @@
-step_size_colors = {"TD": "crimson", "ETD": "blue"}
-
-colors = {"TD": "crimson", "ETD": "blue"}
+colors = {
+    "TD": "crimson",
+    "ETD": "blue",
+    "TDTileCoding": "crimson",
+    "ETDTileCoding": "blue",
+}
 
 
 locs = {"TD": 1, "ETD": 2}
