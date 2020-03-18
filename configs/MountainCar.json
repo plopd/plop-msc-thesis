@@ -47,7 +47,7 @@
                 "UI"
             ],
             "policy": [
-                "semi-random-puddle"
+                "MC-fixed-policy"
             ],
             "step_size": [
                 0.03125,

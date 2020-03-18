@@ -14,7 +14,7 @@
                 "~/scratch"
             ],
             "problem": [
-                "Chain"
+                "RandomWalk"
             ]
         }
     ],
@@ -120,7 +120,7 @@
     "simulator_common": [
         {
             "env": [
-                "Chain"
+                "RandomWalk"
             ]
         }
     ]

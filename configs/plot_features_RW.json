@@ -80,7 +80,7 @@
     "simulator_common": [
         {
             "env": [
-                "Chain"
+                "RandomWalk"
             ]
         }
     ]
