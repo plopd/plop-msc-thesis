@@ -1,5 +1,4 @@
 import argparse
-import json
 from pathlib import Path
 
 from alphaex.sweeper import Sweeper
@@ -53,10 +52,6 @@ remove_keys_with_none_value(search_dct)
 search_lst = sweeper.search(search_dct, args.num_runs)
 
 lst_indices = []
-
-for exp in search_lst:
-    lst_indices.extend(exp.get("ids"))
-    print(json.dumps(exp, indent=2))
 
 print(
     f"Number of runs: {args.num_runs},\n"
