@@ -64,7 +64,7 @@ class TD(BaseAgent):
 
     def agent_policy(self, observation):
         return get_action_from_policy(
-            name=self.policy, rand_generator=self.rand_generator
+            name=self.policy, obs=observation, rand_generator=self.rand_generator
         )
 
     def agent_message(self, message):
