@@ -13,7 +13,7 @@ from utils.utils import get_simple_logger
 from utils.utils import path_exists
 
 
-class Chain(BaseExperiment):
+class RandomWalkExp(BaseExperiment):
     def __init__(self, agent_info, env_info, experiment_info):
         super().__init__()
         self.agent_info = agent_info
