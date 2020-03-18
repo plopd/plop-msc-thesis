@@ -1,7 +1,7 @@
 import numpy as np
 
 
-class SquareValueErrorObjective:
+class RootSquareValueErrorObjective:
     def __init__(self, true_values, mu, i):
         """
         Compute the Value Error

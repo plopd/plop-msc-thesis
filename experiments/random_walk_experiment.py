@@ -51,7 +51,7 @@ class RandomWalkExp(BaseExperiment):
         )
 
         self.error = get_objective(
-            "MSVE",
+            "RMSVE",
             self.true_values,
             self.state_distribution,
             np.ones(len(self.true_values)),

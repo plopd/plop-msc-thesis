@@ -39,7 +39,7 @@ class Exp(BaseExperiment):
         )
 
         self.objective = get_objective(
-            "MSVE", self.true_values, self.on_policy_dist, np.ones(self.num_obs),
+            "RMSVE", self.true_values, self.on_policy_dist, np.ones(self.num_obs),
         )
 
     def init(self):
