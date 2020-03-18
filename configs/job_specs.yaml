@@ -1,19 +1,14 @@
 cluster: mp2
- problem1: Plotting Random Walk
+ plot_features_RW:
   type: job-array
   time: 00:30:00 (HH:MM:SS)
   mem_per_cpu: 256 (MB or G)
   runs: 100
- problem2: Random Walk
+ RandomWalk:
    type: job-array
    time: 00:35:00 (HH:MM:SS)
    mem_per_cpu: 128 (M or G)
    episodes: 50000
- problem3: Random Walk
-   type: job-array
-   time: 01:00:00 (HH:MM:SS)
-   mem_per_cpu: 256 (M or G)
-   episodes: 100000
  RW19GammaLambdaAlpha:
    type: job-array
    time: 00:30:00 (HH:MM:SS)
@@ -24,3 +19,8 @@ cluster: mp2
    time: 00:10:00 (HH:MM:SS)
    mem_per_cpu: 128M (M or G)
    episodes: 1000
+ MountainCar:
+   type: job-array
+   time: 08:00:00 (HH:MM:SS)
+   mem_per_cpu: 512 (M or G)
+   episodes: 100000
