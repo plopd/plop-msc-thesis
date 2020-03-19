@@ -5,49 +5,46 @@
                 1
             ],
             "n_episodes": [
-                100000
+                100
             ],
             "output_dir": [
                 "~/scratch"
             ],
             "problem": [
-                "GridWorld"
+                "PuddleWorld"
+            ],
+            "num_runs": [
+                4
             ]
         }
     ],
     "features_common": [
         {
             "max_x": [
-                1.1
+                "1.1,1.1"
             ],
             "min_x": [
-                0.0
-            ],
-            "num_dims": [
-                2
+                "0.0,0.0"
             ],
             "representations": [
                 "TC"
             ],
             "tiles_per_dim": [
-                10
+                "5,5"
             ],
             "tilings": [
-                15,
-                10,
-                5,
-                1
+                5
             ]
         }
     ],
     "learners_common": [
         {
             "algorithm": [
-                "TD",
-                "ETD"
+                "TDTileCoding",
+                "ETDTileCoding"
             ],
             "discount_rate": [
-                1.0
+                0.99
             ],
             "interest": [
                 "UI"
@@ -59,15 +56,7 @@
                 0.03125,
                 0.0078125,
                 0.001953125,
-                0.00048828125,
-                0.0001220703125,
-                3.0517578125e-05,
-                7.62939453125e-06,
-                1.9073486328125e-06,
-                4.76837158203125e-07,
-                1.1920928955078125e-07,
-                2.9802322387695312e-08,
-                7.450580596923828e-09
+                0.00048828125
             ],
             "trace_decay": [
                 0.0
@@ -77,7 +66,7 @@
     "simulator_common": [
         {
             "env": [
-                "puddleworld"
+                "PuddleWorld"
             ]
         }
     ]
