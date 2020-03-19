@@ -35,7 +35,7 @@ def plot(sweep_id, config_fn):
     fig, axes = plt.subplots(
         n_rows, n_cols, figsize=(n_cols * 5, n_rows * 4), sharey="all", sharex="col"
     )
-    fig.suptitle(f"{config.get('metric')} performance on Mountain Car")
+    fig.suptitle(f"{config.get('metric')} performance on {env}")
     for row, experiment in enumerate(experiments):
         _config = {}
         results = Result(
@@ -143,7 +143,7 @@ def plot(sweep_id, config_fn):
 
         fig.tight_layout()
         fig.subplots_adjust(top=0.88)
-        filename = f"plot_mountain_car-metric-{config.get('metric')}"
+        filename = f"plot_{env}-{config.get('metric')}"
         filename = filename.replace(".", "_")
         plt.savefig(save_path / filename)
 

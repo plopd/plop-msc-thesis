@@ -19,7 +19,7 @@ env_id = "PuddleWorld-v0"
 discount_rate = 0.99
 policy_name = "semi-random-policy"
 
-observations = np.load(save_rootpath / f"S_{num_obs}.npy")
+observations = np.load(save_rootpath / f"S.npy")
 env = gym.make(env_id)
 
 # Plot states S
@@ -30,7 +30,7 @@ plt.ylim((env.observation_space.low[1], env.observation_space.high[1]))
 plt.savefig((Path(save_rootpath) / "observation_space"))
 
 # Plot true values
-filename = f"true_values_{discount_rate}".replace(".", "")
+filename = f"true_values"
 true_values = np.load(Path(save_rootpath) / f"{filename}.npy")
 colors = minmax_normalization_ab(
     true_values, true_values.min(), true_values.max(), -1, 1
@@ -42,4 +42,4 @@ plt.ylim((env.observation_space.low[1], env.observation_space.high[1]))
 plt.colorbar(sc)
 plt.title(f"{env_id} {policy_name} Prediction")
 plt.tight_layout()
-plt.savefig((Path(save_rootpath) / f"true_values_{discount_rate}".replace(".", "")))
+plt.savefig((Path(save_rootpath) / f"true_values"))
