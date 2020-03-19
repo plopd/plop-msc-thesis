@@ -24,9 +24,8 @@ class Exp(BaseExperiment):
         self.id = experiment_info.get("id")
         self.max_episode_steps = experiment_info.get("max_episode_steps")
         self.output_dir = Path(experiment_info.get("output_dir")).expanduser()
-        self.log_every_nth_episode = experiment_info.get("log_every_nth_episode")
-        self.initial_seed = experiment_info.get("seed")
         self.output_dir = path_exists(self.output_dir)
+        self.initial_seed = experiment_info.get("seed")
         self.true_values = np.load(self.output_dir.parents[0] / "true_values.npy")
         self.obs = np.load(self.output_dir.parents[0] / "S.npy")
         self.num_obs = len(self.obs)
@@ -86,6 +85,9 @@ class Exp(BaseExperiment):
     def message(self, message):
         if message == "get approx value":
             current_theta = self.rl_glue.rl_agent_message("get weight vector")
-            current_approx_v = np.dot(self.state_features, current_theta)
+            if self.agent_info.get("representations") == "TC":
+                current_approx_v = np.sum(current_theta[self.state_features], axis=1)
+            else:
+                current_approx_v = np.dot(self.state_features, current_theta)
             return current_approx_v
         raise Exception("Unexpected message given.")
