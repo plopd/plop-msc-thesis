@@ -52,6 +52,8 @@ remove_keys_with_none_value(search_dct)
 search_lst = sweeper.search(search_dct, args.num_runs)
 
 lst_indices = []
+for dct in search_lst:
+    print(dct.get("ids"), dct)
 
 print(
     f"Number of runs: {args.num_runs},\n"

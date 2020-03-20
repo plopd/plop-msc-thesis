@@ -42,6 +42,7 @@ def run(sweep_id, config_fn):
         "env": param_cfg.get("env"),
         "num_states": param_cfg.get("num_states"),
         "seed": param_cfg.get("run"),
+        "log_episodes": param_cfg.get("log_episodes", 0),
     }
 
     output_dir = (
@@ -62,6 +63,7 @@ def run(sweep_id, config_fn):
 
     experiment = get_experiment(exp_info.get("problem"), agent_info, env_info, exp_info)
     experiment.run()
+    return experiment
 
 
 if __name__ == "__main__":
