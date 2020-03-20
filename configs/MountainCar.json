@@ -5,7 +5,7 @@
                 1
             ],
             "n_episodes": [
-                10000
+                100000
             ],
             "output_dir": [
                 "~/scratch"
