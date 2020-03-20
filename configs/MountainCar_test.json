@@ -1,0 +1,74 @@
+{
+    "experiment": [
+        {
+            "episode_eval_freq": [
+                1
+            ],
+            "n_episodes": [
+                2
+            ],
+            "output_dir": [
+                "~/scratch"
+            ],
+            "problem": [
+                "MountainCar"
+            ],
+            "num_runs": [
+                50
+            ],
+            "log_episodes": [
+                1
+            ]
+        }
+    ],
+    "features_common": [
+        {
+            "max_x": [
+                "0.6,0.07"
+            ],
+            "min_x": [
+                "-1.2,-0.07"
+            ],
+            "representations": [
+                "TC"
+            ],
+            "tiles_per_dim": [
+                "4,4"
+            ],
+            "tilings": [
+                5
+            ]
+        }
+    ],
+    "learners_common": [
+        {
+            "algorithm": [
+                "TDTileCoding",
+                "ETDTileCoding"
+            ],
+            "discount_rate": [
+                0.99
+            ],
+            "interest": [
+                "UI"
+            ],
+            "policy": [
+                "MC-fixed-policy"
+            ],
+            "step_size": [
+                1.0,
+                1.2
+            ],
+            "trace_decay": [
+                0.0
+            ]
+        }
+    ],
+    "simulator_common": [
+        {
+            "env": [
+                "MountainCar"
+            ]
+        }
+    ]
+}
