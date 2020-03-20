@@ -23,6 +23,7 @@ class PuddleWorld(BaseEnvironment):
 
     def env_init(self, env_info={}):
         self.env = gym.make("PuddleWorld-v0")
+        self.env.seed(env_info.get("seed"))
         self.len_episode = 0
 
     def env_start(self):
