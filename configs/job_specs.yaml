@@ -21,7 +21,7 @@ cluster: mp2
    episodes: 1000
  MountainCar:
    type: job-array
-   time: 08:00:00 (HH:MM:SS)
+   time: 04:15:00 (HH:MM:SS)
    mem_per_cpu: 512 (M or G)
    episodes: 100000
  PuddleWorld:
