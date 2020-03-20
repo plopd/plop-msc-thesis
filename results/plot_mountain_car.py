@@ -30,7 +30,7 @@ def plot(sweep_id, config_fn):
     env = config.get("env")
     data_path = Path(f"~/scratch/{env}").expanduser()
     save_path = path_exists(Path(__file__).parents[0] / config_fn)
-    n_rows = len(experiments) + 1
+    n_rows = len(experiments)
     n_cols = len(algorithms)
     fig, axes = plt.subplots(
         n_rows, n_cols, figsize=(n_cols * 5, n_rows * 4), sharey="all", sharex="col"
