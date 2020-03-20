@@ -18,7 +18,7 @@ class RandomWalkEnv(BaseEnvironment):
     def env_init(self, env_info={}):
         self.rand_generator = np.random.RandomState(env_info.get("seed"))
         self.num_states = env_info.get("num_states")
-        self.log_episodes = env_info.get("log_episodes", 0)
+        self.log_episodes = env_info.get("log_episodes")
 
     def env_start(self):
         if self.log_episodes:

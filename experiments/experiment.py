@@ -36,6 +36,9 @@ class Exp(BaseExperiment):
                 self.num_episodes // self.episode_eval_freq + 1,
             )
         )
+        self.log_episodes = self.env_info.get("log_episodes")
+        if self.log_episodes:
+            self.episodes = [[] for i in range(self.experiment_info.get("runs"))]
 
         self.objective = get_objective(
             "RMSVE", self.true_values, self.on_policy_dist, np.ones(self.num_obs),
@@ -66,6 +69,8 @@ class Exp(BaseExperiment):
 
         for episode in range(1, self.num_episodes + 1):
             self._learn(episode, trial)
+            if self.log_episodes:
+                self.episodes[trial].append(self.rl_glue.rl_env_message("get episode"))
 
     def _learn(self, episode, trial):
         self.rl_glue.rl_episode(self.max_episode_steps)
