@@ -92,7 +92,10 @@ def compute_value_function(**kwargs):
                     Gs[n_e] = G
         true_value = np.mean(Gs)
         true_values[i] = true_value
-    np.save(save_rootpath / f"true_values", true_values)
+    np.save(
+        save_rootpath / f"true_values-discount_rate_{discount_rate}".replace(".", "_"),
+        true_values,
+    )
 
 
 if __name__ == "__main__":
