@@ -64,7 +64,9 @@ def compute_value_function(**kwargs):
     discount_rate = kwargs.get("discount_rate")
 
     observations = np.load(save_rootpath / "S.npy")
-    idxs = np.random.choice(
+    seed = 0
+    rand_generator = np.random.RandomState(seed)
+    idxs = rand_generator.choice(
         np.arange(steps // 2, steps), size=(num_obs,), replace=False
     )
     observations = observations[idxs, :]
