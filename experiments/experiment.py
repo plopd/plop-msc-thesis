@@ -26,7 +26,10 @@ class Exp(BaseExperiment):
         self.output_dir = Path(experiment_info.get("output_dir")).expanduser()
         self.output_dir = path_exists(self.output_dir)
         self.initial_seed = experiment_info.get("seed")
-        self.true_values = np.load(self.output_dir.parents[0] / "true_values.npy")
+        fn = f"true_values-discount_rate_{self.agent_info.get('discount_rate')}".replace(
+            ".", "_"
+        )
+        self.true_values = np.load(self.output_dir.parents[0] / f"{fn}.npy")
         self.obs = np.load(self.output_dir.parents[0] / "S.npy")
         self.num_obs = len(self.obs)
         self.on_policy_dist = np.ones(self.num_obs) * 1 / self.num_obs
