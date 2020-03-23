@@ -36,6 +36,7 @@ def simulate_on_policy(**kwargs):
     steps = kwargs.get("steps")
     policy_name = kwargs.get("policy_name")
     save_rootpath = kwargs.get("save_rootpath")
+    num_obs = kwargs.get("num_obs")
 
     env = gym.make(env_id)
     seed = 0
@@ -51,12 +52,18 @@ def simulate_on_policy(**kwargs):
         if done:
             obs = env.reset()
     env.close()
-    np.save(save_rootpath / "S", observations)
+
+    rand_generator = np.random.RandomState(seed)
+    idxs = rand_generator.choice(
+        np.arange(steps // 2, steps), size=(num_obs,), replace=False
+    )
+    observations = np.array(observations)
+    observations = observations[idxs, :]
+    np.save(save_rootpath / f"S", observations)
 
 
 def compute_value_function(**kwargs):
     env_id = kwargs.get("env_id")
-    steps = kwargs.get("steps")
     policy_name = kwargs.get("policy_name")
     save_rootpath = kwargs.get("save_rootpath")
     num_obs = kwargs.get("num_obs")
@@ -64,13 +71,6 @@ def compute_value_function(**kwargs):
     discount_rate = kwargs.get("discount_rate")
 
     observations = np.load(save_rootpath / "S.npy")
-    seed = 0
-    rand_generator = np.random.RandomState(seed)
-    idxs = rand_generator.choice(
-        np.arange(steps // 2, steps), size=(num_obs,), replace=False
-    )
-    observations = observations[idxs, :]
-    np.save(save_rootpath / f"S", observations)
 
     # Get true values by averaging returns
     true_values = np.zeros(num_obs)
