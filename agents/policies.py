@@ -6,7 +6,7 @@ def get_action_from_policy(name, obs, rand_generator=None):
         left = 0
         right = 1
         return rand_generator.choice([left, right])
-    elif name == "semi-random-puddle":
+    elif name == "PW-north-east":
         north = 3
         east = 1
         return rand_generator.choice([north, east])

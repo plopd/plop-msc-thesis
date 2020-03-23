@@ -52,7 +52,7 @@
                 "UI"
             ],
             "policy": [
-                "semi-random-puddle"
+                "PW-north-east"
             ],
             "step_size": [
                 5.9604646e-09,
@@ -69,6 +69,8 @@
                 0.025,
                 0.1,
                 0.4,
+                0.8,
+                1.2,
                 1.6
             ],
             "trace_decay": [
