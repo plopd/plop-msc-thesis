@@ -26,3 +26,5 @@ def main():
 if __name__ == "__main__":
     step_sizes_td = main()
     print(f"TD: {len(step_sizes_td)}, {step_sizes_td},\n")
+
+    print([np.log10(x) for x in step_sizes_td])
