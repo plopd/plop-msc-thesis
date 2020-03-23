@@ -44,10 +44,10 @@ def simulate_on_policy(**kwargs):
     obs = env.reset()
     observations = []
     for _ in tqdm(range(steps)):
-        observations.append(obs)
+        current_obs = np.copy(obs)
+        observations.append(current_obs)
         action = get_action_from_policy(policy_name, obs, rand_generator)
-        obs, reward, done, info = env.step(action)
-        # env.render("human")
+        obs, reward, done, _ = env.step(action)
         if done:
             obs = env.reset()
     env.close()
@@ -75,7 +75,6 @@ def compute_value_function(**kwargs):
     # Get true values by averaging returns
     true_values = np.zeros(num_obs)
     for i in tqdm(range(num_obs)):
-        obs = observations[i]
         env = gym.make(env_id)
         env.seed(i)
         Gs = np.zeros(num_episode)
@@ -84,14 +83,15 @@ def compute_value_function(**kwargs):
             rewards = []
             done = False
             env.reset()
-            env.state = obs
+            env.state = np.copy(observations[i])
+            obs = env.state
             while not done:
                 action = get_action_from_policy(policy_name, obs, rand_generator)
                 obs, reward, done, info = env.step(action)
                 rewards.append(reward)
-                if done:
-                    G = np.sum([discount_rate ** i * r for i, r in enumerate(rewards)])
-                    Gs[n_e] = G
+            if done:
+                G = np.sum([discount_rate ** j * r for j, r in enumerate(rewards)])
+                Gs[n_e] = G
         true_value = np.mean(Gs)
         true_values[i] = true_value
     np.save(
