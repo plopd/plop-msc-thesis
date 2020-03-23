@@ -7,7 +7,6 @@ import numpy as np
 from alphaex.sweeper import Sweeper
 
 from analysis.colormap import colors
-from analysis.colormap import linestyles
 from analysis.results import get_data_by
 from analysis.results import Result
 from representations.configs import to_name
@@ -25,18 +24,20 @@ def plot(sweep_id, config_fn):
     config_root_path = Path(__file__).parents[1] / "configs"
     sweeper = Sweeper(config_root_path / f"{config_fn}.json")
     config = sweeper.parse(sweep_id)
-    experiments = config.get("experiment").split(",")
+    experiment = config.get("experiment")
     algorithms = config.get("algorithms").split(",")
+    trace_decays = [float(x) for x in config.get("trace_decay").split(",")]
+    trace_decays = sorted(trace_decays)
     env = config.get("env")
     data_path = Path(f"~/scratch/{env}").expanduser()
     save_path = path_exists(Path(__file__).parents[0] / config_fn)
-    n_rows = len(experiments)
+    n_rows = len(trace_decays)
     n_cols = len(algorithms)
     fig, axes = plt.subplots(
         n_rows, n_cols, figsize=(n_cols * 5, n_rows * 4), sharey="all", sharex="col"
     )
     fig.suptitle(f"{config.get('metric')} performance on {env}")
-    for row, experiment in enumerate(experiments):
+    for row, trace_decay in enumerate(trace_decays):
         _config = {}
         results = Result(
             config_filename=f"{experiment}.json",
@@ -46,6 +47,7 @@ def plot(sweep_id, config_fn):
         representations = list(results.get_param_val("representations", {}, 1))[0]
         num_runs = list(results.get_param_val("num_runs", {}, 1))[0]
         _config["representations"] = representations
+        _config["trace_decay"] = trace_decay
         for algorithm in algorithms:
 
             color = colors.get(algorithm)
@@ -100,27 +102,7 @@ def plot(sweep_id, config_fn):
                 alpha=0.15,
             )
             axes[-1, 0].set_xlabel("Episodes")
-            if row == 0:
-                axes[0, 0].set_ylabel(f"RMSVE over {num_runs} runs")
-
-            if _config.get("baseline") == 1:
-                _config["algorithm"] = "LSTD" if algorithm == "TD" else "ELSTD"
-                _config.pop("step_size", None)
-                ids = results.find_experiment_by(_config, num_runs)
-                data = results.load(ids)
-                mean = data[
-                    :, -1
-                ].mean()  # During early learning the inverse of A may be unstable
-
-                axes[row, 0].axhline(
-                    mean,
-                    xmin=0,
-                    xmax=len(data),
-                    color=color,
-                    label=_config["algorithm"],
-                    linestyle=linestyles.get(algorithm),
-                )
-            axes[row, 0].legend(loc="upper right")
+            axes[row, 0].set_ylabel(f"RMSVE over {num_runs} runs")
 
             ################ PLOT SSA ####################
             axes[row, 1].errorbar(
@@ -130,16 +112,6 @@ def plot(sweep_id, config_fn):
             axes[-1, 1].set_xlabel("Step size")
 
             axes[row, 1].set_title(f"{to_name.get(representations)}", loc="left")
-
-        # y_tick_values = np.arange(
-        #     config.get("y_min"), cutoff + config.get("step"), config.get("step"),
-        # ).astype(np.float32)
-        # for i in range(n_cols):
-        #     axes[row, i].spines["right"].set_visible(False)
-        #     axes[row, i].spines["top"].set_visible(False)
-        #     axes[row, i].set_yticks(y_tick_values)
-        #     axes[row, i].set_yticklabels(y_tick_values)
-        #     axes[row, i].set_ylim(config.get("y_min"), cutoff - 0.05)
 
         fig.tight_layout()
         fig.subplots_adjust(top=0.88)
