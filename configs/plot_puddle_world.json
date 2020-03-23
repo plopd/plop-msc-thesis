@@ -3,6 +3,9 @@
         {
             "experiment": [
                 "PuddleWorld"
+            ],
+            "tilings": [
+                "1,5,10"
             ]
         }
     ],
@@ -64,7 +67,7 @@
                 "TDTileCoding,ETDTileCoding"
             ],
             "discount_rate": [
-                0.99
+                1.0
             ],
             "interest": [
                 "UI"
