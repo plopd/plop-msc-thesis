@@ -8,7 +8,7 @@ from analysis.results import get_data_by
 def get_WF(ax, result, config, metric, **param_dict):
     n_runs = param_dict.get("n_runs")
     config.pop("step_size", None)
-    step_sizes = result.get_param_val("step_size", config, n_runs)
+    step_sizes = result.get_value_param("step_size", config, n_runs)
     step_sizes = sorted(step_sizes)
     means = []
     n_negatives = 0
@@ -16,7 +16,7 @@ def get_WF(ax, result, config, metric, **param_dict):
     for stepsize in step_sizes:
         config["step_size"] = stepsize
         idx_data = result.find_experiment_by(config, n_runs)
-        data = result.load(idx_data)
+        data = result._load(idx_data)
         mean, _ = get_data_by(data, metric)
         cutoff = data[:, 0].mean()
         if mean <= cutoff:

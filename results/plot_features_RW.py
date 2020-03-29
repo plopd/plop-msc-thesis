@@ -39,13 +39,9 @@ def plot(sweep_id, config_fn):
     fig.suptitle(f"{config.get('metric')} performance on {num_states} random walk")
     for row, experiment in enumerate(experiments):
         _config = {}
-        results = Result(
-            config_filename=f"{experiment}.json",
-            datapath=data_path,
-            experiment=experiment,
-        )
-        representations = list(results.get_param_val("representations", {}, 1))[0]
-        num_runs = list(results.get_param_val("num_runs", {}, 1))[0]
+        results = Result(config_filename=f"{experiment}.json", datapath=data_path)
+        representations = list(results.get_value_param("representations", {}, 1))[0]
+        num_runs = list(results.get_value_param("num_runs", {}, 1))[0]
         _config["representations"] = representations
         _config["num_states"] = config.get("num_states")
         for algorithm in algorithms:
@@ -53,7 +49,7 @@ def plot(sweep_id, config_fn):
             color = colors.get(algorithm)
             _config["algorithm"] = algorithm
             _config.pop("step_size", None)
-            step_sizes = results.get_param_val("step_size", _config, num_runs)
+            step_sizes = results.get_value_param("step_size", _config, num_runs)
             step_sizes = sorted(step_sizes)
             num_step_sizes = len(step_sizes)
             means = np.zeros(num_step_sizes)
@@ -64,7 +60,7 @@ def plot(sweep_id, config_fn):
             for i, step_size in enumerate(step_sizes):
                 _config["step_size"] = step_size
                 ids = results.find_experiment_by(_config, num_runs)
-                data = results.load(ids)
+                data = results._load(ids)
                 mean, se = get_data_by(
                     data,
                     name=config.get("metric"),
@@ -86,7 +82,7 @@ def plot(sweep_id, config_fn):
             # ################ PLOT LCA ####################
             _config["step_size"] = optimum_step_size
             ids = results.find_experiment_by(_config, num_runs)
-            data = results.load(ids)
+            data = results._load(ids)
 
             mean = data.mean(axis=0)
             se = data.std(axis=0) / np.sqrt(num_runs)
@@ -111,7 +107,7 @@ def plot(sweep_id, config_fn):
                 _config["algorithm"] = "LSTD" if algorithm == "TD" else "ELSTD"
                 _config.pop("step_size", None)
                 ids = results.find_experiment_by(_config, num_runs)
-                data = results.load(ids)
+                data = results._load(ids)
                 mean = data[
                     :, -1
                 ].mean()  # During early learning the inverse of A may be unstable

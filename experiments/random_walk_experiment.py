@@ -27,7 +27,6 @@ class RandomWalkExp(BaseExperiment):
         self.id = experiment_info.get("id")
         self.max_episode_steps = experiment_info.get("max_episode_steps")
         self.output_dir = Path(experiment_info.get("output_dir")).expanduser()
-        self.log_every_nth_episode = experiment_info.get("log_every_nth_episode")
         self.initial_seed = experiment_info.get("seed")
         path_exists(self.output_dir)
         path_exists(self.output_dir / "logs")
@@ -95,13 +94,6 @@ class RandomWalkExp(BaseExperiment):
             self.msve_error[
                 trial, episode // self.episode_eval_freq
             ] = self.error.value(estimated_state_values)
-
-        if episode % self.experiment_info.get("log_every_nth_episode") == 0:
-            self.logger.info(
-                f"Episodes: "
-                f"{episode}/{self.n_episodes}, "
-                f"MSVE: {self.msve_error[trial, episode // self.episode_eval_freq]:.4f}"
-            )
 
     def save(self, path, data):
         np.save(path, data)

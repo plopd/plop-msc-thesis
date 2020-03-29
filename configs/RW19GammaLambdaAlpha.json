@@ -1,9 +1,6 @@
 {
     "experiment_common": [
         {
-            "log_every_nth_episode": [
-                100
-            ],
             "n_episodes": [
                 1000
             ],

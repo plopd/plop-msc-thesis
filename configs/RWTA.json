@@ -4,9 +4,6 @@
             "episode_eval_freq": [
                 1
             ],
-            "log_every_nth_episode": [
-                1000
-            ],
             "n_episodes": [
                 50000
             ],

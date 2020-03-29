@@ -36,10 +36,10 @@ def plot(sweep_id, config_fn):
     save_rootpath = path_exists(Path(__file__).parents[0] / experiment)
     filename = f"RW-gamma-{discount_rate}-n_episode-{n_episodes}".replace(".", "")
     savepath = save_rootpath / filename
-    results = Result(f"{experiment}.json", data_path, experiment)
+    results = Result(f"{experiment}.json", data_path)
 
-    algorithms = sorted(list(results.get_param_val("algorithm", {}, 1)), reverse=True)
-    trace_decays = list(results.get_param_val("trace_decay", {}, 1))
+    algorithms = sorted(list(results.get_value_param("algorithm", {}, 1)), reverse=True)
+    trace_decays = list(results.get_value_param("trace_decay", {}, 1))
 
     n_cols = len(algorithms)
     n_rows = len(representations)
@@ -75,7 +75,7 @@ def plot(sweep_id, config_fn):
                 color = lmbdas.get(trace_decay)
                 config.pop("step_size", None)
                 config["trace_decay"] = trace_decay
-                step_sizes = list(results.get_param_val("step_size", config, 1))
+                step_sizes = list(results.get_value_param("step_size", config, 1))
                 step_sizes = sorted(step_sizes)
                 step_sizes = np.array(step_sizes)
                 step_sizes = step_sizes[np.where(step_sizes <= xmax)[0]]
@@ -85,7 +85,7 @@ def plot(sweep_id, config_fn):
                 for step_size_idx, step_size in enumerate(step_sizes):
                     config["step_size"] = step_size
                     ids = results.find_experiment_by(config, 1)
-                    data = results.load(ids)
+                    data = results._load(ids)
                     data = data[:, :n_episodes]
                     mean, se = get_data_by(data, name="auc", percent=1.0)
                     cutoff = data[:, 0].mean()

@@ -5,7 +5,7 @@
                 "MountainCar"
             ],
             "trace_decay": [
-                "0.0,0.4,0.9"
+                "0.0"
             ]
         }
     ],
@@ -67,7 +67,7 @@
                 "TDTileCoding,ETDTileCoding"
             ],
             "discount_rate": [
-                0.99
+                1.0
             ],
             "interest": [
                 "UI"

@@ -31,29 +31,25 @@ def plot(sweep_id, config_fn):
     env = config.get("env")
     data_path = Path(f"~/scratch/{env}").expanduser()
     save_path = path_exists(Path(__file__).parents[0] / config_fn)
-    n_rows = len(trace_decays)
-    n_cols = len(algorithms)
+    n_rows = len(trace_decays) + 1
+    n_cols = 2
     fig, axes = plt.subplots(
         n_rows, n_cols, figsize=(n_cols * 5, n_rows * 4), sharey="all", sharex="col"
     )
     fig.suptitle(f"{config.get('metric')} performance on {env}")
     for row, trace_decay in enumerate(trace_decays):
+        results = Result(config_filename=f"{experiment}.json", datapath=data_path)
+        representations = list(results.get_value_param("representations", {}, 1))[0]
+        num_runs = list(results.get_value_param("num_runs", {}, 1))[0]
         _config = {}
-        results = Result(
-            config_filename=f"{experiment}.json",
-            datapath=data_path,
-            experiment=experiment,
-        )
-        representations = list(results.get_param_val("representations", {}, 1))[0]
-        num_runs = list(results.get_param_val("num_runs", {}, 1))[0]
-        _config["representations"] = representations
-        _config["trace_decay"] = trace_decay
         for algorithm in algorithms:
-
-            color = colors.get(algorithm)
+            _config["representations"] = representations
+            _config["trace_decay"] = trace_decay
             _config["algorithm"] = algorithm
+            color = colors.get(algorithm)
+            print(algorithms, algorithm, color)
             _config.pop("step_size", None)
-            step_sizes = results.get_param_val("step_size", _config, num_runs)
+            step_sizes = results.get_value_param("step_size", _config, num_runs)
             step_sizes = sorted(step_sizes)
             num_step_sizes = len(step_sizes)
             means = np.zeros(num_step_sizes)
@@ -64,7 +60,7 @@ def plot(sweep_id, config_fn):
             for i, step_size in enumerate(step_sizes):
                 _config["step_size"] = step_size
                 ids = results.find_experiment_by(_config, num_runs)
-                data = results.load(ids)
+                data = results._load(ids)
                 mean, se = get_data_by(
                     data,
                     name=config.get("metric"),
@@ -86,7 +82,7 @@ def plot(sweep_id, config_fn):
             # ################ PLOT LCA ####################
             _config["step_size"] = optimum_step_size
             ids = results.find_experiment_by(_config, num_runs)
-            data = results.load(ids)
+            data = results._load(ids)
 
             mean = data.mean(axis=0)
             se = data.std(axis=0) / np.sqrt(num_runs)

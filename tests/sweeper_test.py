@@ -38,9 +38,9 @@ def test_sweeper_same_keys_for_all_experiments():
 )
 def test_sweeper_number_of_stepsizes_for_method(name, representations):
     cfg_filename, num_runs = "Test_Sweeper", 100
-    result = Result(f"{cfg_filename}.json", None, "Test_Sweeper")
+    result = Result(f"{cfg_filename}.json", None)
 
-    param_vals = result.get_param_val(
+    param_vals = result.get_value_param(
         "step_size",
         {
             "algorithm": name,

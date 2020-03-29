@@ -5,16 +5,18 @@ from alphaex.sweeper import Sweeper
 
 
 class Result:
-    def __init__(self, config_filename, datapath, experiment):
+    def __init__(self, config_filename, datapath, num_runs):
         self.config_filename = config_filename
         self.datapath = datapath
-        self.experiment = experiment
-        sweeper_config_file = (
-            Path(__file__).parents[1] / "configs" / f"{self.config_filename}"
+        self.sweeper = Sweeper(
+            Path(__file__).parents[1] / "configs" / f"{self.config_filename}.json"
         )
-        self.sweeper = Sweeper(sweeper_config_file)
+        self.num_experiments = self.sweeper.total_combinations * num_runs
+        self.data = self._load(np.arange(0, self.num_experiments))
+        self.num_episodes = self.data.shape[1]
+        self.num_runs = num_runs
 
-    def find_experiment_by(self, params, n_runs):
+    def find_experiment_by(self, params):
         """
         Find all experiments which include `params` across `n_runs` runs.
         Args:
@@ -24,22 +26,14 @@ class Result:
         Returns: list, sweeper indices
 
         """
-        exps = self.sweeper.search(params, n_runs)
-        ids_exp = []
-        for ls in exps:
-            ids_exp.extend(ls["ids"])
+        search_result_list = self.sweeper.search(params, self.num_runs)
+        ids_experiments = []
+        for search_result in search_result_list:
+            ids_experiments = ids_experiments + search_result.get("ids")
 
-        return sorted(ids_exp)
+        return list(set(ids_experiments))
 
-    def find_experiment_by_idx(self, ids):
-        exps = []
-        for idx in ids:
-            exp_config = self.sweeper.parse(idx)
-            exps.append(exp_config)
-
-        return exps
-
-    def get_param_val(self, name, config, n_runs):
+    def get_value_param(self, name, config, n_runs=1):
         """
         Find values to parameter `name` by `config` across `runs`
         Args:
@@ -49,58 +43,52 @@ class Result:
         Returns:
 
         """
-        param_vals = set()
-        exps = self.sweeper.search(config, n_runs)
-        for exp in exps:
-            param_vals.add(exp[name])
+        param_values = []
+        search_result_list = self.sweeper.search(config, n_runs)
+        for search_result in search_result_list:
+            param_values.append(search_result.get(name))
 
-        return param_vals
+        return list(set(param_values))
 
-    def load(self, ids):
+    def _load(self, ids):
         data = []
         for idx in ids:
             filename = f"{idx}.npy"
             try:
-                data.append(np.load(self.datapath / f"{self.experiment}" / filename))
+                data.append(
+                    np.load(self.datapath / f"{self.config_filename}" / filename)
+                )
             except FileNotFoundError:
                 print(f"File {filename} not found.")
         data = np.vstack(data)
         return data
 
+    def get_data_auc(self, ids):
+        auc_runs = self.data[ids, :].mean(axis=1)
 
-def get_data_auc(data):
-    n_runs, n_episodes = data.shape
+        return auc_runs.mean(), (auc_runs.std() / np.sqrt(self.num_runs))
 
-    auc_runs = data.mean(axis=1)
+    def get_data_end(self, ids, percent):
+        left = int(np.ceil(self.num_episodes * percent))
+        end_data = self.data[ids, -left:]
 
-    return auc_runs.mean(), auc_runs.std() / np.sqrt(n_runs)
+        end_data = end_data.mean(axis=1)
 
+        return end_data.mean(), (end_data.std() / np.sqrt(self.num_runs))
 
-def get_data_end(data, percent):
-    n_runs, n_episodes = data.shape
-    steps = int(np.ceil(n_episodes * percent))
-    end_data = data[:, -steps:]
+    def get_data_interim(self, ids, percent):
+        right = int(np.ceil(self.num_episodes * percent))
+        interim_data = self.data[ids, :right]
 
-    end_data = end_data.mean(axis=1)
+        interim_data = interim_data.mean(axis=1)
 
-    return end_data.mean(), end_data.std() / np.sqrt(n_runs)
+        return interim_data.mean(), (interim_data.std() / np.sqrt(self.num_runs))
 
-
-def get_data_interim(data, percent):
-    n_runs, n_episodes = data.shape
-    steps = int(np.ceil(n_episodes * percent))
-    interim_data = data[:, :steps]
-
-    interim_data = interim_data.mean(axis=1)
-
-    return interim_data.mean(), interim_data.std() / np.sqrt(n_runs)
-
-
-def get_data_by(data, name, percent=None):
-    if name == "end":
-        return get_data_end(data, percent)
-    elif name == "interim":
-        return get_data_interim(data, percent)
-    elif name == "auc":
-        return get_data_auc(data)
-    raise Exception("Unknown name given.")
+    def get_data_by(self, name, ids, percent=None):
+        if name == "end":
+            return self.get_data_end(ids, percent)
+        elif name == "interim":
+            return self.get_data_interim(ids, percent)
+        elif name == "auc":
+            return self.get_data_auc(ids)
+        raise Exception("Unknown name given.")

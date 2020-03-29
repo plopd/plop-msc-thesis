@@ -56,7 +56,6 @@ def run(sweep_id, config_fn):
         "episode_eval_freq": param_cfg.get("episode_eval_freq"),
         "n_episodes": param_cfg.get("n_episodes"),
         "output_dir": str(output_dir),
-        "log_every_nth_episode": param_cfg.get("log_every_nth_episode"),
         "save_representations": param_cfg.get("save_representations"),
         "runs": param_cfg.get("runs", 1),
     }
