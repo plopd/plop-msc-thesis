@@ -1,0 +1,27 @@
+{
+    "experiment": [
+        {
+            "env_id": [
+                "MountainCar-v0"
+            ],
+            "policy_name": [
+                "MC-fixed-policy"
+            ],
+            "save_rootpath": [
+                "~/scratch"
+            ],
+            "problem": [
+                "MountainCar"
+            ],
+            "num_obs": [
+                500
+            ],
+            "num_episode": [
+                1000
+            ],
+            "discount_rate": [
+                0.99
+            ]
+        }
+    ]
+}

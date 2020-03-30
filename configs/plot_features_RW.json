@@ -2,7 +2,7 @@
     "experiments": [
         {
             "experiment": [
-                "RWTA,RWD"
+                "RWTA"
             ],
             "num_states": [
                 5
@@ -43,19 +43,6 @@
                     ],
                     "percent_plot": [
                         1.0
-                    ]
-                }
-            ],
-            "plotting": [
-                {
-                    "step": [
-                        0.1
-                    ],
-                    "y_max": [
-                        0.55
-                    ],
-                    "y_min": [
-                        0.0
                     ]
                 }
             ]

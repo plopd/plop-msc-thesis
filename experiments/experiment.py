@@ -25,7 +25,6 @@ class Exp(BaseExperiment):
         self.max_episode_steps = experiment_info.get("max_episode_steps")
         self.output_dir = Path(experiment_info.get("output_dir")).expanduser()
         self.output_dir = path_exists(self.output_dir)
-        self.initial_seed = experiment_info.get("seed")
         fn = f"true_values-discount_rate_{self.agent_info.get('discount_rate')}".replace(
             ".", "_"
         )
@@ -33,12 +32,7 @@ class Exp(BaseExperiment):
         self.obs = np.load(self.output_dir.parents[0] / "S.npy")
         self.num_obs = len(self.obs)
         self.on_policy_dist = np.ones(self.num_obs) * 1 / self.num_obs
-        self.msve_error = np.zeros(
-            (
-                self.experiment_info.get("runs"),
-                self.num_episodes // self.episode_eval_freq + 1,
-            )
-        )
+        self.msve_error = np.zeros((self.num_episodes // self.episode_eval_freq + 1,))
         self.log_episodes = self.env_info.get("log_episodes")
         if self.log_episodes:
             self.episodes = [[] for i in range(self.experiment_info.get("runs"))]
@@ -59,30 +53,27 @@ class Exp(BaseExperiment):
         self.rl_glue.rl_init(self.agent_info, self.env_info)
 
     def run(self):
-        for i in range(self.experiment_info.get("runs")):
-            self.agent_info["seed"] = i + self.initial_seed
-            self.env_info["seed"] = i + self.initial_seed
-            self.init()
-            self.learn(i)
+        self.init()
+        self.learn()
         self.save(self.output_dir / f"{self.id}", self.msve_error)
 
-    def learn(self, trial):
+    def learn(self):
         estimated_state_values = self.message("get approx value")
-        self.msve_error[trial, 0] = self.objective.value(estimated_state_values)
+        self.msve_error[0] = self.objective.value(estimated_state_values)
 
         for episode in range(1, self.num_episodes + 1):
-            self._learn(episode, trial)
+            self._learn(episode)
             if self.log_episodes:
-                self.episodes[trial].append(self.rl_glue.rl_env_message("get episode"))
+                self.episodes[0].append(self.rl_glue.rl_env_message("get episode"))
 
-    def _learn(self, episode, trial):
+    def _learn(self, episode):
         self.rl_glue.rl_episode(self.max_episode_steps)
 
         if episode % self.episode_eval_freq == 0:
             estimated_state_values = self.message("get approx value")
-            self.msve_error[
-                trial, episode // self.episode_eval_freq
-            ] = self.objective.value(estimated_state_values)
+            self.msve_error[episode // self.episode_eval_freq] = self.objective.value(
+                estimated_state_values
+            )
 
     def save(self, path, data):
         np.save(path, data)

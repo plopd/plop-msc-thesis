@@ -1,0 +1,70 @@
+{
+    "experiment_common": [
+        {
+            "episode_eval_freq": [
+                1
+            ],
+            "n_episodes": [
+                100
+            ],
+            "output_dir": [
+                "~/scratch"
+            ],
+            "problem": [
+                "RandomWalk"
+            ],
+            "num_runs": [
+                100
+            ]
+        }
+    ],
+    "learners": [
+        {
+            "algorithm": [
+                "TD"
+            ],
+            "step_size": [
+                0.15,
+                0.1,
+                0.05
+            ]
+        }
+    ],
+    "learners_common": [
+        {
+            "discount_rate": [
+                1.0
+            ],
+            "interest": [
+                "UI"
+            ],
+            "policy": [
+                "random-chain"
+            ],
+            "trace_decay": [
+                0.0
+            ]
+        }
+    ],
+    "representations_common": [
+        {
+            "representations": [
+                "TA"
+            ]
+        }
+    ],
+    "simulator": [
+        {
+            "num_states": [
+                5
+            ]
+        }
+    ],
+    "simulator_common": [
+        {
+            "env": [
+                "RandomWalk"
+            ]
+        }
+    ]
+}

@@ -1,0 +1,80 @@
+{
+    "experiment_common": [
+        {
+            "episode_eval_freq": [
+                1
+            ],
+            "n_episodes": [
+                5000
+            ],
+            "output_dir": [
+                "~/scratch"
+            ],
+            "problem": [
+                "RandomWalk"
+            ],
+            "num_runs": [
+                30
+            ]
+        }
+    ],
+    "learners": [
+        {
+            "algorithm": [
+                "MCTileCoding"
+            ]
+        }
+    ],
+    "learners_common": [
+        {
+            "discount_rate": [
+                1.0
+            ],
+            "interest": [
+                "UI"
+            ],
+            "policy": [
+                "random-chain"
+            ],
+            "trace_decay": [
+                0.0
+            ],
+            "step_size": [
+                0.0001
+            ]
+        }
+    ],
+    "representations_common": [
+        {
+            "representations": [
+                "TC"
+            ],
+            "max_x": [
+                "999"
+            ],
+            "min_x": [
+                "0"
+            ],
+            "tiles_per_dim": [
+                "5"
+            ],
+            "tilings": [
+                50
+            ]
+        }
+    ],
+    "simulator": [
+        {
+            "num_states": [
+                1000
+            ]
+        }
+    ],
+    "simulator_common": [
+        {
+            "env": [
+                "RandomWalk"
+            ]
+        }
+    ]
+}

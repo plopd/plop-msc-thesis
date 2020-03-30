@@ -48,7 +48,9 @@ class Result:
         for search_result in search_result_list:
             param_values.append(search_result.get(name))
 
-        return list(set(param_values))
+        param_values = sorted(param_values)
+
+        return param_values
 
     def _load(self, ids):
         data = []

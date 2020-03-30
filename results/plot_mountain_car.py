@@ -6,10 +6,10 @@ import matplotlib.pyplot as plt
 import numpy as np
 from alphaex.sweeper import Sweeper
 
-from analysis.colormap import colors
-from analysis.results import get_data_by
+from analysis.LCA import lca
+from analysis.lineplot import lineplot
 from analysis.results import Result
-from representations.configs import to_name
+from analysis.SSA import ssa
 from utils.utils import path_exists
 
 matplotlib.use("agg")
@@ -25,96 +25,76 @@ def plot(sweep_id, config_fn):
     sweeper = Sweeper(config_root_path / f"{config_fn}.json")
     config = sweeper.parse(sweep_id)
     experiment = config.get("experiment")
-    algorithms = config.get("algorithms").split(",")
-    trace_decays = [float(x) for x in config.get("trace_decay").split(",")]
-    trace_decays = sorted(trace_decays)
+    num_runs = config.get("num_runs")
     env = config.get("env")
+    algorithms = config.get("algorithms").split(",")
+
     data_path = Path(f"~/scratch/{env}").expanduser()
     save_path = path_exists(Path(__file__).parents[0] / config_fn)
-    n_rows = len(trace_decays) + 1
     n_cols = 2
-    fig, axes = plt.subplots(
-        n_rows, n_cols, figsize=(n_cols * 5, n_rows * 4), sharey="all", sharex="col"
+    n_rows = 2
+    fig, axs = plt.subplots(
+        n_rows,
+        n_cols,
+        figsize=(n_cols * 5, n_rows * 4),
+        squeeze=False,
+        sharex="col",
+        sharey="all",
     )
-    fig.suptitle(f"{config.get('metric')} performance on {env}")
-    for row, trace_decay in enumerate(trace_decays):
-        results = Result(config_filename=f"{experiment}.json", datapath=data_path)
-        representations = list(results.get_value_param("representations", {}, 1))[0]
-        num_runs = list(results.get_value_param("num_runs", {}, 1))[0]
+
+    result = Result(experiment, data_path, num_runs)
+    cutoff = result.data[:, 0].mean()
+
+    for algorithm in algorithms:
         _config = {}
-        for algorithm in algorithms:
-            _config["representations"] = representations
-            _config["trace_decay"] = trace_decay
-            _config["algorithm"] = algorithm
-            color = colors.get(algorithm)
-            print(algorithms, algorithm, color)
-            _config.pop("step_size", None)
-            step_sizes = results.get_value_param("step_size", _config, num_runs)
-            step_sizes = sorted(step_sizes)
-            num_step_sizes = len(step_sizes)
-            means = np.zeros(num_step_sizes)
-            standard_errors = np.zeros(num_step_sizes)
-            optimum_step_size = None
-            optimum_error = np.inf
+        _config["algorithm"] = algorithm
+        step_sizes = result.get_value_param("step_size", _config)
 
-            for i, step_size in enumerate(step_sizes):
-                _config["step_size"] = step_size
-                ids = results.find_experiment_by(_config, num_runs)
-                data = results._load(ids)
-                mean, se = get_data_by(
-                    data,
-                    name=config.get("metric"),
-                    percent=config.get("percent_metric"),
-                )
-                cutoff = data[:, 0].mean()
-                # Find best instance of algorithm
-                if mean <= optimum_error:
-                    optimum_error = mean
-                    optimum_step_size = step_size
-                # Record step-size sensitivity
-                means[i] = mean
-                means = np.nan_to_num(means, nan=np.inf)
-                means = means.clip(0, cutoff)
-                standard_errors[i] = se
-                standard_errors = np.nan_to_num(standard_errors)
-                standard_errors[np.where(means >= cutoff)[0]] = 1e-8
+        mean, standard_error, opt_step_size = lca(
+            result, _config, step_sizes, "interim", percent=0.1
+        )
+        lineplot(
+            axs[0, 0],
+            np.arange(len(mean)),
+            mean,
+            standard_error,
+            opt_step_size,
+            n_std=2.5,
+            show_legend=True,
+            xscale={"value": "linear", "base": 10},
+            ylim={"bottom": None, "top": cutoff - 0.01 * cutoff},
+        )
 
-            # ################ PLOT LCA ####################
-            _config["step_size"] = optimum_step_size
-            ids = results.find_experiment_by(_config, num_runs)
-            data = results._load(ids)
-
-            mean = data.mean(axis=0)
-            se = data.std(axis=0) / np.sqrt(num_runs)
-            steps = int(np.ceil(len(mean) * config.get("percent_plot")))
-            mean = mean[:steps]
-            se = se[:steps]
-            axes[row, 0].plot(mean, c=color, label=algorithm)
-            axes[row, 0].fill_between(
-                np.arange(len(mean)),
-                mean + 2.5 * se,
-                mean - 2.5 * se,
-                color=color,
-                alpha=0.15,
-            )
-            axes[-1, 0].set_xlabel("Episodes")
-            axes[row, 0].set_ylabel(f"RMSVE over {num_runs} runs")
-
-            ################ PLOT SSA ####################
-            axes[row, 1].errorbar(
-                step_sizes, means, yerr=2.5 * standard_errors, color=color, fmt="o-"
-            )
-            axes[row, 1].set_xscale("log", basex=2)
-            axes[-1, 1].set_xlabel("Step size")
-
-            axes[row, 1].set_title(f"{to_name.get(representations)}", loc="left")
+        means, standard_errors = ssa(
+            result, _config, step_sizes, "interim", percent=0.1, cutoff=cutoff
+        )
+        lineplot(
+            axs[0, 1],
+            step_sizes,
+            means,
+            standard_errors,
+            _config.get("algorithm"),
+            n_std=2.5,
+            marker="o",
+            show_legend=True,
+            xscale={"value": "log", "base": 2},
+            ylim={"bottom": None, "top": cutoff - 0.01 * cutoff},
+        )
 
         fig.tight_layout()
-        fig.subplots_adjust(top=0.88)
-        filename = f"plot_{env}-{config.get('metric')}"
-        filename = filename.replace(".", "_")
-        plt.savefig(save_path / filename)
+        plt.savefig(save_path / f"{config_fn}")
 
 
 if __name__ == "__main__":
     main()
+
+
+# for i, step_size in enumerate(step_sizes):
+#     _config["step_size"] = step_size
+#     ids = result.find_experiment_by(_config)
+#     data = result.data[ids, :]
+#     mean = data.mean(axis=0)
+#     standard_error = data.std(axis=0) / np.sqrt(num_runs)
+#     label = f"{step_size}*" if opt_step_size == step_size else step_size
+#     lineplot(axs[0,1], np.arange(len(mean)), mean, standard_error, label, n_std=2.5, show_legend=True,
+#              xscale={"value": "linear", "base": 10})

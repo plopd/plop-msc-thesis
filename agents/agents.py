@@ -3,6 +3,7 @@ from .ETD import ETD
 from .ETDTileCoding import ETDTileCoding
 from .LSTD import LSTD
 from .MC import MC
+from .MCTileCoding import MCTileCoding
 from .TD import TD
 from .TDTileCoding import TDTileCoding
 
@@ -18,6 +19,8 @@ def get_agent(name):
         return ETD
     elif name == "MC":
         return MC
+    elif name == "MCTileCoding":
+        return MCTileCoding
     elif name == "LSTD":
         return LSTD
     elif name == "ELSTD":

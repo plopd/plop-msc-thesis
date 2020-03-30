@@ -6,34 +6,15 @@
             ],
             "trace_decay": [
                 "0.0"
+            ],
+            "num_runs": [
+                5
             ]
         }
     ],
     "experiments_common": [
         {
             "metric": [
-                {
-                    "metric": [
-                        "interim"
-                    ],
-                    "percent_metric": [
-                        0.0025
-                    ],
-                    "percent_plot": [
-                        0.0025
-                    ]
-                },
-                {
-                    "metric": [
-                        "end"
-                    ],
-                    "percent_metric": [
-                        0.0025
-                    ],
-                    "percent_plot": [
-                        1.0
-                    ]
-                },
                 {
                     "metric": [
                         "auc"
@@ -43,19 +24,6 @@
                     ],
                     "percent_plot": [
                         1.0
-                    ]
-                }
-            ],
-            "plotting": [
-                {
-                    "step": [
-                        0.1
-                    ],
-                    "y_max": [
-                        0.6
-                    ],
-                    "y_min": [
-                        0.2
                     ]
                 }
             ]

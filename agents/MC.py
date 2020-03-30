@@ -5,17 +5,17 @@ from agents.TD import TD
 
 class MC(TD):
     def __init__(self):
-        super(MC, self).__init__()
+        super().__init__()
         self.trajectory = None
         self.G = None
 
     def agent_init(self, agent_info):
-        super(MC, self).agent_init(agent_info)
+        super().agent_init(agent_info)
         self.trajectory = []
         self.G = 0
 
     def agent_start(self, observation):
-        self.a_t = super(MC, self).agent_start(observation)
+        self.a_t = super().agent_start(observation)
         self.G = 0
         self.trajectory = []
 
@@ -29,15 +29,12 @@ class MC(TD):
 
         return self.a_t
 
-    def agent_policy(self, observation):
-        return super(MC, self).agent_policy(observation)
-
     def agent_end(self, reward):
         self.trajectory.append((self.s_t, reward))
         for (s_t, r) in self.trajectory[::-1]:
             self.G = self.discount_rate * self.G + r
-            delta = self.G - np.dot(self.theta.T, self.feature_type[s_t])
-            self.theta = self.theta + self.step_size * delta * self.feature_type[s_t]
+            delta = self.G - np.dot(self.weights.T, self.FR[s_t])
+            self.weights = self.weights + self.step_size * delta * self.FR[s_t]
 
         return
 
