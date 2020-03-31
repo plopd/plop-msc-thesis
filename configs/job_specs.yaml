@@ -1,9 +1,4 @@
 cluster: mp2
- plot_features_RW:
-  type: job-array
-  time: 00:30:00 (HH:MM:SS)
-  mem_per_cpu: 256 (MB or G)
-  runs: 100
  RandomWalk:
    type: job-array
    time: 00:35:00 (HH:MM:SS)

@@ -1,7 +1,7 @@
 import numpy as np
 
-from analysis.colormap import colors
-from analysis.colormap import locs
+from analysis.colormap import color_algorithms
+from analysis.colormap import location_algorithms_wfa
 from analysis.results import get_data_by
 
 
@@ -26,11 +26,12 @@ def get_WF(ax, result, config, metric, **param_dict):
             n_negatives += 1
         xs.append(
             np.random.uniform(
-                locs[config["algorithm"]] - 0.15, locs[config["algorithm"]] + 0.15
+                location_algorithms_wfa[config["algorithm"]] - 0.15,
+                location_algorithms_wfa[config["algorithm"]] + 0.15,
             )
         )
     means = np.array(means)
-    color = colors[config["algorithm"]]
+    color = color_algorithms[config["algorithm"]]
     ax.scatter(xs, means, facecolors=color, edgecolors=color, s=75)
     ax.spines["right"].set_visible(False)
     ax.spines["top"].set_visible(False)

@@ -6,7 +6,6 @@ import matplotlib.pyplot as plt
 import numpy as np
 from alphaex.sweeper import Sweeper
 
-from analysis.colormap import colors
 from analysis.results import get_data_by
 from analysis.results import Result
 from representations.configs import to_name
@@ -46,7 +45,7 @@ def plot(sweep_id, config_fn):
         _config["tilings"] = tilings
         for algorithm in algorithms:
 
-            color = colors.get(algorithm)
+            color = algorithms.get(algorithm)
             _config["algorithm"] = algorithm
             _config.pop("step_size", None)
             step_sizes = results.get_value_param("step_size", _config, num_runs)

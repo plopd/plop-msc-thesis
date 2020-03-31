@@ -1,14 +1,12 @@
-colors = {
+color_algorithms = {
     "TD": "crimson",
     "ETD": "blue",
-    "TDTileCoding": "crimson",
-    "ETDTileCoding": "blue",
 }
 
 
-locs = {"TD": 1, "ETD": 2}
+location_algorithms_wfa = {"TD": 1, "ETD": 2}
 
-lmbdas = {
+lambdas = {
     0: "red",
     0.4: "lime",
     0.8: "blue",
@@ -19,4 +17,4 @@ lmbdas = {
     1.0: "magenta",
 }
 
-linestyles = {"TD": "-.", "ETD": "--"}
+line_styles_algorithms = {"TD": "-.", "ETD": "--"}
