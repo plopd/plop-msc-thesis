@@ -33,7 +33,7 @@ class Result:
 
         return list(set(ids_experiments))
 
-    def get_value_param(self, name, config, n_runs=1):
+    def get_value_param(self, name, config, num_runs=1):
         """
         Find values to parameter `name` by `config` across `runs`
         Args:
@@ -44,7 +44,7 @@ class Result:
 
         """
         param_values = []
-        search_result_list = self.sweeper.search(config, n_runs)
+        search_result_list = self.sweeper.search(config, num_runs)
         for search_result in search_result_list:
             param_values.append(search_result.get(name))
 
