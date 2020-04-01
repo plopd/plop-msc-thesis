@@ -1,6 +1,8 @@
 color_algorithms = {
     "TD": "crimson",
     "ETD": "blue",
+    "TDTileCoding": "crimson",
+    "ETDTileCoding": "blue",
 }
 
 
