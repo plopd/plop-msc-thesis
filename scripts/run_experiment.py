@@ -45,9 +45,7 @@ def run(sweep_id, config_fn):
         "log_episodes": param_cfg.get("log_episodes", 0),
     }
 
-    output_dir = (
-        Path(param_cfg.get("output_dir")) / param_cfg.get("problem") / config_fn
-    )
+    output_dir = Path(param_cfg.get("output_dir")) / config_fn
     exp_info = {
         "seed": param_cfg.get("run"),
         "problem": param_cfg.get("problem"),

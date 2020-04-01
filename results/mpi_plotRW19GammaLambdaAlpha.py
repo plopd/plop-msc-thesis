@@ -2,7 +2,7 @@ import sys
 
 from mpi4py import MPI
 
-from results.random_walk_alpha_lambda_gamma import plot
+from results.old_random_walk_alpha_lambda_gamma import plot
 
 
 def main():

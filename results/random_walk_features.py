@@ -22,7 +22,7 @@ def main():
 
 @timer
 def plot_random_walk_features():
-    experiments = ["RWTA"]
+    experiments = ["RWTA", "RWD", "RWP", "RWF"]
     num_runs = 60
     env = "RandomWalk"
     algorithms = ["TD", "ETD"]
@@ -30,37 +30,37 @@ def plot_random_walk_features():
         "interim": {
             "percent_metric": 0.0025,
             "lca_ylim_bottom": 0.0,
-            "lca_ylim_top": 0.3,
+            "lca_ylim_top": 0.4,
             "lca_xlim_bottom": 0.0,
             "lca_xlim_top": 100,
             "ssa_ylim_bottom": 0.0,
-            "ssa_ylim_top": 0.3,
+            "ssa_ylim_top": 0.4,
             "ssa_xlim_bottom": 0.015625,
             "ssa_xlim_top": 2,
         },
         "auc": {
             "percent_metric": 1.0,
             "lca_ylim_bottom": 0.0,
-            "lca_ylim_top": 0.3,
+            "lca_ylim_top": 0.4,
             "lca_xlim_bottom": 0.0,
             "ssa_ylim_bottom": 0.0,
-            "ssa_ylim_top": 0.3,
+            "ssa_ylim_top": 0.4,
             "ssa_xlim_bottom": 3.051757e-05,
             "ssa_xlim_top": 2,
         },
         "end": {
             "percent_metric": 0.0025,
             "lca_ylim_bottom": 0.0,
-            "lca_ylim_top": 0.3,
+            "lca_ylim_top": 0.5,
             "lca_xlim_bottom": 0.0,
             "ssa_ylim_bottom": 0.0,
-            "ssa_ylim_top": 0.3,
+            "ssa_ylim_top": 0.5,
             "ssa_xlim_top": 2,
         },
     }
     states = [5, 19]
 
-    data_path = Path(f"~/scratch/{env}").expanduser()
+    data_path = Path(f"/Volumes/REINFORCE/Plop-Msc-2020/{env}").expanduser()
     save_path = path_exists(Path(__file__).parents[0] / "plots")
     n_cols = 2
     n_rows = len(experiments)
@@ -76,10 +76,9 @@ def plot_random_walk_features():
                 sharey="all",
                 dpi=120,
             )
-            for experiment in experiments:
+            for row, experiment in enumerate(experiments):
                 result = Result(experiment, data_path, num_runs)
                 cutoff = result.data[:, 0].mean()
-
                 for algorithm in algorithms:
                     _config = {}
                     _config["num_states"] = state
@@ -94,7 +93,7 @@ def plot_random_walk_features():
                         percent=config.get("percent_metric"),
                     )
                     lineplot(
-                        axs[0, 0],
+                        axs[row, 0],
                         np.arange(len(mean)),
                         mean,
                         standard_error,
@@ -122,7 +121,7 @@ def plot_random_walk_features():
                         cutoff=cutoff,
                     )
                     lineplot(
-                        axs[0, 1],
+                        axs[row, 1],
                         step_sizes,
                         means,
                         standard_errors,
@@ -142,10 +141,10 @@ def plot_random_walk_features():
                         },
                     )
 
-                    for row in range(n_rows):
-                        for col in range(n_cols):
-                            axs[row, col].spines["right"].set_visible(False)
-                            axs[row, col].spines["top"].set_visible(False)
+            for row in range(n_rows):
+                for col in range(n_cols):
+                    axs[row, col].spines["right"].set_visible(False)
+                    axs[row, col].spines["top"].set_visible(False)
 
             fig.tight_layout()
             plt.savefig(save_path / f"{state}-RandomWalk-{metric}")

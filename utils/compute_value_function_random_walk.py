@@ -46,10 +46,9 @@ if __name__ == "__main__":
     num_states = int(sys.argv[1])
     action_range = int(sys.argv[2])
     gamma = float(sys.argv[3])
+    config_fn = sys.argv[4]
     V = compute_value_function(num_states, action_range, gamma)
-    path = Path(
-        f"~/scratch/RandomWalk/true_v_{num_states}_{gamma}".replace(".", "-")
-    ).expanduser()
+    path = Path(f"~/scratch/{config_fn}/true_values").expanduser()
     np.save(path, V)
     states = range(0, num_states)
     plt.plot(states, V)

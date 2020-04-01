@@ -42,12 +42,7 @@ class RandomWalkExp(BaseExperiment):
         self.true_values = np.load(f"{path}.npy")
         self.states = np.arange(self.N).reshape((-1, 1))
         self.state_distribution = np.ones_like(self.true_values) * 1 / len(self.states)
-        self.msve_error = np.zeros(
-            (
-                self.experiment_info.get("runs"),
-                self.n_episodes // self.episode_eval_freq + 1,
-            )
-        )
+        self.msve_error = np.zeros((self.n_episodes // self.episode_eval_freq + 1,))
 
         self.error = get_objective(
             "RMSVE",
@@ -76,24 +71,24 @@ class RandomWalkExp(BaseExperiment):
             self.agent_info["seed"] = i + self.initial_seed
             self.env_info["seed"] = i + self.initial_seed
             self.init()
-            self.learn(i)
+            self.learn()
         self.save(self.output_dir / f"{self.id}", self.msve_error)
 
-    def learn(self, trial):
+    def learn(self):
         estimated_state_values = self.message("get state value")
-        self.msve_error[trial, 0] = self.error.value(estimated_state_values)
+        self.msve_error[0] = self.error.value(estimated_state_values)
 
         for episode in range(1, self.n_episodes + 1):
-            self._learn(episode, trial)
+            self._learn(episode)
 
-    def _learn(self, episode, trial):
+    def _learn(self, episode):
         self.rl_glue.rl_episode(self.max_episode_steps)
 
         if episode % self.episode_eval_freq == 0:
             estimated_state_values = self.message("get state value")
-            self.msve_error[
-                trial, episode // self.episode_eval_freq
-            ] = self.error.value(estimated_state_values)
+            self.msve_error[episode // self.episode_eval_freq] = self.error.value(
+                estimated_state_values
+            )
 
     def save(self, path, data):
         np.save(path, data)

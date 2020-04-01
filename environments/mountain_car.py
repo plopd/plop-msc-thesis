@@ -34,9 +34,6 @@ class MountainCarEnv(BaseEnvironment):
         self.reward_obs_term = (reward, observation, done)
         return self.reward_obs_term
 
-    def env_cleanup(self):
-        pass
-
     def env_message(self, message):
         if message == "get episode" and self.log_episodes:
             return self.experience_episode

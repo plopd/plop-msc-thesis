@@ -25,11 +25,8 @@ class Exp(BaseExperiment):
         self.max_episode_steps = experiment_info.get("max_episode_steps")
         self.output_dir = Path(experiment_info.get("output_dir")).expanduser()
         self.output_dir = path_exists(self.output_dir)
-        fn = f"true_values-discount_rate_{self.agent_info.get('discount_rate')}".replace(
-            ".", "_"
-        )
-        self.true_values = np.load(self.output_dir.parents[0] / f"{fn}.npy")
-        self.obs = np.load(self.output_dir.parents[0] / "S.npy")
+        self.true_values = np.load(self.output_dir / "true_values.npy")
+        self.obs = np.load(self.output_dir / "states.npy")
         self.num_obs = len(self.obs)
         self.on_policy_dist = np.ones(self.num_obs) * 1 / self.num_obs
         self.msve_error = np.zeros((self.num_episodes // self.episode_eval_freq + 1,))
@@ -47,7 +44,7 @@ class Exp(BaseExperiment):
         )
         self.state_features = np.array(
             [feature_representation[self.obs[i]] for i in range(self.num_obs)]
-        ).reshape(self.num_obs, feature_representation.tilings)
+        ).reshape(self.num_obs, -1)
 
         self.rl_glue = RLGlue(self.env, self.agent)
         self.rl_glue.rl_init(self.agent_info, self.env_info)
@@ -77,9 +74,6 @@ class Exp(BaseExperiment):
 
     def save(self, path, data):
         np.save(path, data)
-
-    def cleanup(self):
-        pass
 
     def message(self, message):
         if message == "get approx value":

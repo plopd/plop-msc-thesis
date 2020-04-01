@@ -6,15 +6,36 @@
                 0.9995
             ],
             "xlim": [
-                "0.0,1.5,0.3",
-                "0.0,0.2,0.04"
+                "0.0,1.0,0.2"
             ],
             "ylim": [
                 "0.0,0.52,0.1"
             ],
             "n_episodes": [
-                10,
-                100,
+                10
+            ],
+            "experiment": [
+                "RW19GammaLambdaAlpha"
+            ],
+            "representations": [
+                "TA,D"
+            ],
+            "env": [
+                "RandomWalk"
+            ]
+        },
+        {
+            "discount_rate": [
+                0.99,
+                0.9995
+            ],
+            "xlim": [
+                "0.0,1.2,0.2"
+            ],
+            "ylim": [
+                "0.0,0.52,0.1"
+            ],
+            "n_episodes": [
                 1000
             ],
             "experiment": [
@@ -22,6 +43,36 @@
             ],
             "representations": [
                 "TA,D,IN"
+            ],
+            "env": [
+                "RandomWalk"
+            ]
+        },
+        {
+            "discount_rate": [
+                0.99,
+                0.9995
+            ],
+            "zoom": [
+                1
+            ],
+            "xlim": [
+                "0.0,0.2,0.04"
+            ],
+            "ylim": [
+                "0.0,0.52,0.1"
+            ],
+            "n_episodes": [
+                1000
+            ],
+            "experiment": [
+                "RW19GammaLambdaAlpha"
+            ],
+            "representations": [
+                "TA,D,IN"
+            ],
+            "env": [
+                "RandomWalk"
             ]
         }
     ]
